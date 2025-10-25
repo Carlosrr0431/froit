@@ -148,7 +148,7 @@ const Features = () => {
             <span>Soluciones Tecnológicas</span>
           </motion.div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
             <span className="block text-gray-900 dark:text-white mb-2">Automatización inteligente</span>
             <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
               para tu negocio
@@ -161,6 +161,7 @@ const Features = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed font-light"
+            style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
           >
             Herramientas de inteligencia artificial y automatización diseñadas para{' '}
             <span className="font-semibold text-blue-600 dark:text-blue-400">
@@ -211,18 +212,18 @@ const Features = () => {
 
                   {/* Content */}
                   <div className="relative z-10">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                       {feature.title}
                     </h3>
                     
-                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4 font-light">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4 font-light" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                       {feature.description}
                     </p>
 
                     {/* Benefits List */}
                     <ul className="space-y-2">
                       {feature.benefits.map((benefit, bIndex) => (
-                        <li key={bIndex} className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                        <li key={bIndex} className="flex items-center text-xs text-gray-500 dark:text-gray-400" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                           <CheckCircle className="w-3 h-3 text-green-500 mr-2 flex-shrink-0" />
                           <span className="leading-tight">{benefit}</span>
                         </li>
@@ -283,6 +284,7 @@ const Features = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight"
+                style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
               >
                 Prueba nuestra demo gratuita
               </motion.h3>
@@ -293,6 +295,7 @@ const Features = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-lg sm:text-xl lg:text-2xl mb-8 opacity-90 max-w-3xl mx-auto font-light leading-relaxed"
+                style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
               >
                 Configura tu cuenta y comienza a automatizar la gestión de clientes
                 en WhatsApp en minutos

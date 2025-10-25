@@ -1,10 +1,11 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useRef } from 'react';
+import AnimatedFroitLogo from './AnimatedFroitLogo';
 
-const Hero = () => {
+const Hero = ({ isLogoInHeader = false }) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -37,7 +38,33 @@ const Hero = () => {
   };
 
   return (
-    <section ref={ref} className="relative h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 overflow-hidden flex items-center justify-center transition-colors duration-500">
+    <section ref={ref} className="relative min-h-screen h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 overflow-hidden flex items-center justify-center transition-colors duration-500">
+      {/* Logo en Hero Desktop - z-index bajo para no superponerse */}
+      {!isLogoInHeader && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.1 }}
+          className="absolute top-10 left-10 z-10 hidden md:block"
+        >
+          <AnimatedFroitLogo className="w-[140px] h-auto drop-shadow-lg" />
+        </motion.div>
+      )}
+
+      {/* Logo en Hero Mobile - z-index bajo, sin fixed */}
+      {!isLogoInHeader && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.1 }}
+          className="md:hidden absolute top-20 left-1/2 -translate-x-1/2 z-10"
+        >
+          <AnimatedFroitLogo className="w-[90px] h-auto drop-shadow-lg" />
+        </motion.div>
+      )}
+
       {/* Enhanced Background Effects - More Impactful */}
       <motion.div style={{ y, opacity }} className="absolute inset-0">
         {/* Large animated gradient orbs - More dramatic */}
@@ -209,33 +236,34 @@ const Hero = () => {
         })}
       </motion.div>
 
-      {/* Content Container - Centralized and Compact */}
-      <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-0">
-        <div className="max-w-6xl mx-auto">
+      {/* Content Container - Optimized for Mobile */}
+      <div className="relative z-20 w-full h-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto w-full">
           <motion.div 
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="flex flex-col items-center text-center space-y-6 sm:space-y-5"
+            className="flex flex-col items-center text-center space-y-4 sm:space-y-5 md:space-y-6 pt-28 md:pt-0"
           >
-            {/* Modern Title - Compact and Responsive */}
-            <motion.div variants={itemVariants} className="w-full px-2 sm:px-0">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.15] sm:leading-[1.1] tracking-tight">
-                <span className="block text-slate-900 dark:text-white mb-1 sm:mb-0">Automatización</span>
-                <span className="block bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 dark:from-blue-400 dark:via-cyan-400 dark:to-purple-400 bg-clip-text text-transparent my-1 sm:my-0">
+            {/* Modern Title - Better Mobile Spacing */}
+            <motion.div variants={itemVariants} className="w-full">
+              <h1 className="text-4xl xs:text-5xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-light leading-[1.1] tracking-tight" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                <span className="block text-slate-900 dark:text-white">Automatización</span>
+                <span className="block bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 dark:from-blue-400 dark:via-cyan-400 dark:to-purple-400 bg-clip-text text-transparent font-normal">
                   Inteligente
                 </span>
-                <span className="block text-slate-900 dark:text-white mt-1 sm:mt-0">para WhatsApp</span>
+                <span className="block text-slate-900 dark:text-white">para WhatsApp</span>
               </h1>
             </motion.div>
 
-            {/* Value Proposition - Compact */}
+            {/* Value Proposition - Better Mobile Text */}
             <motion.p
               variants={itemVariants}
-              className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-700 dark:text-gray-300 max-w-3xl leading-relaxed font-light px-4 sm:px-2"
+              className="text-base sm:text-lg md:text-lg lg:text-xl text-slate-700 dark:text-gray-300 max-w-3xl leading-relaxed font-light px-2"
+              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
             >
               Automatización de WhatsApp con{' '}
-              <span className="text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text font-bold">
+              <span className="text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text font-medium">
                 CRM personalizado
               </span>{' '}
               a tu negocio
@@ -244,18 +272,19 @@ const Hero = () => {
             {/* Additional Service Message */}
             <motion.p
               variants={itemVariants}
-              className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-gray-400 max-w-2xl leading-relaxed px-4 sm:px-2"
+              className="text-sm sm:text-base md:text-base text-slate-600 dark:text-gray-400 max-w-2xl leading-relaxed px-2 font-light"
+              style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
             >
               + Microservicio incluido para{' '}
-              <span className="font-semibold text-slate-700 dark:text-gray-300">
+              <span className="font-normal text-slate-700 dark:text-gray-300">
                 publicar en todas tus redes sociales en un solo lugar
               </span>
             </motion.p>
 
-            {/* CTA Buttons - Single Primary Button */}
+            {/* CTA Buttons - Better Mobile Size */}
             <motion.div
               variants={itemVariants}
-              className="flex justify-center w-full max-w-md mx-auto px-4 sm:px-2 pt-2 sm:pt-0"
+              className="flex justify-center w-full max-w-md mx-auto pt-2 sm:pt-3"
             >
               <motion.button
                 whileHover={{ 
@@ -264,7 +293,7 @@ const Hero = () => {
                   y: -2
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="group relative bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 hover:from-blue-500 hover:via-blue-600 hover:to-purple-500 text-white font-bold text-base sm:text-lg px-10 sm:px-12 py-4 sm:py-4.5 transition-all duration-300 inline-flex items-center justify-center shadow-2xl rounded-xl w-full sm:w-auto overflow-hidden"
+                className="group relative bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 hover:from-blue-500 hover:via-blue-600 hover:to-purple-500 text-white font-medium text-base sm:text-lg md:text-lg px-8 sm:px-10 py-3.5 sm:py-4 transition-all duration-300 inline-flex items-center justify-center shadow-2xl rounded-xl w-full sm:w-auto overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative z-10 mr-2">Comenzar Demo Gratis</span>
@@ -272,9 +301,9 @@ const Hero = () => {
               </motion.button>
             </motion.div>
 
-            {/* Trust Line - Minimal */}
-            <motion.div variants={itemVariants} className="pt-1 sm:pt-0">
-              <p className="text-[10px] sm:text-xs text-slate-600 dark:text-gray-400 font-medium">
+            {/* Trust Line - Better Mobile Visibility */}
+            <motion.div variants={itemVariants} className="pt-2 sm:pt-3">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-gray-400 font-light">
                 Confiado por startups y empresas innovadoras
               </p>
             </motion.div>

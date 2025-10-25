@@ -102,12 +102,12 @@ const Contact = () => {
             <span className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-semibold mb-4">
               Contáctanos
             </span>
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
               <span className="text-gray-900 dark:text-white">Comienza tu</span>
               <br />
               <span className="gradient-text">transformación hoy</span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
               ¿Listo para automatizar tu WhatsApp y potenciar tus ventas? 
               Hablemos sobre cómo FroIT puede transformar tu negocio.
             </p>
@@ -122,14 +122,14 @@ const Contact = () => {
               transition={{ duration: 0.8 }}
             >
               <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                   Solicita tu Demo Personalizada
                 </h3>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Name */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                       Nombre Completo *
                     </label>
                     <input
@@ -145,7 +145,7 @@ const Contact = () => {
 
                   {/* Email */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                       Email Empresarial *
                     </label>
                     <input
@@ -162,7 +162,7 @@ const Contact = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Company */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                         Empresa
                       </label>
                       <input
@@ -177,7 +177,7 @@ const Contact = () => {
 
                     {/* Phone */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                         Teléfono
                       </label>
                       <input
@@ -193,7 +193,7 @@ const Contact = () => {
 
                   {/* Service */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                       Tipo de Consulta
                     </label>
                     <select
@@ -212,7 +212,7 @@ const Contact = () => {
 
                   {/* Message */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                       Mensaje *
                     </label>
                     <textarea
@@ -302,7 +302,7 @@ const Contact = () => {
 
               {/* Benefits */}
               <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                   ¿Por qué elegir FroIT?
                 </h3>
                 
@@ -326,13 +326,13 @@ const Contact = () => {
 
               {/* Urgency CTA */}
               <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-6 rounded-lg">
-                <h4 className="font-bold text-yellow-800 dark:text-yellow-200 mb-2">
+                <h4 className="font-bold text-yellow-800 dark:text-yellow-200 mb-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                   🚀 Oferta por Tiempo Limitado
                 </h4>
-                <p className="text-yellow-700 dark:text-yellow-300 mb-4">
+                <p className="text-yellow-700 dark:text-yellow-300 mb-4" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                   Primeros 100 clientes obtienen 3 meses gratis + setup personalizado sin costo.
                 </p>
-                <p className="text-sm text-yellow-600 dark:text-yellow-400">
+                <p className="text-sm text-yellow-600 dark:text-yellow-400" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                   ⏰ Quedan 23 espacios disponibles
                 </p>
               </div>

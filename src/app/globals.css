@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 /* Modern CSS Variables for AI Startup Theme */
@@ -12,6 +12,7 @@
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
+  --font-sans: var(--font-montserrat), 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Light Mode Styles */
@@ -35,14 +36,22 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  font-family: var(--font-montserrat), 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-montserrat), 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.6;
   background: var(--background);
   color: var(--foreground);
   font-weight: 400;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.01em;
   transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, select {
+  font-family: var(--font-montserrat), 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Light mode specific styles */

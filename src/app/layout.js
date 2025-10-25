@@ -1,6 +1,14 @@
 import "./globals.css";
 import { ThemeProvider } from '@/components/ThemeProvider';
 import Providers from '@/components/Providers';
+import { Montserrat } from 'next/font/google';
+
+const montserrat = Montserrat({ 
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'], // Pesos más ligeros
+  variable: '--font-montserrat',
+  display: 'swap',
+});
 
 export const metadata = {
   title: {
@@ -80,7 +88,7 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className="antialiased font-sans">
+      <body className={`${montserrat.variable} antialiased font-sans`}>
         <Providers>
           <ThemeProvider>
             {children}

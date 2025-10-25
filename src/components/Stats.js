@@ -77,15 +77,15 @@ const Stats = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full text-sm font-semibold mb-4">
+          <span className="inline-block px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full text-sm font-semibold mb-4" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
             Capacidades del Sistema
           </span>
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
             <span className="text-gray-900 dark:text-white">Tecnología que</span>
             <br />
             <span className="gradient-text">optimiza tu operación</span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
             Características técnicas de nuestra plataforma de automatización 
             con inteligencia artificial para WhatsApp Business.
           </p>
@@ -107,19 +107,19 @@ const Stats = () => {
                 <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${metric.color} mb-4`}>
                   <IconComponent className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                   {metric.value}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-2">
+                <p className="text-gray-600 dark:text-gray-300 mb-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                   {metric.title}
                 </p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                  <span className="text-sm text-gray-500 dark:text-gray-400" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                     {metric.subtitle}
                   </span>
                   <span className={`text-sm font-semibold ${
                     metric.change.startsWith('+') ? 'text-green-500' : 'text-red-500'
-                  }`}>
+                  }`} style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                     {metric.change}
                   </span>
                 </div>
@@ -140,11 +140,11 @@ const Stats = () => {
           >
             <div className="flex items-center mb-6">
               <Clock className="w-6 h-6 text-blue-500 mr-3" />
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                 Tiempo de Respuesta
               </h3>
             </div>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-gray-600 dark:text-gray-300 mb-6" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
               Comparación de tiempos de respuesta entre gestión manual y automatizada (minutos)
             </p>
             <ResponsiveContainer width="100%" height={300}>
