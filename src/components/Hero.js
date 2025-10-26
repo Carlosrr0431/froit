@@ -287,6 +287,7 @@ const Hero = ({ isLogoInHeader = false }) => {
               className="flex justify-center w-full max-w-md mx-auto pt-2 sm:pt-3"
             >
               <motion.button
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                 whileHover={{ 
                   scale: 1.05, 
                   boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.7)",
@@ -296,7 +297,7 @@ const Hero = ({ isLogoInHeader = false }) => {
                 className="group relative bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 hover:from-blue-500 hover:via-blue-600 hover:to-purple-500 text-white font-medium text-base sm:text-lg md:text-lg px-8 sm:px-10 py-3.5 sm:py-4 transition-all duration-300 inline-flex items-center justify-center shadow-2xl rounded-xl w-full sm:w-auto overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative z-10 mr-2">Comenzar Demo Gratis</span>
+                <span className="relative z-10 mr-2">Agenda tu Demo Personalizada</span>
                 <ArrowRight className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform duration-200" />
               </motion.button>
             </motion.div>

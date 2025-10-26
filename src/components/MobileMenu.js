@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Home, Sparkles, TrendingUp, MessageCircle, Mail } from 'lucide-react';
+import { X, Home, Sparkles, TrendingUp, MessageCircle, Mail, DollarSign, Zap } from 'lucide-react';
 import { useEffect } from 'react';
 import Image from 'next/image';
 
@@ -20,9 +20,9 @@ const MobileMenu = ({ isOpen, onClose, activeSection, scrollToSection }) => {
 
   const menuItems = [
     { id: 'home', label: 'Inicio', icon: Home },
-    { id: 'features', label: 'Características', icon: Sparkles },
+    { id: 'services', label: 'Servicios', icon: Zap },
     { id: 'how-it-works', label: 'Cómo Funciona', icon: MessageCircle },
-    { id: 'stats', label: 'Resultados', icon: TrendingUp },
+    { id: 'pricing', label: 'Precios', icon: DollarSign },
     { id: 'contact', label: 'Contacto', icon: Mail },
   ];
 

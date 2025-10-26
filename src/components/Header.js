@@ -13,7 +13,7 @@ const Header = ({ isLogoInHeader = false }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['features', 'how-it-works', 'stats', 'testimonials', 'contact'];
+      const sections = ['services', 'how-it-works', 'pricing', 'contact'];
       const current = sections.find(section => {
         const element = document.getElementById(section);
         if (element) {
@@ -30,9 +30,9 @@ const Header = ({ isLogoInHeader = false }) => {
   }, []);
 
   const navItems = [
-    { id: 'features', label: 'Características' },
+    { id: 'services', label: 'Servicios' },
     { id: 'how-it-works', label: 'Cómo Funciona' },
-    { id: 'stats', label: 'Resultados' },
+    { id: 'pricing', label: 'Precios' },
     { id: 'contact', label: 'Contacto' },
   ];
 
@@ -95,7 +95,7 @@ const Header = ({ isLogoInHeader = false }) => {
                     }}
                     className="flex-shrink-0"
                   >
-                    <AnimatedFroitLogo className="w-[70px] h-auto" />
+                    <AnimatedFroitLogo className="w-[50px] h-auto" />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -219,10 +219,10 @@ const Header = ({ isLogoInHeader = false }) => {
                       }
                     }}
                   >
-                    <AnimatedFroitLogo className="w-[60px] h-auto" />
+                    <AnimatedFroitLogo className="w-[45px] h-auto" />
                   </motion.div>
                 ) : (
-                  <div className="w-[60px] h-[22px]" />
+                  <div className="w-[45px] h-[22px]" />
                 )}
               </AnimatePresence>
 

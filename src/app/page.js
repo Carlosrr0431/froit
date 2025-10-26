@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import Hero from '@/components/Hero';
 import Header from '@/components/Header';
-import Features from '@/components/Features';
+import Services from '@/components/Services';
 import HowItWorks from '@/components/HowItWorks';
-import Stats from '@/components/Stats';
+import Pricing from '@/components/Pricing';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 
@@ -51,9 +51,9 @@ export default function Home() {
       {/* Main Content - Perfectly Centered Layout with Mobile Padding */}
       <div className="relative pt-0 md:pt-0">
         <Hero isLogoInHeader={isLogoInHeader} />
-        <Features />
+        <Services />
         <HowItWorks />
-        <Stats />
+        <Pricing />
         <Contact />
         <Footer />
       </div>
