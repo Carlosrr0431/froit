@@ -107,26 +107,21 @@ const Contact = () => {
               animate={{ opacity: 1, height: 'auto', marginTop: 24 }}
               exit={{ opacity: 0, height: 0, marginTop: 0 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden"
+              className="rounded-2xl shadow-2xl overflow-hidden"
             >
-              <div className="p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Selecciona fecha y hora
-                  </h3>
-                  <button
-                    onClick={() => setShowCalendar(false)}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                  >
-                    <ArrowRight className="w-6 h-6 text-gray-600 dark:text-gray-400 rotate-90" />
-                  </button>
-                </div>
+              <div className="relative">
+                <button
+                  onClick={() => setShowCalendar(false)}
+                  className="absolute top-4 right-4 z-10 p-2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 rounded-lg transition-colors shadow-lg"
+                >
+                  <ArrowRight className="w-6 h-6 text-gray-600 dark:text-gray-400 rotate-90" />
+                </button>
                 
-                <div className="w-full flex justify-center">
+                <div className="w-full flex justify-center bg-transparent">
                   <iframe 
                     src="https://zcal.co/i/M4Qr-nrK?embed=1&embedType=iframe" 
                     loading="lazy" 
-                    style={{ border: 'none', minWidth: '320px', minHeight: '544px', height: '801px', width: '100%', maxWidth: '1096px' }}
+                    style={{ border: 'none', minWidth: '320px', minHeight: '544px', height: '801px', width: '100%', maxWidth: '1096px', display: 'block' }}
                     id="zcal-invite" 
                     scrolling="no"
                     title="Agendar reunión"

@@ -65,15 +65,15 @@ const Header = ({ isLogoInHeader = false }) => {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="hidden md:block fixed top-4 left-1/2 -translate-x-1/2 z-50"
+        className="hidden md:block fixed top-7 left-1/2 -translate-x-1/2 z-50"
       >
         <div className="relative">
           {/* Subtle glow effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 blur-2xl rounded-full" />
           
           {/* Main container - Centered content */}
-          <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/50 dark:border-slate-700/50 rounded-full shadow-lg px-3.5 py-1.5">
-            <div className="flex items-center justify-center gap-4">
+          <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/50 dark:border-slate-700/50 rounded-full shadow-lg px-3.5 py-1.5 h-[40px]">
+            <div className="flex items-center justify-center gap-4 h-full">
               {/* Logo que aparece en el header desktop - Fixed, siempre visible */}
               <AnimatePresence mode="wait">
                 {isLogoInHeader && (
