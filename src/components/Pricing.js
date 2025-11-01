@@ -7,7 +7,7 @@ import { Check, Sparkles, Zap, Shield, Share2 } from 'lucide-react';
 const Pricing = () => {
   const basePlan = {
     name: "Plan Completo",
-    price: 25,
+    price: 45,
     description: "Todo lo que necesitas para automatizar y gestionar tu comunicación por WhatsApp",
     includes: [
       {
