@@ -124,20 +124,7 @@ const Footer = () => {
             </p>
 
             {/* Contact Info */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mb-4 sm:mb-6">
-              <div className="flex items-center text-gray-300 text-sm sm:text-base">
-                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-400" />
-                <span>hola@froit.ai</span>
-              </div>
-              <div className="flex items-center text-gray-300 text-sm sm:text-base">
-                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-green-400" />
-                <span>+1 (555) 123-4567</span>
-              </div>
-              <div className="flex items-center text-gray-300 text-sm sm:text-base">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-red-400" />
-                <span>Miami, FL - Estados Unidos</span>
-              </div>
-            </div>
+
 
             {/* Social Links */}
             <div className="flex items-center justify-center space-x-4">
