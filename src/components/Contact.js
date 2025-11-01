@@ -100,7 +100,7 @@ const Contact = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            href="https://wa.me/5491234567890?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20FroIT"
+            href="https://wa.me/5493878256162?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20FroIT"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full group relative bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 rounded-xl sm:rounded-2xl p-6 sm:p-8 text-white transition-all duration-300 hover:shadow-xl"
