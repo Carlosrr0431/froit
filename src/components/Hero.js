@@ -273,7 +273,7 @@ const Hero = ({ isLogoInHeader = false }) => {
                 }}
               >
                 <span className="block text-slate-900 dark:text-white">
-                  Automatización{" "}
+                  Agente IA{" "}
                   <span className="font-bold" style={{ color: "#56c3e8" }}>
                     INTELIGENTE
                   </span>{" "}
@@ -307,7 +307,7 @@ const Hero = ({ isLogoInHeader = false }) => {
                   times: [0, 0.2, 0.5, 0.7, 1]
                 }}
               >
-                Automatización de WhatsApp con{" "}
+                Agente IA de WhatsApp con{" "}
                 <span className="text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text font-medium">
                   CRM personalizado
                 </span>{" "}
@@ -386,9 +386,9 @@ const Hero = ({ isLogoInHeader = false }) => {
                   times: [0, 0.2, 0.5, 0.7, 1]
                 }}
               >
-                Microservicio incluido para{" "}
+                Microservicios incluidos para{" "}
                 <span className="font-normal text-slate-700 dark:text-gray-300">
-                  publicar en todas tus redes sociales en un solo lugar
+                  mensajes masivos, notificaciones y publicación en todas tus redes sociales
                 </span>
               </motion.p>
             </motion.div>
@@ -414,7 +414,7 @@ const Hero = ({ isLogoInHeader = false }) => {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative z-10 mr-2">
-                  Empezá a automatizar tu negocio
+                  Potencia tu negocio ahora
                 </span>
                 <ArrowRight className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform duration-200" />
               </motion.button>

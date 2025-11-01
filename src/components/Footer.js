@@ -100,77 +100,47 @@ const Footer = () => {
         <ArrowUp className="w-6 h-6" />
       </motion.button>
 
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Newsletter Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="py-16 border-b border-gray-800"
-        >
-          <div className="max-w-4xl mx-auto text-center">
-            <h3 className="text-3xl md:text-4xl font-bold mb-4">
-              Mantente al día con FroIT
-            </h3>
-            <p className="text-xl text-gray-300 mb-8">
-              Recibe las últimas actualizaciones, consejos de automatización y casos de éxito 
-              directamente en tu bandeja de entrada.
-            </p>
-            
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="tu@empresa.com"
-                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              />
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors whitespace-nowrap">
-                Suscribirse
-              </button>
-            </div>
-          </div>
-        </motion.div>
-
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Main Footer Content */}
-        <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+        <div className="py-12 sm:py-16">
           {/* Brand Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="lg:col-span-2"
+            className="text-center mb-8 sm:mb-12"
           >
-            <div className="flex items-center mb-6">
+            <div className="flex items-center justify-center mb-4 sm:mb-6">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-3">
                 <Bot className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold">FroIT</span>
+              <span className="text-xl sm:text-2xl font-bold">FroIT</span>
             </div>
             
-            <p className="text-gray-300 mb-6 leading-relaxed">
+            <p className="text-gray-300 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base max-w-2xl mx-auto px-4">
               Transformamos la atención al cliente con inteligencia artificial avanzada. 
-              Automatiza, integra y convierte más con nuestros agentes IA para WhatsApp.
+              Agente IA de WhatsApp + CRM personalizado + microservicios potentes para tu negocio.
             </p>
 
             {/* Contact Info */}
-            <div className="space-y-3">
-              <div className="flex items-center text-gray-300">
-                <Mail className="w-5 h-5 mr-3 text-blue-400" />
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mb-4 sm:mb-6">
+              <div className="flex items-center text-gray-300 text-sm sm:text-base">
+                <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-400" />
                 <span>hola@froit.ai</span>
               </div>
-              <div className="flex items-center text-gray-300">
-                <Phone className="w-5 h-5 mr-3 text-green-400" />
+              <div className="flex items-center text-gray-300 text-sm sm:text-base">
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-green-400" />
                 <span>+1 (555) 123-4567</span>
               </div>
-              <div className="flex items-center text-gray-300">
-                <MapPin className="w-5 h-5 mr-3 text-red-400" />
+              <div className="flex items-center text-gray-300 text-sm sm:text-base">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-red-400" />
                 <span>Miami, FL - Estados Unidos</span>
               </div>
             </div>
 
             {/* Social Links */}
-            <div className="flex items-center space-x-4 mt-6">
+            <div className="flex items-center justify-center space-x-4">
               {socialLinks.map((social) => {
                 const IconComponent = social.icon;
                 return (
@@ -181,96 +151,11 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     className={`text-gray-400 ${social.color} transition-colors p-2 hover:bg-gray-800 rounded-lg`}
                   >
-                    <IconComponent className="w-5 h-5" />
+                    <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
                   </a>
                 );
               })}
             </div>
-          </motion.div>
-
-          {/* Links Sections */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-          >
-            <h4 className="font-semibold text-lg mb-4">Producto</h4>
-            <ul className="space-y-2">
-              {footerLinks.product.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <h4 className="font-semibold text-lg mb-4">Empresa</h4>
-            <ul className="space-y-2">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            <h4 className="font-semibold text-lg mb-4">Recursos</h4>
-            <ul className="space-y-2">
-              {footerLinks.resources.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <h4 className="font-semibold text-lg mb-4">Legal</h4>
-            <ul className="space-y-2">
-              {footerLinks.legal.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
           </motion.div>
         </div>
 
@@ -288,27 +173,8 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Trust Badges */}
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center text-gray-400">
-              <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center mr-2">
-                <span className="text-white text-xs font-bold">✓</span>
-              </div>
-              <span className="text-sm">SOC 2 Certified</span>
-            </div>
-            
-            <div className="flex items-center text-gray-400">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-2">
-                <span className="text-white text-xs font-bold">G</span>
-              </div>
-              <span className="text-sm">GDPR Compliant</span>
-            </div>
-            
-            <div className="flex items-center text-gray-400">
-              <MessageCircle className="w-5 h-5 mr-2 text-green-500" />
-              <span className="text-sm">WhatsApp Partner</span>
-            </div>
-          </div>
+         
+       
         </motion.div>
 
         {/* Final CTA Bar */}
@@ -319,19 +185,16 @@ const Footer = () => {
           transition={{ duration: 0.8 }}
           className="mb-8"
         >
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-center">
-            <h4 className="text-xl font-bold mb-2">
-              ¿Listo para transformar tu WhatsApp?
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-4 sm:p-6 text-center">
+            <h4 className="text-lg sm:text-xl font-bold mb-2">
+              ¿Listo para potenciar tu WhatsApp con un agente IA?
             </h4>
-            <p className="mb-4 opacity-90">
-              Únete a más de 500 empresas que ya automatizaron su atención al cliente.
+            <p className="mb-4 opacity-90 text-sm sm:text-base">
+              Únete y transforma completamente tu negocio.
             </p>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-              <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                Comenzar Gratis
-              </button>
-              <button className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
-                Ver Demo
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+              <button className="w-full sm:w-auto bg-white text-blue-600 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base">
+                Comenzar
               </button>
             </div>
           </div>

@@ -191,6 +191,16 @@ body:not(.dark) {
   background: rgba(59, 130, 246, 0.5);
 }
 
+/* Hide scrollbar for specific elements */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Selection Color */
 ::selection {
   background: rgba(59, 130, 246, 0.2);
@@ -250,5 +260,109 @@ body:not(.dark) {
 @media (min-width: 1024px) {
   .text-hero { font-size: 4.5rem; }
 }
+
+/* CRM Mobile Optimizations */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .pb-safe {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+  }
+}
+
+/* Prevent overscroll bounce effect */
+.overscroll-none {
+  overscroll-behavior: none;
+}
+
+/* Touch optimization for mobile */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  button:hover {
+    background-color: inherit;
+  }
+  
+  /* Larger touch targets */
+  button, a, input, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent text selection during scrolling */
+  .overscroll-contain {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Smooth scrolling for chat messages */
+.messages-container {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Textarea auto-resize */
+textarea {
+  field-sizing: content;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  /* Prevent zoom on input focus (iOS) */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+  
+  /* Optimize tap highlighting */
+  * {
+    -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
+  }
+  
+  /* Prevent pull-to-refresh in PWA */
+  body {
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* PWA Splash Screen Colors */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0f172a;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #f8fafc;
+  }
+}
+
+/* iOS notch support */
+@supports (padding: max(0px)) {
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top), 0.5rem);
+  }
+  
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+  }
+  
+  .safe-left {
+    padding-left: max(env(safe-area-inset-left), 0rem);
+  }
+  
+  .safe-right {
+    padding-right: max(env(safe-area-inset-right), 0rem);
+  }
+}
+
+/* Prevent layout shift */
+.prevent-shift {
+  contain: layout;
+}
+
+
 
 

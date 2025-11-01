@@ -131,38 +131,6 @@ const Contact = () => {
             </motion.div>
           )}
 
-          {/* Contact Info Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12"
-          >
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
-                <Phone className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              </div>
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Teléfono</h4>
-              <p className="text-gray-600 dark:text-gray-400">+1 (555) 123-4567</p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
-                <Mail className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-              </div>
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Email</h4>
-              <p className="text-gray-600 dark:text-gray-400">hola@froit.ai</p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
-                <MapPin className="w-6 h-6 text-green-600 dark:text-green-400" />
-              </div>
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Ubicación</h4>
-              <p className="text-gray-600 dark:text-gray-400">Miami, FL - USA</p>
-            </div>
-          </motion.div>
 
           {/* Trust Badges */}
           <motion.div
@@ -172,10 +140,7 @@ const Contact = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600 dark:text-gray-400"
           >
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <span>Respuesta en 24h</span>
-            </div>
+       
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-500" />
               <span>Consulta gratuita</span>

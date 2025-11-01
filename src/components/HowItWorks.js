@@ -10,16 +10,16 @@ const HowItWorks = () => {
       icon: MessageCircle,
       title: 'Conecta WhatsApp Business',
       description: 'Vincula tu cuenta de WhatsApp Business mediante nuestra integración con la API oficial de Meta.',
-      details: ['Conexión segura mediante API oficial', 'Configuración guiada', 'Sin interrumpir operaciones actuales'],
+      details: ['Conexión segura mediante API oficial', 'Configuración guiada paso a paso', 'Sin interrumpir operaciones actuales'],
       color: 'from-green-500 to-emerald-600',
       time: '5 min'
     },
     {
       number: 2,
       icon: Bot,
-      title: 'Configura la IA',
-      description: 'Define las respuestas automáticas y configura los flujos de conversación según tu tipo de negocio.',
-      details: ['Plantillas predefinidas disponibles', 'Personalización de respuestas', 'Configuración de horarios'],
+      title: 'Configura el Agente IA',
+      description: 'Define las respuestas automáticas y configura el agente IA con la información de tu negocio.',
+      details: ['Plantillas predefinidas disponibles', 'Personalización de respuestas inteligentes', 'Configuración de horarios de atención'],
       color: 'from-blue-500 to-cyan-600',
       time: '10 min'
     },
@@ -28,16 +28,16 @@ const HowItWorks = () => {
       icon: Settings,
       title: 'Configura tu CRM',
       description: 'Establece los campos personalizados y flujos de trabajo que necesitas para gestionar tus clientes.',
-      details: ['Campos adaptados a tu negocio', 'Automatización de tareas', 'Integraciones con tus herramientas'],
+      details: ['Campos adaptados a tu negocio', 'Automatización de tareas y seguimientos', 'Integración con Google Calendar'],
       color: 'from-purple-500 to-pink-600',
       time: '15 min'
     },
     {
       number: 4,
       icon: BarChart3,
-      title: 'Activa Publicaciones',
-      description: 'Conecta tus redes sociales y comienza a programar contenido desde un solo lugar para todas tus plataformas.',
-      details: ['Conexión de cuentas sociales', 'Programación de publicaciones', 'Gestión centralizada'],
+      title: 'Activa Microservicios',
+      description: 'Elige y activa los microservicios adicionales que necesites: mensajes masivos, notificaciones o multi-redes.',
+      details: ['Activación opcional de microservicios', 'Configuración de campañas y notificaciones', 'Conexión con redes sociales'],
       color: 'from-orange-500 to-red-600',
       time: '10 min'
     }
@@ -143,7 +143,7 @@ const HowItWorks = () => {
           >
             Proceso de configuración en{' '}
             <span className="font-bold text-blue-600 dark:text-blue-400">4 pasos</span>{' '}
-            para comenzar a automatizar la gestión de clientes y redes sociales.
+            para comenzar a potenciar tu negocio con un agente IA de WhatsApp.
           </motion.p>
         </motion.div>
 
@@ -291,7 +291,7 @@ const HowItWorks = () => {
               },
               { 
                 icon: Bot, 
-                title: "IA analiza", 
+                title: "Agente IA analiza", 
                 description: "Sistema procesa el mensaje", 
                 color: "bg-blue-500",
                 step: "02",
@@ -306,8 +306,8 @@ const HowItWorks = () => {
               },
               { 
                 icon: BarChart3, 
-                title: "Registro de datos", 
-                description: "Información almacenada", 
+                title: "Registro y análisis", 
+                description: "Información almacenada y procesada", 
                 color: "bg-orange-500",
                 step: "04"
               }

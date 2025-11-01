@@ -16,19 +16,19 @@ const Features = () => {
   const features = [
     {
       icon: Bot,
-      title: 'Automatización de WhatsApp con IA',
+      title: 'Agente IA de WhatsApp',
       description: 'Sistema de respuesta automática mediante inteligencia artificial que atiende mensajes en tiempo real y captura clientes potenciales las 24 horas.',
       color: 'from-blue-500 to-cyan-500',
       benefits: ['Respuestas automáticas 24/7', 'Captura de leads en tiempo real', 'Conversaciones contextuales'],
-      category: 'WhatsApp'
+      category: 'Agente IA'
     },
     {
       icon: Zap,
       title: 'Procesamiento Instantáneo',
-      description: 'La IA analiza cada mensaje y ejecuta las acciones configuradas sin intervención manual, reduciendo tiempos de respuesta a segundos.',
+      description: 'El agente IA analiza cada mensaje y ejecuta las acciones configuradas sin intervención manual, reduciendo tiempos de respuesta a segundos.',
       color: 'from-yellow-500 to-orange-500',
       benefits: ['Análisis automático de mensajes', 'Ejecución de acciones inmediata', 'Cero intervención manual'],
-      category: 'Automatización'
+      category: 'Agente IA'
     },
     {
       icon: MessageCircle,
@@ -60,7 +60,7 @@ const Features = () => {
       description: 'Microservicio que permite crear y programar contenido una sola vez para publicarlo automáticamente en todas tus redes sociales.',
       color: 'from-red-500 to-rose-500',
       benefits: ['Publicación en múltiples redes', 'Programación de contenido', 'Gestión desde un solo lugar'],
-      category: 'Redes Sociales'
+      category: 'Multi-Redes'
     },
     {
       icon: Shield,
@@ -149,7 +149,7 @@ const Features = () => {
           </motion.div>
           
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
-            <span className="block text-gray-900 dark:text-white mb-2">Automatización inteligente</span>
+            <span className="block text-gray-900 dark:text-white mb-2">Agente IA inteligente</span>
             <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
               para tu negocio
             </span>
@@ -163,7 +163,7 @@ const Features = () => {
             className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed font-light"
             style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
           >
-            Herramientas de inteligencia artificial y automatización diseñadas para{' '}
+            Herramientas de inteligencia artificial y microservicios diseñados para{' '}
             <span className="font-semibold text-blue-600 dark:text-blue-400">
               optimizar la gestión de clientes y presencia digital
             </span>
@@ -297,8 +297,7 @@ const Features = () => {
                 className="text-lg sm:text-xl lg:text-2xl mb-8 opacity-90 max-w-3xl mx-auto font-light leading-relaxed"
                 style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
               >
-                Configura tu cuenta y comienza a automatizar la gestión de clientes
-                en WhatsApp en minutos
+                Configura tu cuenta y comienza a potenciar tu negocio con un agente IA de WhatsApp en minutos
               </motion.p>
               
               <motion.div

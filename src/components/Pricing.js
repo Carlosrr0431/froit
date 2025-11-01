@@ -70,45 +70,45 @@ const Pricing = () => {
         >
           {/* Header */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
               <span className="text-gray-900 dark:text-white">Un plan </span>
               <span className="gradient-text">simple y claro</span>
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
+            <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg">
               Incluye todo lo esencial + microservicios opcionales
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Left: Main Plan Card */}
             <div className="lg:col-span-2">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 text-white h-full shadow-2xl"
+                className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white h-full shadow-2xl"
               >
-                <div className="flex items-start justify-between mb-6">
-                  <div>
-                    <h3 className="text-3xl font-bold mb-2">{basePlan.name}</h3>
-                    <p className="text-white/90 text-sm">{basePlan.description}</p>
+                <div className="flex flex-col sm:flex-row items-start justify-between mb-6 gap-4">
+                  <div className="flex-1">
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-2">{basePlan.name}</h3>
+                    <p className="text-white/90 text-sm sm:text-base">{basePlan.description}</p>
                   </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-3 text-right">
-                    <div className="text-4xl font-bold">${total}</div>
-                    <div className="text-white/90 text-sm">por mes</div>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2 sm:py-3 text-center sm:text-right flex-shrink-0">
+                    <div className="text-3xl sm:text-4xl font-bold">${total}</div>
+                    <div className="text-white/90 text-xs sm:text-sm">por mes</div>
                   </div>
                 </div>
 
-                <div className="space-y-4 mb-6">
+                <div className="space-y-3 sm:space-y-4 mb-6">
                   {basePlan.includes.map((item, i) => (
-                    <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-4">
                       <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Check className="w-4 h-4" />
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Check className="w-3 h-3 sm:w-4 sm:h-4" />
                         </div>
-                        <div>
-                          <div className="font-bold text-lg mb-1">{item.title}</div>
-                          <div className="text-white/80 text-sm">{item.detail}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-base sm:text-lg mb-1">{item.title}</div>
+                          <div className="text-white/80 text-xs sm:text-sm leading-relaxed">{item.detail}</div>
                         </div>
                       </div>
                     </div>
@@ -137,12 +137,12 @@ const Pricing = () => {
                 {/* CTA Button */}
                 <button
                   onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="w-full bg-white text-purple-600 hover:bg-gray-50 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  className="w-full bg-white text-purple-600 hover:bg-gray-50 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                 >
-                  <Sparkles className="w-5 h-5" />
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
                   Comenzar Ahora
                 </button>
-                <p className="text-center text-white/80 text-sm mt-3">
+                <p className="text-center text-white/80 text-xs sm:text-sm mt-3">
                   Prueba gratis por 14 días • Sin tarjeta de crédito
                 </p>
               </motion.div>
@@ -155,14 +155,14 @@ const Pricing = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
               >
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">
                   Microservicios
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
+                <p className="text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 text-xs sm:text-sm">
                   Agrega funcionalidades extra
                 </p>
                 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {microservices.map((service) => {
                     const Icon = service.icon;
                     const isSelected = selected.includes(service.id);
@@ -173,33 +173,33 @@ const Pricing = () => {
                         onClick={() => toggle(service.id)}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className={`w-full text-left p-5 rounded-2xl transition-all relative ${
+                        className={`w-full text-left p-4 sm:p-5 rounded-xl sm:rounded-2xl transition-all relative ${
                           isSelected
                             ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg'
                             : 'bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-md'
                         }`}
                       >
                         {isSelected && (
-                          <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
-                            <Check className="w-5 h-5 text-green-500" />
+                          <div className="absolute -top-2 -right-2 w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
+                            <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                           </div>
                         )}
                         
-                        <div className="flex items-start gap-3 mb-3">
-                          <div className={`p-2 rounded-lg ${
+                        <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
+                          <div className={`p-1.5 sm:p-2 rounded-lg ${
                             isSelected ? 'bg-white/20' : 'bg-purple-100 dark:bg-purple-900/30'
                           }`}>
-                            <Icon className={`w-6 h-6 ${
+                            <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${
                               isSelected ? 'text-white' : 'text-purple-600 dark:text-purple-400'
                             }`} />
                           </div>
-                          <div className="flex-1">
-                            <div className={`font-bold text-lg mb-1 ${
+                          <div className="flex-1 min-w-0">
+                            <div className={`font-bold text-base sm:text-lg mb-1 ${
                               isSelected ? 'text-white' : 'text-gray-900 dark:text-white'
                             }`}>
                               {service.name}
                             </div>
-                            <div className={`text-sm ${
+                            <div className={`text-xs sm:text-sm leading-tight ${
                               isSelected ? 'text-white/90' : 'text-gray-600 dark:text-gray-400'
                             }`}>
                               {service.description}
@@ -207,7 +207,7 @@ const Pricing = () => {
                           </div>
                         </div>
                         
-                        <div className={`text-2xl font-bold ${
+                        <div className={`text-xl sm:text-2xl font-bold ${
                           isSelected ? 'text-white' : 'text-gray-900 dark:text-white'
                         }`}>
                           +${service.price}/mes

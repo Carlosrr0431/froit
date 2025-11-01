@@ -7,13 +7,13 @@ const Services = () => {
   const mainServices = [
     {
       id: 'whatsapp-ia',
-      title: 'WhatsApp Automatizado con IA',
-      subtitle: 'Sistema RAG Inteligente',
-      description: 'Sistema de IA con Retrieval-Augmented Generation que busca información actualizada y específica de tu negocio antes de responder.',
+      title: 'WhatsApp IA con RAG',
+      subtitle: 'Sistema Inteligente de Respuestas',
+      description: 'Sistema inteligente que responde automáticamente con información actualizada de tu negocio usando Retrieval-Augmented Generation.',
       benefits: [
-        'Respuestas contextuales y personalizadas',
-        'Automatización inteligente 24/7',
-        'Aprende de tu base de conocimientos'
+        'Respuestas contextuales y personalizadas 24/7',
+        'Aprende de tu base de conocimientos',
+        'Captura y califica leads automáticamente'
       ],
       icon: Bot,
       gradient: 'from-blue-500 via-purple-500 to-pink-500',
@@ -23,11 +23,11 @@ const Services = () => {
       id: 'crm',
       title: 'CRM Conversacional',
       subtitle: 'Gestión Completa de Clientes',
-      description: 'Seguimiento completo de consultas, estados dentro del proceso de negocio e integración con Google Calendar.',
+      description: 'Seguimiento completo de consultas y estados de cada cliente integrado con tu flujo de trabajo.',
       benefits: [
         'Seguimiento de conversaciones en tiempo real',
-        'Estados personalizables del proceso',
-        'Sincronización con Google Calendar'
+        'Estados personalizables del proceso de ventas',
+        'Integración con Google Calendar para agendar'
       ],
       icon: MessageSquare,
       gradient: 'from-green-500 via-emerald-500 to-teal-500',
@@ -39,23 +39,26 @@ const Services = () => {
     {
       id: 'bulk',
       title: 'Mensajes Masivos',
-      description: 'Envíos programados de WhatsApp a múltiples contactos',
+      description: 'Envía campañas programadas a todos tus contactos',
       icon: Send,
-      color: 'from-violet-500 to-purple-500'
+      color: 'from-violet-500 to-purple-500',
+      price: '+$79/mes'
     },
     {
       id: 'notifications',
-      title: 'Notificaciones Automáticas',
-      description: 'Alertas por WhatsApp según eventos o triggers',
+      title: 'Notificaciones',
+      description: 'Alertas automáticas personalizadas por WhatsApp',
       icon: Bell,
-      color: 'from-orange-500 to-red-500'
+      color: 'from-orange-500 to-red-500',
+      price: '+$69/mes'
     },
     {
       id: 'social',
-      title: 'Publicación Multicanal',
+      title: 'Multi-Redes',
       description: 'Publica en todas tus redes desde un solo lugar',
       icon: Share2,
-      color: 'from-cyan-500 to-blue-500'
+      color: 'from-cyan-500 to-blue-500',
+      price: '+$89/mes'
     }
   ];
 
@@ -115,13 +118,13 @@ const Services = () => {
           <h2 className="text-4xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
             <span className="text-gray-900 dark:text-white">Todo lo que tu negocio necesita</span>
             <br />
-            <span className="gradient-text">para automatizar su comunicación</span>
+            <span className="gradient-text">con un agente IA de WhatsApp</span>
           </h2>
           
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Tecnología de punta que integra inteligencia artificial, automatización y gestión,
+            Agente IA inteligente + CRM personalizado + microservicios potentes,
             <br className="hidden md:block" />
-            diseñada específicamente para hacer crecer tu negocio
+            diseñados específicamente para hacer crecer tu negocio
           </p>
         </motion.div>
 
@@ -295,9 +298,12 @@ const Services = () => {
                     <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
                       {micro.title}
                     </h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                       {micro.description}
                     </p>
+                    <div className="text-xl font-bold text-gray-900 dark:text-white">
+                      {micro.price}
+                    </div>
                   </div>
                 </motion.div>
               );
