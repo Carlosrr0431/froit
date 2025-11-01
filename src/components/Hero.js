@@ -7,11 +7,28 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { ArrowRight, Sparkles, Rocket } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import AnimatedFroitLogo from "./AnimatedFroitLogo";
 
 const Hero = ({ isLogoInHeader = false }) => {
   const ref = useRef(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 640);
+    };
+    
+    // Set initial value
+    handleResize();
+    
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -287,32 +304,48 @@ const Hero = ({ isLogoInHeader = false }) => {
               </h1>
             </motion.div>
 
-            {/* Value Proposition - Better Mobile Text */}
+            {/* Value Proposition - Static on Mobile, Animated on Desktop */}
             <motion.div
               variants={itemVariants}
               className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-2 md:gap-3 max-w-3xl mx-auto px-4 sm:px-2"
             >
-              <motion.p 
-                className="text-xs sm:text-sm md:text-base lg:text-base text-slate-700 dark:text-gray-300 leading-tight font-light text-center sm:text-right flex-1 max-w-[240px] sm:max-w-[280px] md:max-w-[320px]"
-                style={{
-                  fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
-                }}
-                animate={{
-                  x: [0, 0, -12, -12, 0]
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: [0.4, 0, 0.2, 1],
-                  times: [0, 0.2, 0.5, 0.7, 1]
-                }}
-              >
-                Agente IA de WhatsApp con{" "}
-                <span className="text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text font-medium">
-                  CRM personalizado
-                </span>{" "}
-                para tu negocio
-              </motion.p>
+              {/* Primera frase - Sin animación en móvil */}
+              {!isDesktop ? (
+                <p 
+                  className="text-xs sm:text-sm md:text-base lg:text-base text-slate-700 dark:text-gray-300 leading-tight font-light text-center sm:text-right flex-1 max-w-[240px] sm:max-w-[280px] md:max-w-[320px]"
+                  style={{
+                    fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
+                  }}
+                >
+                  Agente IA de WhatsApp con{" "}
+                  <span className="text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text font-medium">
+                    CRM personalizado
+                  </span>{" "}
+                  para tu negocio
+                </p>
+              ) : (
+                <motion.p 
+                  className="text-xs sm:text-sm md:text-base lg:text-base text-slate-700 dark:text-gray-300 leading-tight font-light text-center sm:text-right flex-1 max-w-[240px] sm:max-w-[280px] md:max-w-[320px]"
+                  style={{
+                    fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
+                  }}
+                  animate={{
+                    x: [0, 0, -12, -12, 0]
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: [0.4, 0, 0.2, 1],
+                    times: [0, 0.2, 0.5, 0.7, 1]
+                  }}
+                >
+                  Agente IA de WhatsApp con{" "}
+                  <span className="text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text font-medium">
+                    CRM personalizado
+                  </span>{" "}
+                  para tu negocio
+                </motion.p>
+              )}
               
               <motion.div
                 className="relative flex items-center justify-center flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
@@ -371,26 +404,39 @@ const Hero = ({ isLogoInHeader = false }) => {
                 />
               </motion.div>
               
-              <motion.p 
-                className="text-xs sm:text-sm md:text-base lg:text-base text-slate-700 dark:text-gray-300 leading-tight font-light text-center sm:text-left flex-1 max-w-[240px] sm:max-w-[280px] md:max-w-[320px]"
-                style={{
-                  fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
-                }}
-                animate={{
-                  x: [0, 0, 12, 12, 0]
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: [0.4, 0, 0.2, 1],
-                  times: [0, 0.2, 0.5, 0.7, 1]
-                }}
-              >
-                Microservicios incluidos para{" "}
-                <span className="font-normal text-slate-700 dark:text-gray-300">
-                  mensajes masivos, notificaciones y publicación en todas tus redes sociales
-                </span>
-              </motion.p>
+              {/* Segunda frase - Sin animación en móvil */}
+              {!isDesktop ? (
+                <p 
+                  className="text-xs sm:text-sm md:text-base lg:text-base text-slate-700 dark:text-gray-300 leading-tight font-light text-center sm:text-left flex-1 max-w-[240px] sm:max-w-[280px] md:max-w-[320px]"
+                  style={{
+                    fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
+                  }}
+                >
+                  Mensajes masivos {" "}
+                  <span className="font-normal text-slate-700 dark:text-gray-300">, notificaciones y automatización en redes
+                  </span>
+                </p>
+              ) : (
+                <motion.p 
+                  className="text-xs sm:text-sm md:text-base lg:text-base text-slate-700 dark:text-gray-300 leading-tight font-light text-center sm:text-left flex-1 max-w-[240px] sm:max-w-[280px] md:max-w-[320px]"
+                  style={{
+                    fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
+                  }}
+                  animate={{
+                    x: [0, 0, 12, 12, 0]
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: [0.4, 0, 0.2, 1],
+                    times: [0, 0.2, 0.5, 0.7, 1]
+                  }}
+                >
+                  Mensajes masivos {" "}
+                  <span className="font-normal text-slate-700 dark:text-gray-300">, notificaciones y automatización en redes
+                  </span>
+                </motion.p>
+              )}
             </motion.div>
 
             {/* CTA Buttons - Better Mobile Size */}

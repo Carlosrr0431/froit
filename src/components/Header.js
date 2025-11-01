@@ -226,15 +226,7 @@ const Header = ({ isLogoInHeader = false }) => {
                 )}
               </AnimatePresence>
 
-              {/* CTA Button */}
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={() => scrollToSection('contact')}
-                className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/30"
-                style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
-              >
-                Demo
-              </motion.button>
+          
             </div>
           </div>
         </div>
