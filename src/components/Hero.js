@@ -7,12 +7,48 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { ArrowRight, Sparkles, Rocket } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import AnimatedFroitLogo from "./AnimatedFroitLogo";
 
 const Hero = ({ isLogoInHeader = false }) => {
   const ref = useRef(null);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [squarePositions, setSquarePositions] = useState([]);
+
+  // Función para generar posiciones aleatorias sin repetir
+  const generateRandomPositions = (count) => {
+    const positions = [];
+    const usedAreas = new Set();
+    
+    for (let i = 0; i < count; i++) {
+      let attempts = 0;
+      let position;
+      
+      do {
+        const left = Math.floor(Math.random() * 8) * 12 + 10; // Grid de 8 columnas
+        const top = Math.floor(Math.random() * 6) * 15 + 10; // Grid de 6 filas
+        const key = `${left}-${top}`;
+        
+        if (!usedAreas.has(key)) {
+          position = { left, top, key };
+          usedAreas.add(key);
+          break;
+        }
+        attempts++;
+      } while (attempts < 50);
+      
+      if (position) {
+        positions.push({
+          id: i,
+          left: position.left,
+          top: position.top,
+          delay: Math.random() * 4,
+        });
+      }
+    }
+    
+    return positions;
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,6 +65,29 @@ const Hero = ({ isLogoInHeader = false }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Inicializar posiciones de cuadrantes
+  useEffect(() => {
+    setSquarePositions(generateRandomPositions(5));
+    
+    // Cambiar posiciones cada 8 segundos
+    const interval = setInterval(() => {
+      setSquarePositions(generateRandomPositions(5));
+    }, 8000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Generar posiciones aleatorias para partículas móviles una sola vez
+  const mobileParticles = useMemo(() => 
+    Array.from({ length: 6 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 90 + 5,
+      top: Math.random() * 90 + 5,
+      duration: 5 + i * 0.5,
+      delay: i * 0.7,
+    })), []
+  );
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -41,8 +100,8 @@ const Hero = ({ isLogoInHeader = false }) => {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.12,
-        delayChildren: 0.1,
+        staggerChildren: typeof window !== 'undefined' && window.innerWidth < 640 ? 0.05 : 0.12,
+        delayChildren: typeof window !== 'undefined' && window.innerWidth < 640 ? 0 : 0.1,
       },
     },
   };
@@ -53,7 +112,7 @@ const Hero = ({ isLogoInHeader = false }) => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
+        duration: typeof window !== 'undefined' && window.innerWidth < 640 ? 0.3 : 0.5,
         ease: [0.6, -0.05, 0.01, 0.99],
       },
     },
@@ -90,11 +149,15 @@ const Hero = ({ isLogoInHeader = false }) => {
         </motion.div>
       )}
 
-      {/* Enhanced Background Effects - More Impactful */}
+      {/* Enhanced Background Effects - Optimized for Mobile */}
       <motion.div style={{ y, opacity }} className="absolute inset-0">
-        {/* Large animated gradient orbs - More dramatic */}
+        {/* Mobile: Solo 2 orbs estáticos con blur suave */}
+        <div className="sm:hidden absolute top-0 left-0 w-[300px] h-[300px] bg-gradient-to-r from-blue-500/15 to-cyan-500/15 dark:from-blue-500/10 dark:to-cyan-500/10 rounded-full filter blur-2xl"></div>
+        <div className="sm:hidden absolute bottom-0 right-0 w-[350px] h-[350px] bg-gradient-to-r from-purple-500/15 to-pink-500/15 dark:from-purple-500/10 dark:to-pink-500/10 rounded-full filter blur-2xl"></div>
+
+        {/* Desktop: Large animated gradient orbs */}
         <motion.div
-          className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-r from-blue-500/30 to-cyan-500/30 dark:from-blue-500/20 dark:to-cyan-500/20 rounded-full filter blur-3xl"
+          className="hidden sm:block absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-r from-blue-500/30 to-cyan-500/30 dark:from-blue-500/20 dark:to-cyan-500/20 rounded-full filter blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             x: [0, 50, 0],
@@ -108,7 +171,7 @@ const Hero = ({ isLogoInHeader = false }) => {
           }}
         />
         <motion.div
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/25 to-pink-500/25 dark:from-purple-500/15 dark:to-pink-500/15 rounded-full filter blur-3xl"
+          className="hidden sm:block absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/25 to-pink-500/25 dark:from-purple-500/15 dark:to-pink-500/15 rounded-full filter blur-3xl"
           animate={{
             scale: [1, 1.3, 1],
             x: [0, -30, 0],
@@ -123,7 +186,7 @@ const Hero = ({ isLogoInHeader = false }) => {
           }}
         />
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-r from-indigo-500/20 to-blue-500/20 dark:from-indigo-500/15 dark:to-blue-500/15 rounded-full filter blur-3xl"
+          className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-r from-indigo-500/20 to-blue-500/20 dark:from-indigo-500/15 dark:to-blue-500/15 rounded-full filter blur-3xl"
           animate={{
             scale: [1, 1.4, 1],
             rotate: [0, 180, 360],
@@ -136,9 +199,9 @@ const Hero = ({ isLogoInHeader = false }) => {
           }}
         />
 
-        {/* Animated wave effect */}
+        {/* Animated wave effect - Hidden on mobile */}
         <motion.div
-          className="absolute inset-0"
+          className="hidden sm:block absolute inset-0"
           animate={{
             backgroundPosition: ["0% 0%", "100% 100%"],
           }}
@@ -154,9 +217,9 @@ const Hero = ({ isLogoInHeader = false }) => {
           }}
         />
 
-        {/* Enhanced grid pattern with animation */}
+        {/* Grid pattern - Hidden on mobile */}
         <motion.div
-          className="absolute inset-0 opacity-10 dark:opacity-5"
+          className="hidden sm:block absolute inset-0 opacity-10 dark:opacity-5"
           animate={{
             opacity: [0.05, 0.15, 0.05],
           }}
@@ -186,11 +249,35 @@ const Hero = ({ isLogoInHeader = false }) => {
           </svg>
         </motion.div>
 
-        {/* Enhanced floating particles - More dynamic */}
+        {/* Mobile: 6 partículas con posiciones aleatorias */}
+        {mobileParticles.map((particle) => (
+          <motion.div
+            key={`mobile-particle-${particle.id}`}
+            className="sm:hidden absolute bg-blue-400/30 dark:bg-blue-400/15 rounded-full"
+            style={{
+              width: '3px',
+              height: '3px',
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+            }}
+            animate={{
+              y: [0, -50, 0],
+              opacity: [0.2, 0.6, 0.2],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              ease: "linear",
+              delay: particle.delay,
+            }}
+          />
+        ))}
+
+        {/* Desktop: Enhanced floating particles */}
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute bg-blue-400/40 dark:bg-blue-400/20 rounded-full"
+            className="hidden sm:block absolute bg-blue-400/40 dark:bg-blue-400/20 rounded-full"
             style={{
               width: `${Math.random() * 4 + 2}px`,
               height: `${Math.random() * 4 + 2}px`,
@@ -212,21 +299,52 @@ const Hero = ({ isLogoInHeader = false }) => {
           />
         ))}
 
-        {/* Glowing grid squares effect - Aligned with grid, slower and subtle */}
+        {/* Mobile: 5 cuadrantes con posiciones dinámicas que cambian */}
+        {squarePositions.map((square) => (
+          <motion.div
+            key={`mobile-square-${square.id}-${square.left}-${square.top}`}
+            className="sm:hidden absolute border border-blue-500/0 dark:border-blue-400/0 w-[40px] h-[40px]"
+            initial={{ 
+              left: `${square.left}%`,
+              top: `${square.top}%`,
+              opacity: 0 
+            }}
+            animate={{
+              opacity: 1,
+              borderColor: [
+                "rgba(59, 130, 246, 0)",
+                "rgba(59, 130, 246, 0.3)",
+                "rgba(59, 130, 246, 0)",
+              ],
+            }}
+            exit={{ opacity: 0 }}
+            transition={{
+              opacity: { duration: 0.5 },
+              borderColor: {
+                duration: 3.5,
+                repeat: Infinity,
+                delay: square.delay,
+                ease: "linear",
+                repeatDelay: 1.5,
+              }
+            }}
+          />
+        ))}
+
+        {/* Desktop: Glowing grid squares */}
         {[...Array(8)].map((_, i) => {
-          // Calcular posiciones que coincidan con el grid de 50x50
           const gridSize = 50;
-          const randomGridX = Math.floor(Math.random() * 20); // 20 columnas aproximadas
-          const randomGridY = Math.floor(Math.random() * 12); // 12 filas aproximadas
+          const randomGridX = Math.floor(Math.random() * 20);
+          const randomGridY = Math.floor(Math.random() * 12);
           const leftPosition = randomGridX * gridSize;
           const topPosition = randomGridY * gridSize;
-          const randomDelay = Math.random() * 8; // Mayor delay para que aparezcan más espaciados
-          const randomDuration = 4 + Math.random() * 3; // Duración más larga (4-7 segundos)
+          const randomDelay = Math.random() * 8;
+          const randomDuration = 4 + Math.random() * 3;
 
           return (
             <motion.div
               key={`square-${i}`}
-              className="absolute border border-blue-500/0 dark:border-blue-400/0"
+              className="hidden sm:block absolute border border-blue-500/0 dark:border-blue-400/0"
               style={{
                 left: `${leftPosition}px`,
                 top: `${topPosition}px`,
@@ -250,10 +368,9 @@ const Hero = ({ isLogoInHeader = false }) => {
                 repeat: Infinity,
                 delay: randomDelay,
                 ease: "easeInOut",
-                repeatDelay: 2, // Pausa de 2 segundos entre repeticiones
+                repeatDelay: 2,
               }}
             >
-              {/* Inner glow - más sutil */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-400/5 dark:to-purple-400/5"
                 animate={{
