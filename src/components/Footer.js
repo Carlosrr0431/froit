@@ -2,11 +2,11 @@
 
 import { motion } from 'framer-motion';
 import {
-  Bot,
   ArrowUp,
   Facebook,
   Instagram
 } from 'lucide-react';
+import AnimatedFroitLogo from './AnimatedFroitLogo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -93,11 +93,9 @@ const Footer = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-8 sm:mb-12"
           >
-            <div className="flex items-center justify-center mb-4 sm:mb-6">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-3">
-                <Bot className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl sm:text-2xl font-bold">FroIT</span>
+            <div className="flex items-center justify-center gap-4 mb-4 sm:mb-6">
+              <AnimatedFroitLogo isStatic className="w-24 sm:w-28 h-auto drop-shadow-lg" />
+        
             </div>
             
             <p className="text-gray-300 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base max-w-2xl mx-auto px-4">

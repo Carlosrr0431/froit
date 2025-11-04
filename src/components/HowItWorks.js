@@ -4,6 +4,10 @@ import { motion } from 'framer-motion';
 import { ArrowRight, MessageCircle, Bot, Settings, BarChart3, Clock, CheckCircle } from 'lucide-react';
 
 const HowItWorks = () => {
+  const scrollToContact = () => {
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const steps = [
     {
       number: 1,
@@ -366,6 +370,7 @@ const HowItWorks = () => {
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={scrollToContact}
                 className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center"
                 style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
               >
@@ -376,6 +381,7 @@ const HowItWorks = () => {
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={scrollToContact}
                 className="w-full sm:w-auto border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300"
                 style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
               >
