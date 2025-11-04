@@ -438,7 +438,7 @@ const Hero = ({ isLogoInHeader = false }) => {
                   <span className="text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text font-medium">
                     CRM personalizado
                   </span>{" "}
-                  para tu negocio
+           
                 </p>
               ) : (
                 <motion.p 
@@ -460,7 +460,7 @@ const Hero = ({ isLogoInHeader = false }) => {
                   <span className="text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text font-medium">
                     CRM personalizado
                   </span>{" "}
-                  para tu negocio
+                 
                 </motion.p>
               )}
               
@@ -529,8 +529,8 @@ const Hero = ({ isLogoInHeader = false }) => {
                     fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
                   }}
                 >
-                  Mensajes masivos {" "}
-                  <span className="font-normal text-slate-700 dark:text-gray-300">, notificaciones y automatización en redes
+                  Automatizaciones {" "}
+                  <span className="font-normal text-slate-700 dark:text-gray-300">en cada área de tu negocio
                   </span>
                 </p>
               ) : (
@@ -549,8 +549,8 @@ const Hero = ({ isLogoInHeader = false }) => {
                     times: [0, 0.2, 0.5, 0.7, 1]
                   }}
                 >
-                  Mensajes masivos {" "}
-                  <span className="font-normal text-slate-700 dark:text-gray-300">, notificaciones y automatización en redes
+                  Automatizaciones {" "}
+                  <span className="font-normal text-slate-700 dark:text-gray-300">en cada área de tu negocio
                   </span>
                 </motion.p>
               )}

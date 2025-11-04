@@ -9,7 +9,7 @@ const Contact = () => {
 
   return (
     <section id="contact" className="py-16 sm:py-20 bg-white dark:bg-gray-900 relative">
-      <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+  <div className="container mx-auto px-4 sm:px-6 max-w-5xl lg:max-w-6xl">
         {/* Header - Más minimalista */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -78,16 +78,24 @@ const Contact = () => {
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   className="overflow-hidden mt-4"
                 >
-                  <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-2 sm:p-4">
-                    <iframe 
-                      src="https://zcal.co/i/M4Qr-nrK?embed=1&embedType=iframe" 
-                      loading="lazy" 
-                      className="w-full rounded-lg"
-                      style={{ border: 'none', minHeight: '500px', height: '700px' }}
-                      id="zcal-invite" 
-                      scrolling="no"
-                      title="Agendar reunión"
-                    />
+                  <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl overflow-hidden">
+                    <div className="relative w-full max-w-[1100px] mx-auto">
+                      <iframe 
+                        src="https://zcal.co/i/M4Qr-nrK?embed=1&embedType=inline" 
+                        loading="lazy" 
+                        className="w-full"
+                        style={{ 
+                          border: 'none', 
+                          minHeight: '620px', 
+                          height: '680px',
+                          width: '100%'
+                        }}
+                        id="zcal-invite" 
+                        scrolling="no"
+                        title="Agendar reunión"
+                      />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 sm:h-16 bg-white" />
+                    </div>
                   </div>
                 </motion.div>
               )}

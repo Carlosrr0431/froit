@@ -2,13 +2,15 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Check, Sparkles, Zap, Shield, Share2 } from 'lucide-react';
+import { Check, Sparkles, Zap, Shield, Share2, Plus, Minus } from 'lucide-react';
 
 const Pricing = () => {
+  const [automationCount, setAutomationCount] = useState(0);
+  
   const basePlan = {
     name: "Plan Completo",
     price: 45,
-    description: "Todo lo que necesitas para automatizar y gestionar tu comunicación por WhatsApp",
+    description: "Todo lo que necesitas para automatizar y hacer crecer tu negocio",
     includes: [
       {
         title: "WhatsApp IA con RAG",
@@ -19,8 +21,9 @@ const Pricing = () => {
         detail: "Seguimiento completo de consultas y estados de cada cliente"
       },
       {
-        title: "Google Calendar",
-        detail: "Agenda reuniones directamente desde WhatsApp"
+        title: "Automatizaciones",
+        detail: "Automatiza cualquier proceso de tu negocio",
+        isAutomation: true
       }
     ]
   };
@@ -52,10 +55,20 @@ const Pricing = () => {
   const [selected, setSelected] = useState([]);
 
   const toggle = (id) => {
-    setSelected(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+    setSelected(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, i]);
   };
 
-  const total = basePlan.price + selected.reduce((sum, id) => {
+  const incrementAutomations = () => {
+    setAutomationCount(prev => prev + 1);
+  };
+
+  const decrementAutomations = () => {
+    setAutomationCount(prev => Math.max(0, prev - 1));
+  };
+
+  const automationPrice = automationCount * 15;
+
+  const total = basePlan.price + automationPrice + selected.reduce((sum, id) => {
     return sum + (microservices.find(s => s.id === id)?.price || 0);
   }, 0);
 
@@ -102,14 +115,44 @@ const Pricing = () => {
                 <div className="space-y-3 sm:space-y-4 mb-6">
                   {basePlan.includes.map((item, i) => (
                     <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-4">
-                      <div className="flex items-start gap-3">
-                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Check className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-3 flex-1 min-w-0">
+                          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <Check className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-bold text-base sm:text-lg mb-1">{item.title}</div>
+                            <div className="text-white/80 text-xs sm:text-sm leading-relaxed">{item.detail}</div>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-bold text-base sm:text-lg mb-1">{item.title}</div>
-                          <div className="text-white/80 text-xs sm:text-sm leading-relaxed">{item.detail}</div>
-                        </div>
+                        
+                        {/* Contador de automatizaciones - lado derecho */}
+                        {item.isAutomation && (
+                          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                            <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-lg px-1.5 py-1">
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={decrementAutomations}
+                                className="w-6 h-6 bg-white/20 hover:bg-white/30 rounded-md flex items-center justify-center transition-colors"
+                              >
+                                <Minus className="w-3.5 h-3.5" />
+                              </motion.button>
+                              <span className="w-7 text-center font-bold text-base">{automationCount}</span>
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={incrementAutomations}
+                                className="w-6 h-6 bg-white/20 hover:bg-white/30 rounded-md flex items-center justify-center transition-colors"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                              </motion.button>
+                            </div>
+                            <span className="text-white/90 text-xs font-medium bg-white/10 px-2 py-0.5 rounded-md">
+                              ${automationPrice}/mes
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -142,9 +185,7 @@ const Pricing = () => {
                   <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
                   Comenzar Ahora
                 </button>
-                <p className="text-center text-white/80 text-xs sm:text-sm mt-3">
-                  Prueba gratis por 14 días • Sin tarjeta de crédito
-                </p>
+            
               </motion.div>
             </div>
 

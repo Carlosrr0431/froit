@@ -6,6 +6,20 @@ import { Bot, MessageSquare, Calendar, Send, Bell, Share2, Sparkles, Zap, Target
 const Services = () => {
   const mainServices = [
     {
+      id: 'automatizaciones-ia',
+      title: 'Automatizaciones con IA',
+      subtitle: 'Ahorra Tiempo y Recursos',
+      description: 'Automatiza todo tipo de necesidades en tu negocio para ahorrar tiempo y recursos valiosos.',
+      benefits: [
+        'Automatiza tareas repetitivas del día a día',
+        'Reduce costos operativos significativamente',
+        'Libera tiempo para enfocarte en crecer'
+      ],
+      icon: Zap,
+      gradient: 'from-orange-500 via-amber-500 to-yellow-500',
+      accentColor: 'orange'
+    },
+    {
       id: 'whatsapp-ia',
       title: 'WhatsApp IA con RAG',
       subtitle: 'Sistema Inteligente de Respuestas',
@@ -129,7 +143,7 @@ const Services = () => {
         </motion.div>
 
         {/* Main Services */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16 max-w-6xl mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16 max-w-7xl mx-auto px-4">
           {mainServices.map((service, index) => {
             const Icon = service.icon;
             return (
@@ -195,7 +209,15 @@ const Services = () => {
                       viewport={{ once: true }}
                       className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700"
                     >
-                      <button className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:gap-3 transition-all duration-300">
+                      <button 
+                        onClick={() => {
+                          const contactSection = document.getElementById('contact');
+                          if (contactSection) {
+                            contactSection.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        }}
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:gap-3 transition-all duration-300"
+                      >
                         Explorar más
                         <ArrowRight className="w-4 h-4" />
                       </button>

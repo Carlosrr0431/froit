@@ -1,17 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { 
-  Bot, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Twitter, 
-  Linkedin, 
-  Youtube, 
-  Instagram,
+import {
+  Bot,
   ArrowUp,
-  MessageCircle
+  Facebook,
+  Instagram
 } from 'lucide-react';
 
 const Footer = () => {
@@ -57,27 +51,15 @@ const Footer = () => {
 
   const socialLinks = [
     {
-      name: 'Twitter',
-      icon: Twitter,
-      href: 'https://twitter.com/froit_ai',
-      color: 'hover:text-blue-400'
-    },
-    {
-      name: 'LinkedIn',
-      icon: Linkedin,
-      href: 'https://linkedin.com/company/froit',
-      color: 'hover:text-blue-600'
-    },
-    {
-      name: 'YouTube',
-      icon: Youtube,
-      href: 'https://youtube.com/froit',
-      color: 'hover:text-red-500'
+      name: 'Facebook',
+      icon: Facebook,
+      href: 'https://www.facebook.com/share/17LHmPz3Ne/',
+      color: 'hover:text-blue-500'
     },
     {
       name: 'Instagram',
       icon: Instagram,
-      href: 'https://instagram.com/froit_ai',
+      href: 'https://www.instagram.com/froit.ia?igsh=bXBzZm05Z2R2a3J5',
       color: 'hover:text-pink-500'
     }
   ];
@@ -120,7 +102,7 @@ const Footer = () => {
             
             <p className="text-gray-300 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base max-w-2xl mx-auto px-4">
               Transformamos la atención al cliente con inteligencia artificial avanzada. 
-              Agente IA de WhatsApp + CRM personalizado + microservicios potentes para tu negocio.
+              Agente IA de WhatsApp + CRM personalizado + Automatizaciones que tu negocio necesita.
             </p>
 
             {/* Contact Info */}
