@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 const AnimatedFroitLogo = ({ className = "", isStatic = false }) => {
   const [currentCycle, setCurrentCycle] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
     if (isStatic) {
@@ -17,6 +18,15 @@ const AnimatedFroitLogo = ({ className = "", isStatic = false }) => {
 
     return () => clearInterval(interval);
   }, [isStatic]);
+
+  useEffect(() => {
+    // Marcar como animado después de la primera animación
+    const timer = setTimeout(() => {
+      setHasAnimated(true);
+    }, 1200); // Duración de la animación inicial
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Tres posiciones fijas en el logo
   const position1 = { x: 0, y: 109.4 };     // Verde - inferior izquierda
@@ -79,15 +89,23 @@ const AnimatedFroitLogo = ({ className = "", isStatic = false }) => {
         </style>
       </defs>
       
-      {/* Texto FROIT - estático sin animación */}
-      <g>
+      {/* Texto FROIT - con animación de entrada una sola vez */}
+      <motion.g
+        initial={{ y: -30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{
+          duration: 0.8,
+          ease: [0.34, 1.56, 0.64, 1], // Bounce out
+          delay: 0.3
+        }}
+      >
         <path className="cls-2" d="M63.4,81.2c-1.9,1.1-3.5,2.6-4.6,4.5-1.1,1.9-1.7,4.1-1.7,6.6v36.4h6.8v-20.5h21v-6h-21v-10c0-2,.6-3.6,1.9-4.9,1.2-1.3,2.9-1.9,5-1.9h16.7v-6h-17.5c-2.4,0-4.6.6-6.6,1.7Z"/>
         <path className="cls-2" d="M97.6,95.6c-1.8,1.8-2.7,4.3-2.7,7.5v25.7h6.5v-25.3c0-1.6.4-2.8,1.3-3.7.9-.9,2.1-1.3,3.6-1.3h6.2v-5.6h-7.4c-3.2,0-5.7.9-7.5,2.7Z"/>
         <path className="cls-2" d="M145,94.6c-2.8-1.7-6.1-2.5-9.7-2.5s-6.9.8-9.7,2.5c-2.8,1.7-5,3.9-6.7,6.8-1.6,2.8-2.5,6-2.5,9.5s.8,6.7,2.5,9.5c1.6,2.8,3.9,5.1,6.7,6.8s6,2.5,9.7,2.5,6.9-.8,9.7-2.5,5.1-3.9,6.7-6.8c1.6-2.8,2.4-6,2.4-9.5s-.8-6.7-2.4-9.5c-1.6-2.8-3.8-5.1-6.7-6.8ZM146.1,117.6c-1,2-2.5,3.6-4.3,4.7-1.8,1.2-4,1.8-6.4,1.8s-4.7-.6-6.5-1.8c-1.9-1.2-3.3-2.8-4.3-4.7-1-2-1.5-4.2-1.5-6.7s.5-4.7,1.5-6.7c1-2,2.5-3.6,4.3-4.7,1.9-1.2,4-1.8,6.5-1.8s4.6.6,6.4,1.8c1.8,1.2,3.3,2.8,4.3,4.7,1,2,1.5,4.2,1.5,6.7s-.5,4.7-1.5,6.7Z"/>
         <path className="cls-2" d="M165.7,78.5c-1.2,0-2.2.4-3.1,1.3-.9.9-1.3,1.9-1.3,3.1s.4,2.2,1.3,3.1c.9.9,1.9,1.3,3.1,1.3s2.2-.4,3.1-1.3c.9-.9,1.3-1.9,1.3-3.1s-.4-2.2-1.3-3.1c-.9-.9-1.9-1.3-3.1-1.3Z"/>
         <rect className="cls-2" x="162.4" y="92.9" width="6.5" height="35.9"/>
         <path className="cls-2" d="M200,98.5v-5.6h-12.3v-9h-6.5v9h-6.2v5.6h6.2v20.1c0,3.1.9,5.6,2.7,7.5,1.8,1.8,4.3,2.7,7.5,2.7h8.4v-5.6h-7.2c-1.5,0-2.8-.5-3.6-1.4s-1.3-2.1-1.3-3.7v-19.7h12.3Z"/>
-      </g>
+      </motion.g>
       
       {/* Cuadrados animados con patrones aleatorios y dinámicos */}
       <g>
