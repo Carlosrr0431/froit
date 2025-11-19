@@ -2,8 +2,14 @@
 // Webhook para recibir eventos de Brevo (SendinBlue)
 // Maneja: deliveries, opens, clicks, bounces, spam, unsubscribes
 
-import { supabaseClient as supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+
+// Crear cliente de Supabase directamente con las variables de entorno
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON
+)
 
 // Configuración
 const WEBHOOK_SECRET = process.env.BREVO_WEBHOOK_SECRET || '' // Opcional: para validar firma
@@ -84,15 +90,6 @@ async function updateContactMetrics(contactId) {
 export async function POST(request) {
     try {
         log('📧 Webhook recibido de Brevo')
-        
-        // Verificar que supabase esté disponible
-        if (!supabase) {
-            log('❌ Supabase client no disponible')
-            return NextResponse.json({ 
-                success: false, 
-                error: 'Database connection not available' 
-            }, { status: 500 })
-        }
         
         // Leer el body
         const body = await request.json()
