@@ -4,21 +4,27 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON
 
-if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Faltan variables de entorno de Supabase. Verifica NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON')
+// Cliente de Supabase (se creará solo si hay variables de entorno)
+let supabaseClient = null
+
+if (supabaseUrl && supabaseAnonKey) {
+    supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+        },
+        realtime: {
+            params: {
+                eventsPerSecond: 10
+            }
+        }
+    })
+} else if (typeof window !== 'undefined') {
+    // Solo mostrar error en el cliente, no en build
+    console.warn('⚠️ Faltan variables de entorno de Supabase. Verifica NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON')
 }
 
-export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-    },
-    realtime: {
-        params: {
-            eventsPerSecond: 10
-        }
-    }
-})
+export { supabaseClient }
 
 // Helper para verificar conexión
 export async function testSupabaseConnection() {
