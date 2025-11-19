@@ -2,13 +2,8 @@
 // Webhook para recibir eventos de Brevo (SendinBlue)
 // Maneja: deliveries, opens, clicks, bounces, spam, unsubscribes
 
-import { createClient } from '@supabase/supabase-js'
+import { supabaseClient as supabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
-
-// Configurar cliente de Supabase
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 // Configuración
 const WEBHOOK_SECRET = process.env.BREVO_WEBHOOK_SECRET || '' // Opcional: para validar firma
