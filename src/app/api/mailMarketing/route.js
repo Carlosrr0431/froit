@@ -5,11 +5,18 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-// Crear cliente de Supabase directamente con las variables de entorno
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON
-)
+// Función para obtener el cliente de Supabase (lazy initialization)
+function getSupabaseClient() {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+        console.error('⚠️ Supabase credentials missing')
+        return null
+    }
+    
+    return createClient(supabaseUrl, supabaseAnonKey)
+}
 
 // Configuración
 const WEBHOOK_SECRET = process.env.BREVO_WEBHOOK_SECRET || '' // Opcional: para validar firma
@@ -54,6 +61,9 @@ function parseUserAgent(userAgent) {
 
 // Helper: Actualizar métricas de campaña
 async function updateCampaignMetrics(campaignId) {
+    const supabase = getSupabaseClient()
+    if (!supabase) return
+    
     try {
         const { error } = await supabase.rpc('update_campaign_metrics', {
             p_campaign_id: campaignId
@@ -71,6 +81,9 @@ async function updateCampaignMetrics(campaignId) {
 
 // Helper: Actualizar métricas de contacto
 async function updateContactMetrics(contactId) {
+    const supabase = getSupabaseClient()
+    if (!supabase) return
+    
     try {
         const { error } = await supabase.rpc('update_contact_metrics', {
             p_contact_id: contactId
@@ -88,6 +101,16 @@ async function updateContactMetrics(contactId) {
 
 // Handler principal del webhook
 export async function POST(request) {
+    const supabase = getSupabaseClient()
+    
+    if (!supabase) {
+        console.error('❌ Supabase client not available')
+        return NextResponse.json({ 
+            success: false, 
+            error: 'Database connection not available' 
+        }, { status: 500 })
+    }
+    
     try {
         log('📧 Webhook recibido de Brevo')
         
