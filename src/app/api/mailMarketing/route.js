@@ -7,11 +7,19 @@ import { NextResponse } from 'next/server'
 
 // Función para obtener el cliente de Supabase (lazy initialization)
 function getSupabaseClient() {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON
+    // En producción (Vercel), las API routes NO tienen acceso a NEXT_PUBLIC_*
+    // Usar variables sin prefijo que se configuran en Vercel Dashboard
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON
+    
+    console.log('🔍 Verificando env vars:', {
+        hasSupabaseUrl: !!supabaseUrl,
+        hasSupabaseKey: !!supabaseAnonKey,
+        urlPrefix: supabaseUrl?.substring(0, 30)
+    })
     
     if (!supabaseUrl || !supabaseAnonKey) {
-        console.error('⚠️ Supabase credentials missing')
+        console.error('⚠️ Supabase credentials missing. Add SUPABASE_URL and SUPABASE_ANON_KEY to Vercel env vars')
         return null
     }
     
