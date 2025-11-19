@@ -5,11 +5,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON
-)
-
 /**
  * Webhook de Brevo para tracking de emails
  * Eventos soportados:
@@ -24,6 +19,12 @@ const supabase = createClient(
  * - unsubscribe: Usuario se dio de baja
  */
 export async function POST(request) {
+  // Crear cliente Supabase dentro de la función para evitar errores de build
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON
+  )
+  
   try {
     const body = await request.json()
     
@@ -224,6 +225,12 @@ export async function POST(request) {
  */
 async function actualizarEstadisticasCampaña(campaignId) {
   if (!campaignId) return
+
+  // Crear cliente dentro de la función
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON
+  )
 
   try {
     // Obtener estadísticas agregadas
