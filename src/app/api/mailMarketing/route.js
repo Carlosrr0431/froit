@@ -5,408 +5,270 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-// Función para obtener el cliente de Supabase (lazy initialization)
-function getSupabaseClient() {
-    // En producción (Vercel), las API routes NO tienen acceso a NEXT_PUBLIC_*
-    // Usar variables sin prefijo que se configuran en Vercel Dashboard
-    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON
-    
-    console.log('🔍 Verificando env vars:', {
-        hasSupabaseUrl: !!supabaseUrl,
-        hasSupabaseKey: !!supabaseAnonKey,
-        urlPrefix: supabaseUrl?.substring(0, 30)
-    })
-    
-    if (!supabaseUrl || !supabaseAnonKey) {
-        console.error('⚠️ Supabase credentials missing. Add SUPABASE_URL and SUPABASE_ANON_KEY to Vercel env vars')
-        return null
-    }
-    
-    return createClient(supabaseUrl, supabaseAnonKey)
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON
+)
 
-// Configuración
-const WEBHOOK_SECRET = process.env.BREVO_WEBHOOK_SECRET || '' // Opcional: para validar firma
-const DEBUG_MODE = process.env.NODE_ENV === 'development'
-
-// Helper: Log con timestamp
-function log(message, data = null) {
-    const timestamp = new Date().toISOString()
-    console.log(`[${timestamp}] [Brevo Webhook]`, message)
-    if (data && DEBUG_MODE) {
-        console.log(JSON.stringify(data, null, 2))
-    }
-}
-
-// Helper: Extraer información del user agent
-function parseUserAgent(userAgent) {
-    if (!userAgent) return { dispositivo: 'desconocido', navegador: 'desconocido', sistema_operativo: 'desconocido' }
-    
-    // Detectar dispositivo
-    let dispositivo = 'desktop'
-    if (/mobile/i.test(userAgent)) dispositivo = 'mobile'
-    else if (/tablet/i.test(userAgent)) dispositivo = 'tablet'
-    
-    // Detectar navegador
-    let navegador = 'desconocido'
-    if (/chrome/i.test(userAgent) && !/edg/i.test(userAgent)) navegador = 'Chrome'
-    else if (/safari/i.test(userAgent) && !/chrome/i.test(userAgent)) navegador = 'Safari'
-    else if (/firefox/i.test(userAgent)) navegador = 'Firefox'
-    else if (/edg/i.test(userAgent)) navegador = 'Edge'
-    else if (/opera/i.test(userAgent)) navegador = 'Opera'
-    
-    // Detectar sistema operativo
-    let sistema_operativo = 'desconocido'
-    if (/windows/i.test(userAgent)) sistema_operativo = 'Windows'
-    else if (/mac os/i.test(userAgent)) sistema_operativo = 'MacOS'
-    else if (/linux/i.test(userAgent)) sistema_operativo = 'Linux'
-    else if (/android/i.test(userAgent)) sistema_operativo = 'Android'
-    else if (/ios|iphone|ipad/i.test(userAgent)) sistema_operativo = 'iOS'
-    
-    return { dispositivo, navegador, sistema_operativo }
-}
-
-// Helper: Actualizar métricas de campaña
-async function updateCampaignMetrics(campaignId) {
-    const supabase = getSupabaseClient()
-    if (!supabase) return
-    
-    try {
-        const { error } = await supabase.rpc('update_campaign_metrics', {
-            p_campaign_id: campaignId
-        })
-        
-        if (error) {
-            log(`Error actualizando métricas de campaña ${campaignId}:`, error)
-        } else {
-            log(`✅ Métricas actualizadas para campaña ${campaignId}`)
-        }
-    } catch (err) {
-        log(`Error en updateCampaignMetrics:`, err)
-    }
-}
-
-// Helper: Actualizar métricas de contacto
-async function updateContactMetrics(contactId) {
-    const supabase = getSupabaseClient()
-    if (!supabase) return
-    
-    try {
-        const { error } = await supabase.rpc('update_contact_metrics', {
-            p_contact_id: contactId
-        })
-        
-        if (error) {
-            log(`Error actualizando métricas de contacto ${contactId}:`, error)
-        } else {
-            log(`✅ Métricas actualizadas para contacto ${contactId}`)
-        }
-    } catch (err) {
-        log(`Error en updateContactMetrics:`, err)
-    }
-}
-
-// Handler principal del webhook
+/**
+ * Webhook de Brevo para tracking de emails
+ * Eventos soportados:
+ * - request: Email enviado
+ * - delivered: Email entregado
+ * - opened: Email abierto
+ * - click: Link clickeado
+ * - hard_bounce: Rebote permanente
+ * - soft_bounce: Rebote temporal
+ * - blocked: Email bloqueado
+ * - spam: Marcado como spam
+ * - unsubscribe: Usuario se dio de baja
+ */
 export async function POST(request) {
-    const supabase = getSupabaseClient()
+  try {
+    const body = await request.json()
     
-    if (!supabase) {
-        console.error('❌ Supabase client not available')
-        return NextResponse.json({ 
-            success: false, 
-            error: 'Database connection not available' 
-        }, { status: 500 })
+    console.log('📧 Webhook de Brevo recibido:', JSON.stringify(body, null, 2))
+
+    const { event, email, 'message-id': messageId, date, tag, tags } = body
+
+    if (!email) {
+      console.error('❌ Email no proporcionado en webhook')
+      return NextResponse.json({ error: 'Email requerido' }, { status: 400 })
     }
+
+    // Buscar el envío en la base de datos por email
+    const { data: envios, error: errorBusqueda } = await supabase
+      .from('froit_email_sends')
+      .select('*')
+      .eq('email', email)
+      .order('created_at', { ascending: false })
+      .limit(1)
+
+    if (errorBusqueda) {
+      console.error('Error buscando envío:', errorBusqueda)
+      return NextResponse.json({ error: 'Error en BD' }, { status: 500 })
+    }
+
+    if (!envios || envios.length === 0) {
+      console.warn(`⚠️ No se encontró registro para email: ${email}`)
+      // Aún así retornamos 200 para que Brevo no reintente
+      return NextResponse.json({ message: 'Email no encontrado pero webhook procesado' })
+    }
+
+    const envio = envios[0]
+    console.log(`✅ Envío encontrado: ${envio.id} - Estado actual: ${envio.estado}`)
+
+    // Procesar según el tipo de evento
+    let updateData = {
+      updated_at: new Date().toISOString()
+    }
+
+    switch (event) {
+      case 'request':
+        // Email enviado (solicitado)
+        updateData.estado = 'enviado'
+        updateData.fecha_envio = new Date(date).toISOString()
+        console.log(`📤 Email enviado: ${email}`)
+        break
+
+      case 'delivered':
+        // Email entregado
+        updateData.estado = 'enviado'
+        updateData.fecha_envio = new Date(date).toISOString()
+        console.log(`✅ Email entregado: ${email}`)
+        break
+
+      case 'opened':
+      case 'unique_opened':
+        // Email abierto
+        updateData.abierto = true
+        updateData.cantidad_aperturas = (envio.cantidad_aperturas || 0) + 1
+        
+        if (!envio.fecha_apertura) {
+          updateData.fecha_apertura = new Date(date).toISOString()
+        }
+        
+        console.log(`👁️ Email abierto: ${email} (Total: ${(envio.cantidad_aperturas || 0) + 1})`)
+        break
+
+      case 'click':
+      case 'unique_click':
+        // Link clickeado
+        updateData.click = true
+        updateData.cantidad_clicks = (envio.cantidad_clicks || 0) + 1
+        
+        if (!envio.fecha_primer_click) {
+          updateData.fecha_primer_click = new Date(date).toISOString()
+        }
+
+        // Guardar el link clickeado si viene en el body
+        if (body.link) {
+          const urlsActuales = envio.urls_clickeadas || []
+          if (!urlsActuales.includes(body.link)) {
+            updateData.urls_clickeadas = [...urlsActuales, body.link]
+          }
+        }
+        
+        console.log(`🖱️ Link clickeado: ${email} (Total: ${(envio.cantidad_clicks || 0) + 1})`)
+        break
+
+      case 'hard_bounce':
+        // Rebote permanente (email inválido)
+        updateData.estado = 'bounce'
+        updateData.bounce = true
+        updateData.bounce_type = 'hard'
+        updateData.bounce_reason = body.reason || 'Hard bounce - Email inválido'
+        
+        // Marcar contacto como bounce en la tabla de contactos
+        await supabase
+          .from('froit_email_contacts')
+          .update({ estado: 'bounce' })
+          .eq('email', email)
+        
+        console.log(`⛔ Hard bounce: ${email} - ${body.reason}`)
+        break
+
+      case 'soft_bounce':
+        // Rebote temporal (buzón lleno, servidor temporal no disponible)
+        updateData.bounce = true
+        updateData.bounce_type = 'soft'
+        updateData.bounce_reason = body.reason || 'Soft bounce - Temporal'
+        console.log(`⚠️ Soft bounce: ${email} - ${body.reason}`)
+        break
+
+      case 'blocked':
+        // Email bloqueado
+        updateData.estado = 'rechazado'
+        updateData.error_mensaje = body.reason || 'Email bloqueado'
+        console.log(`🚫 Email bloqueado: ${email} - ${body.reason}`)
+        break
+
+      case 'spam':
+        // Marcado como spam
+        updateData.spam_report = true
+        
+        // Marcar contacto como spam
+        await supabase
+          .from('froit_email_contacts')
+          .update({ estado: 'spam' })
+          .eq('email', email)
+        
+        console.log(`🚨 Marcado como spam: ${email}`)
+        break
+
+      case 'unsubscribe':
+        // Usuario se dio de baja
+        updateData.unsubscribed = true
+        
+        // Marcar contacto como unsubscribed
+        await supabase
+          .from('froit_email_contacts')
+          .update({ estado: 'unsubscribed' })
+          .eq('email', email)
+        
+        console.log(`👋 Usuario se dio de baja: ${email}`)
+        break
+
+      case 'invalid_email':
+        // Email inválido
+        updateData.estado = 'fallido'
+        updateData.error_mensaje = 'Email inválido'
+        
+        await supabase
+          .from('froit_email_contacts')
+          .update({ estado: 'bounce' })
+          .eq('email', email)
+        
+        console.log(`❌ Email inválido: ${email}`)
+        break
+
+      default:
+        console.log(`ℹ️ Evento no manejado: ${event}`)
+        return NextResponse.json({ message: 'Evento recibido pero no procesado' })
+    }
+
+    // Actualizar el registro del envío
+    const { error: errorUpdate } = await supabase
+      .from('froit_email_sends')
+      .update(updateData)
+      .eq('id', envio.id)
+
+    if (errorUpdate) {
+      console.error('Error actualizando envío:', errorUpdate)
+      return NextResponse.json({ error: 'Error actualizando' }, { status: 500 })
+    }
+
+    // Actualizar estadísticas de la campaña
+    await actualizarEstadisticasCampaña(envio.campaign_id)
+
+    console.log(`✅ Webhook procesado exitosamente para ${email}`)
     
-    try {
-        log('📧 Webhook recibido de Brevo')
-        
-        // Leer el body
-        const body = await request.json()
-        log('Body recibido:', body)
-        
-        const event = body.event || body.Event
-        const email = body.email || body.Email
-        const messageId = body['message-id'] || body.MessageId || body.messageId
-        const tags = body.tags || body.Tags || []
-        
-        if (!event || !email) {
-            log('❌ Evento inválido: falta event o email')
-            return NextResponse.json({ 
-                success: false, 
-                error: 'Evento inválido: se requiere event y email' 
-            }, { status: 400 })
-        }
-        
-        log(`Procesando evento: ${event} para ${email}`)
-        
-        // Extraer campaign_id de los tags
-        let campaignId = null
-        const campaignTag = tags.find(tag => tag.startsWith('campaign-'))
-        if (campaignTag) {
-            campaignId = campaignTag.replace('campaign-', '')
-        }
-        
-        // Buscar el registro de envío
-        let query = supabase
-            .from('froit_email_sends')
-            .select('*')
-            .eq('email', email.toLowerCase())
-        
-        if (messageId) {
-            query = query.eq('brevo_message_id', messageId)
-        } else if (campaignId) {
-            query = query.eq('campaign_id', campaignId)
-        }
-        
-        query = query.order('created_at', { ascending: false }).limit(1)
-        
-        const { data: sends, error: searchError } = await query
-        
-        if (searchError) {
-            log('❌ Error buscando envío:', searchError)
-            return NextResponse.json({ 
-                success: false, 
-                error: 'Error buscando registro de envío' 
-            }, { status: 500 })
-        }
-        
-        if (!sends || sends.length === 0) {
-            log(`⚠️ No se encontró registro de envío para ${email}`)
-            return NextResponse.json({ 
-                success: true, 
-                message: 'Registro no encontrado, ignorando evento' 
-            }, { status: 200 })
-        }
-        
-        const sendRecord = sends[0]
-        log(`✅ Registro encontrado: ${sendRecord.id}`)
-        
-        // Preparar actualización según el tipo de evento
-        let updateData = {
-            updated_at: new Date().toISOString()
-        }
-        
-        // Guardar message ID si no existe
-        if (messageId && !sendRecord.brevo_message_id) {
-            updateData.brevo_message_id = messageId
-        }
-        
-        // Procesar según tipo de evento
-        switch (event.toLowerCase()) {
-            case 'request':
-            case 'delivered':
-            case 'delivery':
-                log('✉️ Email entregado correctamente')
-                updateData.estado = 'enviado'
-                updateData.fecha_envio = new Date().toISOString()
-                
-                // Incrementar contador diario
-                await supabase.rpc('increment_email_counter', { cantidad: 1 })
-                break
-                
-            case 'open':
-            case 'opened':
-            case 'unique_opened':
-                log('👀 Email abierto')
-                const ipApertura = body.ip || body.IP
-                const userAgent = body['user-agent'] || body.UserAgent || body.userAgent
-                const deviceInfo = parseUserAgent(userAgent)
-                
-                updateData.abierto = true
-                updateData.cantidad_aperturas = (sendRecord.cantidad_aperturas || 0) + 1
-                updateData.ultima_apertura = new Date().toISOString()
-                
-                if (!sendRecord.fecha_apertura) {
-                    updateData.fecha_apertura = new Date().toISOString()
-                }
-                
-                if (ipApertura) updateData.ip_apertura = ipApertura
-                if (userAgent) updateData.user_agent_apertura = userAgent
-                if (deviceInfo.dispositivo) updateData.dispositivo = deviceInfo.dispositivo
-                if (deviceInfo.navegador) updateData.navegador = deviceInfo.navegador
-                if (deviceInfo.sistema_operativo) updateData.sistema_operativo = deviceInfo.sistema_operativo
-                break
-                
-            case 'click':
-            case 'clicked':
-            case 'unique_clicked':
-                log('🖱️ Click en enlace')
-                const clickedUrl = body.link || body.url || body.URL
-                
-                updateData.click = true
-                updateData.cantidad_clicks = (sendRecord.cantidad_clicks || 0) + 1
-                updateData.ultimo_click = new Date().toISOString()
-                
-                if (!sendRecord.fecha_primer_click) {
-                    updateData.fecha_primer_click = new Date().toISOString()
-                }
-                
-                // Agregar URL clickeada al array
-                if (clickedUrl) {
-                    const urlsActuales = sendRecord.urls_clickeadas || []
-                    if (!urlsActuales.includes(clickedUrl)) {
-                        updateData.urls_clickeadas = [...urlsActuales, clickedUrl]
-                    }
-                }
-                
-                // Si hizo click, automáticamente lo marcamos como abierto
-                if (!sendRecord.abierto) {
-                    updateData.abierto = true
-                    updateData.cantidad_aperturas = 1
-                    updateData.fecha_apertura = new Date().toISOString()
-                    updateData.ultima_apertura = new Date().toISOString()
-                }
-                break
-                
-            case 'bounce':
-            case 'hard_bounce':
-            case 'soft_bounce':
-            case 'blocked':
-                log('🚫 Bounce detectado')
-                const bounceReason = body.reason || body.Reason || 'No especificado'
-                const bounceType = event.toLowerCase().includes('hard') ? 'hard' : 
-                                 event.toLowerCase().includes('soft') ? 'soft' : 'blocked'
-                
-                updateData.bounce = true
-                updateData.bounce_type = bounceType
-                updateData.fecha_bounce = new Date().toISOString()
-                updateData.bounce_reason = bounceReason
-                updateData.estado = 'bounce'
-                
-                // Actualizar estado del contacto
-                if (bounceType === 'hard') {
-                    const { error: contactError } = await supabase
-                        .from('froit_email_contacts')
-                        .update({ 
-                            estado: 'bounce',
-                            updated_at: new Date().toISOString()
-                        })
-                        .eq('email', email.toLowerCase())
-                    
-                    if (contactError) {
-                        log('Error actualizando estado de contacto:', contactError)
-                    }
-                }
-                break
-                
-            case 'spam':
-            case 'complaint':
-                log('⚠️ Reporte de spam')
-                updateData.spam_report = true
-                updateData.fecha_spam_report = new Date().toISOString()
-                
-                // Actualizar estado del contacto
-                const { error: spamContactError } = await supabase
-                    .from('froit_email_contacts')
-                    .update({ 
-                        estado: 'spam',
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('email', email.toLowerCase())
-                
-                if (spamContactError) {
-                    log('Error actualizando estado de contacto (spam):', spamContactError)
-                }
-                break
-                
-            case 'unsubscribe':
-            case 'unsubscribed':
-                log('👋 Usuario dado de baja')
-                updateData.unsubscribed = true
-                updateData.fecha_unsubscribe = new Date().toISOString()
-                
-                // Actualizar estado del contacto
-                const { error: unsubContactError } = await supabase
-                    .from('froit_email_contacts')
-                    .update({ 
-                        estado: 'unsubscribed',
-                        fecha_baja: new Date().toISOString(),
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('email', email.toLowerCase())
-                
-                if (unsubContactError) {
-                    log('Error actualizando estado de contacto (unsub):', unsubContactError)
-                }
-                break
-                
-            case 'error':
-            case 'deferred':
-            case 'invalid_email':
-                log('❌ Error en envío')
-                updateData.estado = 'fallido'
-                updateData.error_mensaje = body.reason || body.error || 'Error desconocido'
-                break
-                
-            default:
-                log(`⚠️ Evento no manejado: ${event}`)
-                return NextResponse.json({ 
-                    success: true, 
-                    message: `Evento ${event} recibido pero no procesado` 
-                }, { status: 200 })
-        }
-        
-        // Actualizar registro de envío
-        const { error: updateError } = await supabase
-            .from('froit_email_sends')
-            .update(updateData)
-            .eq('id', sendRecord.id)
-        
-        if (updateError) {
-            log('❌ Error actualizando registro:', updateError)
-            return NextResponse.json({ 
-                success: false, 
-                error: 'Error actualizando registro de envío' 
-            }, { status: 500 })
-        }
-        
-        log(`✅ Registro actualizado exitosamente`)
-        
-        // Actualizar métricas de campaña y contacto en segundo plano
-        if (sendRecord.campaign_id) {
-            updateCampaignMetrics(sendRecord.campaign_id)
-        }
-        
-        if (sendRecord.contact_id) {
-            updateContactMetrics(sendRecord.contact_id)
-        }
-        
-        return NextResponse.json({ 
-            success: true,
-            message: `Evento ${event} procesado correctamente`,
-            email: email,
-            event: event
-        }, { status: 200 })
-        
-    } catch (error) {
-        log('❌ Error general en webhook:', error)
-        console.error('Stack trace:', error.stack)
-        return NextResponse.json({ 
-            success: false, 
-            error: 'Error interno del servidor',
-            message: error.message,
-            details: DEBUG_MODE ? error.stack : undefined
-        }, { status: 500 })
-    }
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Webhook procesado',
+      event,
+      email 
+    })
+
+  } catch (error) {
+    console.error('❌ Error procesando webhook:', error)
+    return NextResponse.json({ 
+      error: 'Error interno',
+      message: error.message 
+    }, { status: 500 })
+  }
 }
 
-// GET para verificar que el endpoint está activo
-export async function GET(request) {
-    return NextResponse.json({
-        service: 'Froit Email Marketing Webhook',
-        status: 'active',
-        endpoint: '/api/mailMarketing',
-        events: [
-            'delivered',
-            'opened',
-            'clicked',
-            'bounce',
-            'spam',
-            'unsubscribe',
-            'error'
-        ],
-        timestamp: new Date().toISOString()
-    }, { status: 200 })
+/**
+ * Actualizar estadísticas agregadas de la campaña
+ */
+async function actualizarEstadisticasCampaña(campaignId) {
+  if (!campaignId) return
+
+  try {
+    // Obtener estadísticas agregadas
+    const { data: stats } = await supabase
+      .from('froit_email_sends')
+      .select('*')
+      .eq('campaign_id', campaignId)
+
+    if (!stats) return
+
+    const enviados = stats.filter(s => s.estado === 'enviado').length
+    const fallidos = stats.filter(s => s.estado === 'fallido' || s.estado === 'bounce').length
+    const abiertos = stats.filter(s => s.abierto).length
+    const clicks = stats.filter(s => s.click).length
+    const bounces = stats.filter(s => s.bounce).length
+    const spamReports = stats.filter(s => s.spam_report).length
+    const unsubscribes = stats.filter(s => s.unsubscribed).length
+
+    // Actualizar campaña
+    await supabase
+      .from('froit_email_campaigns')
+      .update({
+        enviados,
+        fallidos,
+        abiertos,
+        clicks,
+        bounces,
+        spam_reports: spamReports,
+        unsubscribes,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', campaignId)
+
+    console.log(`📊 Estadísticas actualizadas para campaña ${campaignId}:`, {
+      enviados, fallidos, abiertos, clicks
+    })
+  } catch (error) {
+    console.error('Error actualizando estadísticas de campaña:', error)
+  }
+}
+
+// Método GET para verificar que la API está funcionando
+export async function GET() {
+  return NextResponse.json({ 
+    message: 'Webhook de Brevo activo',
+    timestamp: new Date().toISOString()
+  })
 }
