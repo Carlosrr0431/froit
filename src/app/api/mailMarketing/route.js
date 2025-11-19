@@ -19,16 +19,17 @@ import { NextResponse } from 'next/server'
  * - unsubscribe: Usuario se dio de baja
  */
 export async function POST(request) {
-  // Crear cliente Supabase dentro de la función para evitar errores de build
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON
-  )
-  
   try {
     const body = await request.json()
     
     console.log('📧 Webhook de Brevo recibido:', JSON.stringify(body, null, 2))
+    
+    // Log de variables de entorno disponibles
+    console.log('🔍 Env vars check:', {
+      hasNextPublicUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+      hasNextPublicAnon: !!process.env.NEXT_PUBLIC_SUPABASE_ANON,
+      allEnvKeys: Object.keys(process.env).filter(k => k.includes('SUPABASE'))
+    })
 
     const { event, email, 'message-id': messageId, date, tag, tags } = body
 
@@ -36,6 +37,23 @@ export async function POST(request) {
       console.error('❌ Email no proporcionado en webhook')
       return NextResponse.json({ error: 'Email requerido' }, { status: 400 })
     }
+    
+    // Crear cliente Supabase con validación
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('❌ Variables de Supabase no disponibles')
+      return NextResponse.json({ 
+        error: 'Database configuration missing',
+        debug: {
+          hasUrl: !!supabaseUrl,
+          hasKey: !!supabaseAnonKey
+        }
+      }, { status: 500 })
+    }
+    
+    const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
     // Buscar el envío en la base de datos por email
     const { data: envios, error: errorBusqueda } = await supabase
@@ -226,13 +244,17 @@ export async function POST(request) {
 async function actualizarEstadisticasCampaña(campaignId) {
   if (!campaignId) return
 
-  // Crear cliente dentro de la función
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON
-  )
-
   try {
+    // Validar variables de entorno
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('❌ No se pueden actualizar estadísticas: Supabase no configurado')
+      return
+    }
+    
+    const supabase = createClient(supabaseUrl, supabaseAnonKey)
     // Obtener estadísticas agregadas
     const { data: stats } = await supabase
       .from('froit_email_sends')
