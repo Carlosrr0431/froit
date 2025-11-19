@@ -85,6 +85,15 @@ export async function POST(request) {
     try {
         log('📧 Webhook recibido de Brevo')
         
+        // Verificar que supabase esté disponible
+        if (!supabase) {
+            log('❌ Supabase client no disponible')
+            return NextResponse.json({ 
+                success: false, 
+                error: 'Database connection not available' 
+            }, { status: 500 })
+        }
+        
         // Leer el body
         const body = await request.json()
         log('Body recibido:', body)
@@ -158,6 +167,7 @@ export async function POST(request) {
         
         // Procesar según tipo de evento
         switch (event.toLowerCase()) {
+            case 'request':
             case 'delivered':
             case 'delivery':
                 log('✉️ Email entregado correctamente')
@@ -170,6 +180,7 @@ export async function POST(request) {
                 
             case 'open':
             case 'opened':
+            case 'unique_opened':
                 log('👀 Email abierto')
                 const ipApertura = body.ip || body.IP
                 const userAgent = body['user-agent'] || body.UserAgent || body.userAgent
@@ -192,6 +203,7 @@ export async function POST(request) {
                 
             case 'click':
             case 'clicked':
+            case 'unique_clicked':
                 log('🖱️ Click en enlace')
                 const clickedUrl = body.link || body.url || body.URL
                 
@@ -342,10 +354,12 @@ export async function POST(request) {
         
     } catch (error) {
         log('❌ Error general en webhook:', error)
+        console.error('Stack trace:', error.stack)
         return NextResponse.json({ 
             success: false, 
             error: 'Error interno del servidor',
-            details: DEBUG_MODE ? error.message : undefined
+            message: error.message,
+            details: DEBUG_MODE ? error.stack : undefined
         }, { status: 500 })
     }
 }
