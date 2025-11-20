@@ -238,7 +238,12 @@ export async function POST(request) {
  * Actualizar estadísticas agregadas de la campaña
  */
 async function actualizarEstadisticasCampaña(campaignId) {
-  if (!campaignId) return
+  if (!campaignId) {
+    console.log('⚠️ No hay campaign_id para actualizar estadísticas')
+    return
+  }
+
+  console.log(`📊 Iniciando actualización de estadísticas para campaña: ${campaignId}`)
 
   try {
     // Usar variables sin prefijo para API routes
@@ -251,13 +256,24 @@ async function actualizarEstadisticasCampaña(campaignId) {
     }
     
     const supabase = createClient(supabaseUrl, supabaseAnonKey)
+    
     // Obtener estadísticas agregadas
-    const { data: stats } = await supabase
+    const { data: stats, error: statsError } = await supabase
       .from('froit_email_sends')
       .select('*')
       .eq('campaign_id', campaignId)
 
-    if (!stats) return
+    if (statsError) {
+      console.error('❌ Error obteniendo estadísticas:', statsError)
+      return
+    }
+
+    if (!stats || stats.length === 0) {
+      console.log('⚠️ No hay registros de envío para esta campaña')
+      return
+    }
+
+    console.log(`📧 Encontrados ${stats.length} envíos para la campaña`)
 
     const enviados = stats.filter(s => s.estado === 'enviado').length
     const fallidos = stats.filter(s => s.estado === 'fallido' || s.estado === 'bounce').length
@@ -267,8 +283,12 @@ async function actualizarEstadisticasCampaña(campaignId) {
     const spamReports = stats.filter(s => s.spam_report).length
     const unsubscribes = stats.filter(s => s.unsubscribed).length
 
+    console.log(`📊 Métricas calculadas:`, {
+      enviados, fallidos, abiertos, clicks, bounces, spamReports, unsubscribes
+    })
+
     // Actualizar campaña
-    await supabase
+    const { error: updateError } = await supabase
       .from('froit_email_campaigns')
       .update({
         enviados,
@@ -282,7 +302,12 @@ async function actualizarEstadisticasCampaña(campaignId) {
       })
       .eq('id', campaignId)
 
-    console.log(`📊 Estadísticas actualizadas para campaña ${campaignId}:`, {
+    if (updateError) {
+      console.error('❌ Error actualizando campaña:', updateError)
+      return
+    }
+
+    console.log(`✅ Estadísticas actualizadas exitosamente para campaña ${campaignId}:`, {
       enviados, fallidos, abiertos, clicks
     })
   } catch (error) {
