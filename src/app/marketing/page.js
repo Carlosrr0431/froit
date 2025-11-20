@@ -38,20 +38,43 @@ export default function MarketingPage() {
     const cargarCampañas = useCallback(async () => {
         setLoading(true)
         try {
-            const { data, error } = await supabaseClient
+            // Cargar campañas
+            const { data: campaigns, error: campaignsError } = await supabaseClient
                 .from('froit_email_campaigns')
                 .select('*')
                 .order('created_at', { ascending: false })
             
-            if (error) throw error
+            if (campaignsError) throw campaignsError
             
-            setCampañas(data || [])
+            // Cargar todos los envíos para calcular métricas en tiempo real
+            const { data: sends, error: sendsError } = await supabaseClient
+                .from('froit_email_sends')
+                .select('*')
             
-            // Calcular métricas globales
-            const totalEnviados = (data || []).reduce((sum, c) => sum + (c.enviados || 0), 0)
-            const totalAbiertos = (data || []).reduce((sum, c) => sum + (c.abiertos || 0), 0)
-            const totalClicks = (data || []).reduce((sum, c) => sum + (c.clicks || 0), 0)
-            const totalBounces = (data || []).reduce((sum, c) => sum + (c.bounces || 0), 0)
+            if (sendsError) throw sendsError
+            
+            // Calcular métricas por campaña desde los envíos
+            const campaignsConMetricas = (campaigns || []).map(campaign => {
+                const enviosCampaña = (sends || []).filter(s => s.campaign_id === campaign.id)
+                
+                return {
+                    ...campaign,
+                    enviados: enviosCampaña.filter(s => s.estado === 'enviado').length,
+                    abiertos: enviosCampaña.filter(s => s.abierto === true).length,
+                    clicks: enviosCampaña.filter(s => s.click === true).length,
+                    bounces: enviosCampaña.filter(s => s.bounce === true).length,
+                    spam_reports: enviosCampaña.filter(s => s.spam_report === true).length,
+                    unsubscribes: enviosCampaña.filter(s => s.unsubscribed === true).length
+                }
+            })
+            
+            setCampañas(campaignsConMetricas)
+            
+            // Calcular métricas globales desde todos los envíos
+            const totalEnviados = (sends || []).filter(s => s.estado === 'enviado').length
+            const totalAbiertos = (sends || []).filter(s => s.abierto === true).length
+            const totalClicks = (sends || []).filter(s => s.click === true).length
+            const totalBounces = (sends || []).filter(s => s.bounce === true).length
 
             setMetricsGlobales({
                 totalEnviados,
