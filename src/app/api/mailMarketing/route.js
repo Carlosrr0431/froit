@@ -24,11 +24,15 @@ export async function POST(request) {
     
     console.log('📧 Webhook de Brevo recibido:', JSON.stringify(body, null, 2))
     
-    // Log de variables de entorno disponibles
+    // En API routes de Vercel, NEXT_PUBLIC_* NO está disponible
+    // Usar variables sin prefijo (configuradas en Vercel Dashboard)
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON
+    
     console.log('🔍 Env vars check:', {
-      hasNextPublicUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-      hasNextPublicAnon: !!process.env.NEXT_PUBLIC_SUPABASE_ANON,
-      allEnvKeys: Object.keys(process.env).filter(k => k.includes('SUPABASE'))
+      hasSupabaseUrl: !!supabaseUrl,
+      hasSupabaseKey: !!supabaseAnonKey,
+      urlPreview: supabaseUrl?.substring(0, 30)
     })
 
     const { event, email, 'message-id': messageId, date, tag, tags } = body
@@ -38,18 +42,10 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Email requerido' }, { status: 400 })
     }
     
-    // Crear cliente Supabase con validación
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON
-    
     if (!supabaseUrl || !supabaseAnonKey) {
-      console.error('❌ Variables de Supabase no disponibles')
+      console.error('❌ Variables de Supabase no disponibles. Configura SUPABASE_URL y SUPABASE_ANON_KEY en Vercel')
       return NextResponse.json({ 
-        error: 'Database configuration missing',
-        debug: {
-          hasUrl: !!supabaseUrl,
-          hasKey: !!supabaseAnonKey
-        }
+        error: 'Database configuration missing - Add SUPABASE_URL and SUPABASE_ANON_KEY to Vercel env vars'
       }, { status: 500 })
     }
     
@@ -245,9 +241,9 @@ async function actualizarEstadisticasCampaña(campaignId) {
   if (!campaignId) return
 
   try {
-    // Validar variables de entorno
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON
+    // Usar variables sin prefijo para API routes
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON
     
     if (!supabaseUrl || !supabaseAnonKey) {
       console.error('❌ No se pueden actualizar estadísticas: Supabase no configurado')
