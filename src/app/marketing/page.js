@@ -15,6 +15,12 @@ export default function MarketingPage() {
     const [loading, setLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     
+    // Estados para modal de detalles de envíos
+    const [modalEnviosAbierto, setModalEnviosAbierto] = useState(false)
+    const [campañaSeleccionada, setCampañaSeleccionada] = useState(null)
+    const [enviosCampaña, setEnviosCampaña] = useState([])
+    const [loadingEnvios, setLoadingEnvios] = useState(false)
+    
     // Estados para nueva campaña
     const [nombreCampaña, setNombreCampaña] = useState('')
     const [asunto, setAsunto] = useState('')
@@ -38,6 +44,14 @@ export default function MarketingPage() {
     const cargarCampañas = useCallback(async () => {
         setLoading(true)
         try {
+            // Verificar que supabaseClient esté inicializado
+            if (!supabaseClient) {
+                console.error('❌ Supabase client no inicializado')
+                toast.error('Error: Cliente de Supabase no disponible. Verifica las variables de entorno.')
+                setLoading(false)
+                return
+            }
+
             // Cargar campañas
             const { data: campaigns, error: campaignsError } = await supabaseClient
                 .from('froit_email_campaigns')
@@ -96,6 +110,14 @@ export default function MarketingPage() {
     const cargarContactos = useCallback(async () => {
         setLoading(true)
         try {
+            // Verificar que supabaseClient esté inicializado
+            if (!supabaseClient) {
+                console.error('❌ Supabase client no inicializado')
+                toast.error('Error: Cliente de Supabase no disponible. Verifica las variables de entorno.')
+                setLoading(false)
+                return
+            }
+
             const { data, error } = await supabaseClient
                 .from('froit_email_contacts')
                 .select('*')
@@ -114,6 +136,12 @@ export default function MarketingPage() {
     useEffect(() => {
         cargarCampañas()
         cargarContactos()
+
+        // Verificar que supabaseClient esté disponible para suscripciones
+        if (!supabaseClient) {
+            console.warn('⚠️ Supabase client no disponible. Suscripciones en tiempo real deshabilitadas.')
+            return
+        }
 
         // Suscripción en tiempo real a cambios en campañas
         const campaignsSubscription = supabaseClient
@@ -558,6 +586,28 @@ export default function MarketingPage() {
         }
     }
 
+    const verDetallesEnvios = async (campaña) => {
+        setCampañaSeleccionada(campaña)
+        setModalEnviosAbierto(true)
+        setLoadingEnvios(true)
+        
+        try {
+            const { data, error } = await supabaseClient
+                .from('froit_email_sends')
+                .select('*')
+                .eq('campaign_id', campaña.id)
+                .order('created_at', { ascending: false })
+            
+            if (error) throw error
+            setEnviosCampaña(data || [])
+        } catch (error) {
+            console.error('Error cargando envíos:', error)
+            toast.error('Error al cargar detalles de envíos')
+        } finally {
+            setLoadingEnvios(false)
+        }
+    }
+
     const campañasFiltradas = campañas.filter(c => 
         c.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         c.asunto?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -774,6 +824,13 @@ export default function MarketingPage() {
                                             </div>
 
                                             <div className="flex flex-col gap-2">
+                                                <button
+                                                    onClick={() => verDetallesEnvios(campaña)}
+                                                    className="p-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors flex items-center justify-center"
+                                                    title="Ver detalles de envíos"
+                                                >
+                                                    <Eye className="w-5 h-5" />
+                                                </button>
                                                 <button
                                                     onClick={() => enviarCampaña(campaña)}
                                                     className="p-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors flex items-center justify-center"
@@ -1090,6 +1147,214 @@ export default function MarketingPage() {
                     </div>
                 )}
             </div>
+
+            {/* Modal de Detalles de Envíos */}
+            {modalEnviosAbierto && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden"
+                    >
+                        {/* Header */}
+                        <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h2 className="text-2xl font-bold">{campañaSeleccionada?.nombre}</h2>
+                                    <p className="text-blue-100 mt-1">{campañaSeleccionada?.asunto}</p>
+                                </div>
+                                <button
+                                    onClick={() => setModalEnviosAbierto(false)}
+                                    className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                                >
+                                    <X className="w-6 h-6" />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                            {loadingEnvios ? (
+                                <div className="flex items-center justify-center py-12">
+                                    <RefreshCw className="w-8 h-8 animate-spin text-blue-500" />
+                                </div>
+                            ) : enviosCampaña.length === 0 ? (
+                                <div className="text-center py-12 text-gray-500">
+                                    <Mail className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                                    <p>No hay envíos para esta campaña</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {enviosCampaña.map((envio) => (
+                                        <div
+                                            key={envio.id}
+                                            className="bg-white border-2 border-gray-100 hover:border-blue-200 rounded-xl p-4 transition-all duration-200 hover:shadow-md"
+                                        >
+                                            <div className="flex items-start justify-between gap-4">
+                                                {/* Email Info */}
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-3 mb-2">
+                                                        <div className="p-2 bg-blue-100 rounded-lg">
+                                                            <Mail className="w-4 h-4 text-blue-600" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-semibold text-gray-800">{envio.email}</p>
+                                                            <p className="text-xs text-gray-500">
+                                                                Enviado: {new Date(envio.fecha_envio || envio.created_at).toLocaleString('es-AR')}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Métricas del envío */}
+                                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
+                                                        {/* Estado */}
+                                                        <div className={`px-3 py-2 rounded-lg text-center ${
+                                                            envio.estado === 'enviado' ? 'bg-green-50' :
+                                                            envio.estado === 'fallido' ? 'bg-red-50' :
+                                                            envio.estado === 'bounce' ? 'bg-orange-50' :
+                                                            'bg-gray-50'
+                                                        }`}>
+                                                            <div className="flex items-center justify-center gap-1 mb-1">
+                                                                {envio.estado === 'enviado' && <CheckCircle2 className="w-4 h-4 text-green-600" />}
+                                                                {envio.estado === 'fallido' && <XCircle className="w-4 h-4 text-red-600" />}
+                                                                {envio.estado === 'bounce' && <AlertCircle className="w-4 h-4 text-orange-600" />}
+                                                            </div>
+                                                            <p className={`text-xs font-semibold ${
+                                                                envio.estado === 'enviado' ? 'text-green-700' :
+                                                                envio.estado === 'fallido' ? 'text-red-700' :
+                                                                envio.estado === 'bounce' ? 'text-orange-700' :
+                                                                'text-gray-700'
+                                                            }`}>
+                                                                {envio.estado}
+                                                            </p>
+                                                        </div>
+
+                                                        {/* Abierto */}
+                                                        <div className={`px-3 py-2 rounded-lg text-center ${
+                                                            envio.abierto ? 'bg-purple-50' : 'bg-gray-50'
+                                                        }`}>
+                                                            <div className="flex items-center justify-center gap-1 mb-1">
+                                                                <Eye className={`w-4 h-4 ${envio.abierto ? 'text-purple-600' : 'text-gray-400'}`} />
+                                                            </div>
+                                                            <p className={`text-xs font-semibold ${
+                                                                envio.abierto ? 'text-purple-700' : 'text-gray-500'
+                                                            }`}>
+                                                                {envio.abierto ? `Abierto (${envio.cantidad_aperturas || 1}x)` : 'No abierto'}
+                                                            </p>
+                                                            {envio.fecha_apertura && (
+                                                                <p className="text-[10px] text-gray-500 mt-1">
+                                                                    {new Date(envio.fecha_apertura).toLocaleString('es-AR', {
+                                                                        hour: '2-digit',
+                                                                        minute: '2-digit',
+                                                                        day: '2-digit',
+                                                                        month: '2-digit'
+                                                                    })}
+                                                                </p>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Click */}
+                                                        <div className={`px-3 py-2 rounded-lg text-center ${
+                                                            envio.click ? 'bg-orange-50' : 'bg-gray-50'
+                                                        }`}>
+                                                            <div className="flex items-center justify-center gap-1 mb-1">
+                                                                <TrendingUp className={`w-4 h-4 ${envio.click ? 'text-orange-600' : 'text-gray-400'}`} />
+                                                            </div>
+                                                            <p className={`text-xs font-semibold ${
+                                                                envio.click ? 'text-orange-700' : 'text-gray-500'
+                                                            }`}>
+                                                                {envio.click ? `${envio.cantidad_clicks || 1} click${envio.cantidad_clicks > 1 ? 's' : ''}` : 'Sin clicks'}
+                                                            </p>
+                                                            {envio.fecha_primer_click && (
+                                                                <p className="text-[10px] text-gray-500 mt-1">
+                                                                    {new Date(envio.fecha_primer_click).toLocaleString('es-AR', {
+                                                                        hour: '2-digit',
+                                                                        minute: '2-digit',
+                                                                        day: '2-digit',
+                                                                        month: '2-digit'
+                                                                    })}
+                                                                </p>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Bounce */}
+                                                        <div className={`px-3 py-2 rounded-lg text-center ${
+                                                            envio.bounce ? 'bg-red-50' : 'bg-gray-50'
+                                                        }`}>
+                                                            <div className="flex items-center justify-center gap-1 mb-1">
+                                                                <XCircle className={`w-4 h-4 ${envio.bounce ? 'text-red-600' : 'text-gray-400'}`} />
+                                                            </div>
+                                                            <p className={`text-xs font-semibold ${
+                                                                envio.bounce ? 'text-red-700' : 'text-gray-500'
+                                                            }`}>
+                                                                {envio.bounce ? `Bounce (${envio.bounce_type || 'N/A'})` : 'OK'}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Información adicional */}
+                                                    {(envio.dispositivo || envio.navegador || envio.urls_clickeadas) && (
+                                                        <div className="mt-3 pt-3 border-t border-gray-100">
+                                                            <div className="flex flex-wrap gap-2 text-xs text-gray-600">
+                                                                {envio.dispositivo && (
+                                                                    <span className="px-2 py-1 bg-gray-100 rounded">
+                                                                        📱 {envio.dispositivo}
+                                                                    </span>
+                                                                )}
+                                                                {envio.navegador && (
+                                                                    <span className="px-2 py-1 bg-gray-100 rounded">
+                                                                        🌐 {envio.navegador}
+                                                                    </span>
+                                                                )}
+                                                                {envio.sistema_operativo && (
+                                                                    <span className="px-2 py-1 bg-gray-100 rounded">
+                                                                        💻 {envio.sistema_operativo}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            {envio.urls_clickeadas && envio.urls_clickeadas.length > 0 && (
+                                                                <div className="mt-2">
+                                                                    <p className="text-xs font-semibold text-gray-700 mb-1">URLs clickeadas:</p>
+                                                                    <div className="space-y-1">
+                                                                        {envio.urls_clickeadas.map((url, idx) => (
+                                                                            <a
+                                                                                key={idx}
+                                                                                href={url}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                className="text-xs text-blue-600 hover:underline block truncate"
+                                                                            >
+                                                                                {url}
+                                                                            </a>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Footer */}
+                        <div className="border-t border-gray-200 p-4 bg-gray-50">
+                            <div className="flex items-center justify-between text-sm text-gray-600">
+                                <p>Total de envíos: <span className="font-bold">{enviosCampaña.length}</span></p>
+                                <button
+                                    onClick={() => setModalEnviosAbierto(false)}
+                                    className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors font-medium"
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            )}
         </div>
     )
 }
