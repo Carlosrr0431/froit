@@ -92,11 +92,6 @@ export default function MarketingPage() {
         cargarCampañas()
         cargarContactos()
 
-        // Polling cada 5 segundos para actualizar métricas en tiempo real
-        const pollingInterval = setInterval(() => {
-            cargarCampañas()
-        }, 5000)
-
         // Suscripción en tiempo real a cambios en campañas
         const campaignsSubscription = supabaseClient
             .channel('froit_email_campaigns_changes')
@@ -107,7 +102,7 @@ export default function MarketingPage() {
                     table: 'froit_email_campaigns' 
                 }, 
                 (payload) => {
-                    console.log('Cambio en campañas:', payload)
+                    console.log('🔔 Cambio en campañas:', payload)
                     cargarCampañas()
                 }
             )
@@ -123,7 +118,7 @@ export default function MarketingPage() {
                     table: 'froit_email_contacts' 
                 }, 
                 (payload) => {
-                    console.log('Cambio en contactos:', payload)
+                    console.log('🔔 Cambio en contactos:', payload)
                     cargarContactos()
                 }
             )
@@ -140,7 +135,7 @@ export default function MarketingPage() {
                 }, 
                 (payload) => {
                     console.log('🔔 Cambio en envío detectado:', payload)
-                    // Recargar inmediatamente cuando hay cambios en envíos
+                    // Recargar campañas inmediatamente cuando hay cambios en envíos
                     cargarCampañas()
                 }
             )
@@ -148,7 +143,6 @@ export default function MarketingPage() {
 
         // Cleanup: desuscribirse al desmontar
         return () => {
-            clearInterval(pollingInterval)
             campaignsSubscription.unsubscribe()
             contactsSubscription.unsubscribe()
             sendsSubscription.unsubscribe()
