@@ -297,6 +297,7 @@ async function actualizarEstadisticasCampaña(campaignId) {
         clicks,
         bounces,
         spam_reports: spamReports,
+        unsubscribes,
         updated_at: new Date().toISOString()
       })
       .eq('id', campaignId)
