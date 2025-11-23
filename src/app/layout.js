@@ -104,8 +104,14 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${montserrat.variable} antialiased font-sans`}>
         {/* Google Tag Manager (noscript) */}
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5X78SFB3"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <noscript>
+          <iframe 
+            src="https://www.googletagmanager.com/ns.html?id=GTM-5X78SFB3"
+            height="0" 
+            width="0" 
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
         {/* End Google Tag Manager (noscript) */}
         <Providers>
           <ThemeProvider>
