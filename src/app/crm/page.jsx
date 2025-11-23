@@ -139,25 +139,11 @@ export default function CrmREMAX() {
 
     // Verificar autenticación
     if (!session?.user) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-                <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md text-center">
-                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                        </svg>
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Acceso Denegado</h2>
-                    <p className="text-gray-600 mb-6">Debes iniciar sesión para acceder al CRM</p>
-                    <button
-                        onClick={() => window.location.href = '/api/auth/signin'}
-                        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                    >
-                        Iniciar Sesión
-                    </button>
-                </div>
-            </div>
-        );
+        // Redirigir al login si no hay sesión
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+        }
+        return null;
     }
 
     return (

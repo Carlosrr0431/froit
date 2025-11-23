@@ -28,6 +28,9 @@ const handler = NextAuth({
       },
     }),
   ],
+  pages: {
+    signIn: '/login',
+  },
   callbacks: {
     async signIn({ user, account }) {
       const { data } = await supabaseClient
