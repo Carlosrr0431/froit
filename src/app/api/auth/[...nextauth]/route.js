@@ -33,29 +33,48 @@ const handler = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      const { data } = await supabaseClient
-        .from("usuarios")
-        .select("email")
-        .eq("email", user.email);
-
-      if (account?.refresh_token) {
-        const encryptedRefresh = encrypt(account.refresh_token);
-        await supabaseClient.from("usuarios").upsert({
-          email: user.email,
-          refresh_token: encryptedRefresh,
-        }, { onConflict: ['email'] });
+      if (!supabaseClient) {
+        console.error("Supabase client not initialized in signIn callback");
+        return false;
       }
 
-      if (!data || data.length === 0) {
-        await supabaseClient.from("usuarios").insert({
-          nombre: user.name,
-          email: user.email,
-          imagenUrl: user.image,
-          role: "member",
-        });
-      }
+      try {
+        const { data, error } = await supabaseClient
+          .from("usuarios")
+          .select("email")
+          .eq("email", user.email);
 
-      return true;
+        if (error) {
+          console.error("Error fetching user in signIn:", error);
+          // No bloquear login si falla la BD, pero loguear error
+        }
+
+        if (account?.refresh_token) {
+          try {
+            const encryptedRefresh = encrypt(account.refresh_token);
+            await supabaseClient.from("usuarios").upsert({
+              email: user.email,
+              refresh_token: encryptedRefresh,
+            }, { onConflict: ['email'] });
+          } catch (err) {
+            console.error("Error saving refresh token:", err);
+          }
+        }
+
+        if (!data || data.length === 0) {
+          await supabaseClient.from("usuarios").insert({
+            nombre: user.name,
+            email: user.email,
+            imagenUrl: user.image,
+            role: "member",
+          });
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Critical error in signIn callback:", error);
+        return false;
+      }
     },
     async jwt({ token, account, user }) {
       // Guardar accessToken y refreshToken en el primer login
