@@ -58,7 +58,7 @@ export default function LoginPage() {
                 )}
                 
                 <button
-                    onClick={() => signIn("google", { callbackUrl: "/CrmREMAX" })}
+                    onClick={() => signIn("google", { callbackUrl: "/crm" })}
                     className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 via-blue-500 to-pink-500 text-white font-semibold text-base shadow-lg hover:scale-105 hover:shadow-xl transition-transform duration-200 mb-2 z-10 animate-fade-in delay-200"
                 >
                     <MdEmail className="w-5 h-5" />

@@ -31,6 +31,10 @@ const handler = NextAuth({
   pages: {
     signIn: '/login',
   },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 días
+  },
   callbacks: {
     async signIn({ user, account }) {
       if (!supabaseClient) {
@@ -122,7 +126,8 @@ const handler = NextAuth({
           }
         } else {
           // No hay refresh token, forzar logout
-          token.error = "NoRefreshToken";
+          // token.error = "NoRefreshToken";
+          console.warn("No refresh token available, but keeping session active.");
         }
       }
 
