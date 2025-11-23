@@ -33,8 +33,8 @@ export async function middleware(req) {
       secureCookie: process.env.NODE_ENV === 'production',
     });
 
-    // Proteger solo la ruta /CrmREMAX y subrutas (Actualizado de /remax/crmIA)
-    if (url.pathname.startsWith("/CrmREMAX")) {
+    // Proteger solo la ruta /crm y subrutas (Actualizado de /remax/crmIA)
+    if (url.pathname.startsWith("/crm")) {
       // Si no hay token, redirigir a login
       if (!token) {
         const loginUrl = new URL("/login", req.url);
