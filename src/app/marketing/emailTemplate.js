@@ -1,186 +1,319 @@
-// Plantilla HTML para emails de Froit - Diseño minimalista y moderno
-export const emailFroitHTML = (contenido, nombre = 'Cliente') => {
-    return `<!DOCTYPE html>
+// Plantilla HTML para emails de Froit - Diseño inspirado en la imagen
+export const emailFroitHTML = (contenido, nombre = "Cliente") => {
+  return `
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Froit</title>
+    <meta name="color-scheme" content="light dark">
+    <meta name="supported-color-schemes" content="light dark">
+    <title>Newsletter Froit - Soluciones IA</title>
+    <style>
+        /* Reset básico */
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        body { margin: 0; padding: 0; width: 100%; height: 100%; }
+        
+        /* Soporte para Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            .dark-mode-bg { background-color: #1a1a1a !important; }
+            .dark-mode-text { color: #ffffff !important; }
+            .dark-mode-text-secondary { color: #b0b0b0 !important; }
+            .dark-mode-border { border-color: #333333 !important; }
+        }
+        
+        /* Responsive */
+        @media screen and (max-width: 600px) {
+            .container { width: 100% !important; max-width: 100% !important; }
+            .mobile-padding { padding: 20px 15px !important; }
+            .mobile-text { font-size: 16px !important; line-height: 24px !important; }
+            .mobile-title { font-size: 28px !important; line-height: 36px !important; }
+            .mobile-button { width: 100% !important; display: block !important; }
+            .mobile-hide { display: none !important; }
+            .mobile-stack { display: block !important; width: 100% !important; }
+            .mobile-icon { width: 40px !important; height: 40px !important; font-size: 20px !important; }
+        }
+    </style>
 </head>
-<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #ffffff;">
+<body style="margin: 0; padding: 0; background: linear-gradient(180deg, #e0e7ff 0%, #f0f4f8 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
     
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <!-- Wrapper principal -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background: linear-gradient(180deg, #e0e7ff 0%, #f0f4f8 100%);">
         <tr>
-            <td align="center" style="padding: 60px 20px 40px 20px;">
+            <td align="center" style="padding: 40px 15px;">
                 
-                <!-- Logo de Froit grande -->
-                <svg width="280" height="100" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="display: block; margin: 0 auto 40px auto;">
-                    <defs>
-                        <style>
-                            .cls-1 { fill: #6cbfa5; }
-                            .cls-2 { fill: #1e293b; }
-                            .cls-3 { fill: #56c3e8; }
-                            .cls-4 { fill: #826aac; }
-                        </style>
-                    </defs>
+                <!-- Container principal 600px -->
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="container" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(79, 70, 229, 0.15);">
                     
-                    <!-- Texto FROIT -->
-                    <path class="cls-2" d="M63.4,81.2c-1.9,1.1-3.5,2.6-4.6,4.5-1.1,1.9-1.7,4.1-1.7,6.6v36.4h6.8v-20.5h21v-6h-21v-10c0-2,.6-3.6,1.9-4.9,1.2-1.3,2.9-1.9,5-1.9h16.7v-6h-17.5c-2.4,0-4.6.6-6.6,1.7Z"/>
-                    <path class="cls-2" d="M97.6,95.6c-1.8,1.8-2.7,4.3-2.7,7.5v25.7h6.5v-25.3c0-1.6.4-2.8,1.3-3.7.9-.9,2.1-1.3,3.6-1.3h6.2v-5.6h-7.4c-3.2,0-5.7.9-7.5,2.7Z"/>
-                    <path class="cls-2" d="M145,94.6c-2.8-1.7-6.1-2.5-9.7-2.5s-6.9.8-9.7,2.5c-2.8,1.7-5,3.9-6.7,6.8-1.6,2.8-2.5,6-2.5,9.5s.8,6.7,2.5,9.5c1.6,2.8,3.9,5.1,6.7,6.8s6,2.5,9.7,2.5,6.9-.8,9.7-2.5,5.1-3.9,6.7-6.8c1.6-2.8,2.4-6,2.4-9.5s-.8-6.7-2.4-9.5c-1.6-2.8-3.8-5.1-6.7-6.8ZM146.1,117.6c-1,2-2.5,3.6-4.3,4.7-1.8,1.2-4,1.8-6.4,1.8s-4.7-.6-6.5-1.8c-1.9-1.2-3.3-2.8-4.3-4.7-1-2-1.5-4.2-1.5-6.7s.5-4.7,1.5-6.7c1-2,2.5-3.6,4.3-4.7,1.9-1.2,4-1.8,6.5-1.8s4.6.6,6.4,1.8c1.8,1.2,3.3,2.8,4.3,4.7,1,2,1.5,4.2,1.5,6.7s-.5,4.7-1.5,6.7Z"/>
-                    <path class="cls-2" d="M165.7,78.5c-1.2,0-2.2.4-3.1,1.3-.9.9-1.3,1.9-1.3,3.1s.4,2.2,1.3,3.1c.9.9,1.9,1.3,3.1,1.3s2.2-.4,3.1-1.3c.9-.9,1.3-1.9,1.3-3.1s-.4-2.2-1.3-3.1c-.9-.9-1.9-1.3-3.1-1.3Z"/>
-                    <rect class="cls-2" x="162.4" y="92.9" width="6.5" height="35.9"/>
-                    <path class="cls-2" d="M200,98.5v-5.6h-12.3v-9h-6.5v9h-6.2v5.6h6.2v20.1c0,3.1.9,5.6,2.7,7.5,1.8,1.8,4.3,2.7,7.5,2.7h8.4v-5.6h-7.2c-1.5,0-2.8-.5-3.6-1.4s-1.3-2.1-1.3-3.7v-19.7h12.3Z"/>
-                    
-                    <!-- Cuadrados -->
-                    <rect class="cls-1" x="0" y="109.4" width="19.5" height="19.5"/>
-                    <rect class="cls-3" x="0" y="70.3" width="19.5" height="19.5"/>
-                    <rect class="cls-4" x="19.5" y="89.9" width="19.5" height="19.5"/>
-                </svg>
-                
-            </td>
-        </tr>
-    </table>
-    
-    <!-- Contenedor principal -->
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-            <td align="center" style="padding: 0 20px 60px 20px;">
-                
-                <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px;">
-                    
-                    <!-- Saludo -->
+                    <!-- HEADER -->
                     <tr>
-                        <td style="padding: 0 0 32px 0;">
-                            <h1 style="color: #1e293b; font-size: 32px; font-weight: 700; margin: 0 0 12px 0; letter-spacing: -0.5px; line-height: 1.2;">
-                                Hola ${nombre} 👋
-                            </h1>
-                            <p style="color: #64748b; font-size: 18px; margin: 0; line-height: 1.6; font-weight: 400;">
-                                Transformamos la forma en que trabajas
-                            </p>
-                        </td>
-                    </tr>
-                    
-                    <!-- Contenido personalizado -->
-                    <tr>
-                        <td style="padding: 0 0 48px 0;">
-                            <div style="color: #475569; font-size: 16px; line-height: 1.8; font-weight: 400;">
-                                ${contenido}
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <!-- Features minimalistas -->
-                    <tr>
-                        <td style="padding: 0 0 48px 0;">
-                            
-                            <!-- Feature 1 -->
-                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px;">
+                        <td align="center" style="padding: 40px 40px; background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%); border-bottom: 3px solid #e0e7ff;" class="mobile-padding">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                                 <tr>
-                                    <td style="width: 48px; vertical-align: top; padding-right: 20px;">
-                                        <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #6cbfa5 0%, #4a9d85 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                                            </svg>
-                                        </div>
+                                    <td align="left" valign="middle">
+                                        <!-- Logo Froit sin fondo -->
+                                        <a href="https://froit.com" style="text-decoration: none;">
+                                            <img src="https://res.cloudinary.com/dtiqaci6a/image/upload/v1763773933/Dise%C3%B1o_sin_t%C3%ADtulo_6_j0n39w.png" alt="Froit" width="140" height="auto" style="display: block; max-width: 140px; height: auto;">
+                                        </a>
                                     </td>
-                                    <td style="vertical-align: top;">
-                                        <h3 style="color: #1e293b; font-size: 20px; font-weight: 600; margin: 0 0 8px 0;">
-                                            Automatización Inteligente
-                                        </h3>
-                                        <p style="color: #64748b; font-size: 16px; line-height: 1.6; margin: 0;">
-                                            Libera hasta el 80% de tiempo en tareas repetitivas con IA que aprende de tu negocio.
+                                    <td align="right" valign="middle" class="mobile-hide">
+                                        <a href="https://froit.com/blog" style="color: #1e293b; text-decoration: none; font-size: 15px; font-weight: 600; margin-left: 28px;">Blog</a>
+                                        <a href="https://froit.com/soluciones" style="color: #1e293b; text-decoration: none; font-size: 15px; font-weight: 600; margin-left: 28px;">Soluciones</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- HERO SECTION -->
+                    <tr>
+                        <td align="center" style="padding: 70px 40px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%); position: relative;" class="mobile-padding">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center">
+                                        <h1 style="margin: 0 0 24px 0; font-size: 42px; font-weight: 900; line-height: 50px; color: #ffffff; letter-spacing: -1px; text-shadow: 0 2px 10px rgba(0,0,0,0.1);" class="mobile-title">
+                                            Transforma tu Negocio con IA
+                                        </h1>
+                                        <p style="margin: 0 0 40px 0; font-size: 20px; line-height: 32px; color: #ffffff; font-weight: 400; opacity: 0.95;" class="mobile-text">
+                                            Automatización inteligente que libera tu tiempo y potencia tus resultados
+                                        </p>
+                                        <!-- CTA Button -->
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                                            <tr>
+                                                <td align="center" style="border-radius: 10px; background-color: #ffffff; box-shadow: 0 8px 24px rgba(0,0,0,0.2);" class="mobile-button">
+                                                    <a href="https://froit.com/demo" style="display: inline-block; padding: 20px 48px; font-size: 17px; font-weight: 800; color: #6366f1; text-decoration: none; border-radius: 10px; background-color: #ffffff; letter-spacing: 0.3px;">
+                                                        Solicitar Demo Gratuita →
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- MAIN CONTENT -->
+                    <tr>
+                        <td style="padding: 55px 45px 45px 45px; background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);" class="mobile-padding">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td>
+                                        <h2 style="margin: 0 0 24px 0; font-size: 28px; font-weight: 800; line-height: 36px; color: #0f172a;">
+                                            Hola 👋
+                                        </h2>
+                                        <p style="margin: 0 0 20px 0; font-size: 17px; line-height: 30px; color: #1e293b; font-weight: 400;">
+                                            En <strong style="color: #6366f1; font-weight: 700;">Froit</strong> sabemos que tu tiempo es valioso. Por eso hemos desarrollado soluciones de inteligencia artificial que trabajan para ti las 24 horas del día.
+                                        </p>
+                                        <p style="margin: 0 0 0 0; font-size: 17px; line-height: 30px; color: #1e293b; font-weight: 400;">
+                                            Descubre cómo nuestras herramientas de IA pueden transformar la gestión de tu negocio y llevarte al siguiente nivel.
                                         </p>
                                     </td>
                                 </tr>
                             </table>
-                            
-                            <!-- Feature 2 -->
-                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px;">
+                        </td>
+                    </tr>
+                    
+                    <!-- FEATURES SECTION -->
+                    <tr>
+                        <td style="padding: 0 45px 55px 45px; background: linear-gradient(180deg, #fafbff 0%, #f8fafc 100%);" class="mobile-padding">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                
+                                <!-- Feature 1: Automatización Inteligente -->
                                 <tr>
-                                    <td style="width: 48px; vertical-align: top; padding-right: 20px;">
-                                        <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #56c3e8 0%, #3a9ec7 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                                            </svg>
-                                        </div>
+                                    <td style="padding: 32px; background: linear-gradient(135deg, #ffffff 0%, #fefeff 100%); border-radius: 16px; border: 2px solid #e0e7ff; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);" class="mobile-padding">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                            <tr>
+                                                <td width="80" valign="top" style="padding-right: 24px;">
+                                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                                        <tr>
+                                                            <td align="center" valign="middle" style="width: 64px; height: 64px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 16px; font-size: 32px; line-height: 64px; box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);" class="mobile-icon">
+                                                                ⚡
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td valign="top">
+                                                    <h3 style="margin: 0 0 12px 0; font-size: 21px; font-weight: 800; line-height: 28px; color: #0f172a;">
+                                                        Automatización Inteligente
+                                                    </h3>
+                                                    <p style="margin: 0; font-size: 16px; line-height: 27px; color: #334155; font-weight: 400;">
+                                                        Libera el <strong style="color: #6366f1; font-weight: 700;">80% de tu tiempo</strong> con IA que aprende de tu negocio y automatiza tareas repetitivas de forma inteligente.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </td>
-                                    <td style="vertical-align: top;">
-                                        <h3 style="color: #1e293b; font-size: 20px; font-weight: 600; margin: 0 0 8px 0;">
-                                            WhatsApp IA Avanzado
+                                </tr>
+                                
+                                <!-- Spacer -->
+                                <tr><td style="height: 20px; font-size: 1px; line-height: 1px;">&nbsp;</td></tr>
+                                
+                                <!-- Feature 2: WhatsApp IA 24/7 -->
+                                <tr>
+                                    <td style="padding: 32px; background: linear-gradient(135deg, #ffffff 0%, #fefeff 100%); border-radius: 16px; border: 2px solid #e0e7ff; box-shadow: 0 8px 24px rgba(139, 92, 246, 0.08);" class="mobile-padding">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                            <tr>
+                                                <td width="80" valign="top" style="padding-right: 24px;">
+                                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                                        <tr>
+                                                            <td align="center" valign="middle" style="width: 64px; height: 64px; background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%); border-radius: 16px; font-size: 32px; line-height: 64px; box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);" class="mobile-icon">
+                                                                💬
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td valign="top">
+                                                    <h3 style="margin: 0 0 12px 0; font-size: 21px; font-weight: 800; line-height: 28px; color: #0f172a;">
+                                                        WhatsApp IA 24/7
+                                                    </h3>
+                                                    <p style="margin: 0; font-size: 16px; line-height: 27px; color: #334155; font-weight: 400;">
+                                                        Atención <strong style="color: #8b5cf6; font-weight: 700;">personalizada las 24 horas</strong> del día. Responde a tus clientes al instante, incluso mientras duermes.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Spacer -->
+                                <tr><td style="height: 20px; font-size: 1px; line-height: 1px;">&nbsp;</td></tr>
+                                
+                                <!-- Feature 3: CRM Inteligente -->
+                                <tr>
+                                    <td style="padding: 32px; background: linear-gradient(135deg, #ffffff 0%, #fefeff 100%); border-radius: 16px; border: 2px solid #e0e7ff; box-shadow: 0 8px 24px rgba(168, 85, 247, 0.08);" class="mobile-padding">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                            <tr>
+                                                <td width="80" valign="top" style="padding-right: 24px;">
+                                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                                        <tr>
+                                                            <td align="center" valign="middle" style="width: 64px; height: 64px; background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); border-radius: 16px; font-size: 32px; line-height: 64px; box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);" class="mobile-icon">
+                                                                📊
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td valign="top">
+                                                    <h3 style="margin: 0 0 12px 0; font-size: 21px; font-weight: 800; line-height: 28px; color: #0f172a;">
+                                                        CRM Inteligente
+                                                    </h3>
+                                                    <p style="margin: 0; font-size: 16px; line-height: 27px; color: #334155; font-weight: 400;">
+                                                        Decisiones basadas en <strong style="color: #a855f7; font-weight: 700;">datos en tiempo real</strong>. Analítica predictiva que anticipa las necesidades de tus clientes.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- CTA SECTION -->
+                    <tr>
+                        <td align="center" style="padding: 50px 45px; background: linear-gradient(135deg, #eef2ff 0%, #ddd6fe 100%); border-top: 3px solid #c7d2fe;" class="mobile-padding">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center">
+                                        <h3 style="margin: 0 0 16px 0; font-size: 26px; font-weight: 800; line-height: 34px; color: #0f172a;">
+                                            ¿Listo para Automatizar tu Negocio? 🚀
                                         </h3>
-                                        <p style="color: #64748b; font-size: 16px; line-height: 1.6; margin: 0;">
-                                            Atención personalizada 24/7 con contexto completo de cada conversación.
+                                        <p style="margin: 0 0 32px 0; font-size: 17px; line-height: 28px; color: #1e293b; font-weight: 500;">
+                                            Únete a <strong style="color: #6366f1;">cientos de empresas</strong> que ya transformaron su gestión con IA
                                         </p>
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                                            <tr>
+                                                <td align="center" style="border-radius: 10px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);" class="mobile-button">
+                                                    <a href="https://froit.com/comenzar" style="display: inline-block; padding: 20px 48px; font-size: 18px; font-weight: 800; color: #ffffff; text-decoration: none; border-radius: 10px; letter-spacing: 0.3px;">
+                                                        Comenzar Ahora →
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             </table>
-                            
-                            <!-- Feature 3 -->
-                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                        </td>
+                    </tr>
+                    
+                    <!-- FOOTER -->
+                    <tr>
+                        <td style="padding: 50px 45px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);" class="mobile-padding">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                
+                                <!-- Social Media -->
                                 <tr>
-                                    <td style="width: 48px; vertical-align: top; padding-right: 20px;">
-                                        <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #826aac 0%, #654a8a 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M3 3V21H21" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                                                <path d="M18 17L13 12L9 16L3 10" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                                            </svg>
-                                        </div>
+                                    <td align="center" style="padding-bottom: 32px;">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                                            <tr>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="https://twitter.com/froit" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                                                        <img src="https://cdn-icons-png.flaticon.com/32/733/733579.png" alt="Twitter" width="22" height="22" style="display: inline-block; vertical-align: middle;">
+                                                    </a>
+                                                </td>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="https://linkedin.com/company/froit" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                                                        <img src="https://cdn-icons-png.flaticon.com/32/174/174857.png" alt="LinkedIn" width="22" height="22" style="display: inline-block; vertical-align: middle;">
+                                                    </a>
+                                                </td>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="https://instagram.com/froit" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                                                        <img src="https://cdn-icons-png.flaticon.com/32/174/174855.png" alt="Instagram" width="22" height="22" style="display: inline-block; vertical-align: middle;">
+                                                    </a>
+                                                </td>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="https://wa.me/1234567890" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                                                        <img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="22" height="22" style="display: inline-block; vertical-align: middle;">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </td>
-                                    <td style="vertical-align: top;">
-                                        <h3 style="color: #1e293b; font-size: 20px; font-weight: 600; margin: 0 0 8px 0;">
-                                            CRM Inteligente
-                                        </h3>
-                                        <p style="color: #64748b; font-size: 16px; line-height: 1.6; margin: 0;">
-                                            Centraliza interacciones y toma decisiones basadas en datos en tiempo real.
+                                </tr>
+                                
+                                <!-- Company Info -->
+                                <tr>
+                                    <td align="center" style="padding-bottom: 24px;">
+                                        <p style="margin: 0; font-size: 16px; line-height: 26px; color: #cbd5e1;">
+                                            <strong style="color: #ffffff; font-size: 18px; font-weight: 700;">Froit - Soluciones IA</strong><br>
+                                            <span style="color: #94a3b8;">Tu partner en transformación digital</span><br><br>
+                                            <a href="tel:+1234567890" style="color: #c7d2fe; text-decoration: none; font-weight: 500;">+1 (234) 567-890</a> | 
+                                            <a href="mailto:hola@froit.com" style="color: #c7d2fe; text-decoration: none; font-weight: 500;">hola@froit.com</a><br>
+                                            <a href="https://froit.com" style="color: #a5b4fc; text-decoration: none; font-weight: 600;">www.froit.com</a>
                                         </p>
                                     </td>
                                 </tr>
+                                
+                                <!-- Unsubscribe -->
+                                <tr>
+                                    <td align="center" style="padding-top: 24px; border-top: 1px solid #334155;">
+                                        <p style="margin: 0; font-size: 13px; line-height: 24px; color: #64748b;">
+                                            Recibiste este email porque estás suscrito a nuestro newsletter de Froit.<br>
+                                            <a href="https://froit.com/preferencias" style="color: #94a3b8; text-decoration: underline; font-weight: 500;">Gestionar preferencias</a> | 
+                                            <a href="https://froit.com/unsub" style="color: #94a3b8; text-decoration: underline; font-weight: 500;">Cancelar suscripción</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                
                             </table>
-                            
-                        </td>
-                    </tr>
-                    
-                    <!-- CTA minimalista -->
-                    <tr>
-                        <td style="padding: 0 0 48px 0; text-align: center;">
-                            <a href="https://www.froit.com.ar" style="display: inline-block; padding: 16px 48px; background-color: #1e293b; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; letter-spacing: 0.3px;">
-                                Comenzar ahora
-                            </a>
-                        </td>
-                    </tr>
-                    
-                    <!-- Separador -->
-                    <tr>
-                        <td style="padding: 0 0 32px 0;">
-                            <div style="border-top: 1px solid #e2e8f0;"></div>
-                        </td>
-                    </tr>
-                    
-                    <!-- Footer minimalista -->
-                    <tr>
-                        <td style="text-align: center;">
-                            <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin: 0 0 8px 0;">
-                                ¿Preguntas? Escríbenos a <a href="mailto:comercial@froit.com.ar" style="color: #1e293b; text-decoration: none; font-weight: 600;">comercial@froit.com.ar</a>
-                            </p>
-                            <p style="color: #cbd5e1; font-size: 13px; margin: 0 0 12px 0;">
-                                Froit · Soluciones de IA para negocios · 2025
-                            </p>
-                            <p style="margin: 0;">
-                                <a href="{{unsubscribe}}" style="color: #cbd5e1; text-decoration: none; font-size: 12px; border-bottom: 1px solid #e2e8f0;">
-                                    Cancelar suscripción
-                                </a>
-                            </p>
                         </td>
                     </tr>
                     
                 </table>
+                <!-- Fin Container principal -->
                 
             </td>
         </tr>
     </table>
+    <!-- Fin Wrapper principal -->
     
 </body>
-</html>`
-}
+</html>
+
+
+`;
+};
