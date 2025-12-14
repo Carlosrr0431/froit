@@ -56,7 +56,7 @@ export const emailFroitHTML = (contenido, nombre = "Cliente") => {
                                     <td align="left" valign="middle">
                                         <!-- Logo Froit sin fondo -->
                                         <a href="https://froit.com" style="text-decoration: none;">
-                                            <img src="https://res.cloudinary.com/dtiqaci6a/image/upload/v1763773933/Dise%C3%B1o_sin_t%C3%ADtulo_6_j0n39w.png" alt="Froit" width="140" height="auto" style="display: block; max-width: 140px; height: auto;">
+                                            <img src="https://res.cloudinary.com/dtiqaci6a/image/upload/v1765721888/froit-02_b7isuy.png" alt="Froit" width="140" height="auto" style="display: block; max-width: 140px; height: auto;">
                                         </a>
                                     </td>
                                     <td align="right" valign="middle" class="mobile-hide">
