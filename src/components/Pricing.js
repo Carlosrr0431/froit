@@ -55,7 +55,7 @@ const Pricing = () => {
   const [selected, setSelected] = useState([]);
 
   const toggle = (id) => {
-    setSelected(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, i]);
+    setSelected(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   };
 
   const incrementAutomations = () => {
