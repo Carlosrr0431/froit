@@ -50,18 +50,14 @@ export const emailFroitHTML = (contenido, nombre = "Cliente") => {
                     
                     <!-- HEADER -->
                     <tr>
-                        <td align="center" style="padding: 40px 40px; background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%); border-bottom: 3px solid #e0e7ff;" class="mobile-padding">
+                        <td align="center" style="padding: 20px 30px; background-color: #ffffff;" class="mobile-padding">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                                 <tr>
-                                    <td align="left" valign="middle">
-                                        <!-- Logo Froit sin fondo -->
-                                        <a href="https://froit.com" style="text-decoration: none;">
+                                    <td align="center" valign="middle">
+                                        <!-- Logo Froit centrado -->
+                                        <a href="https://www.froit.com.ar" style="text-decoration: none;">
                                             <img src="https://res.cloudinary.com/dtiqaci6a/image/upload/v1765721888/froit-02_b7isuy.png" alt="Froit" width="140" height="auto" style="display: block; max-width: 140px; height: auto;">
                                         </a>
-                                    </td>
-                                    <td align="right" valign="middle" class="mobile-hide">
-                                        <a href="https://froit.com/blog" style="color: #1e293b; text-decoration: none; font-size: 15px; font-weight: 600; margin-left: 28px;">Blog</a>
-                                        <a href="https://froit.com/soluciones" style="color: #1e293b; text-decoration: none; font-size: 15px; font-weight: 600; margin-left: 28px;">Soluciones</a>
                                     </td>
                                 </tr>
                             </table>
@@ -84,7 +80,7 @@ export const emailFroitHTML = (contenido, nombre = "Cliente") => {
                                         <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
                                             <tr>
                                                 <td align="center" style="border-radius: 10px; background-color: #ffffff; box-shadow: 0 8px 24px rgba(0,0,0,0.2);" class="mobile-button">
-                                                    <a href="https://froit.com/demo" style="display: inline-block; padding: 20px 48px; font-size: 17px; font-weight: 800; color: #6366f1; text-decoration: none; border-radius: 10px; background-color: #ffffff; letter-spacing: 0.3px;">
+                                                    <a href="https://www.froit.com.ar" style="display: inline-block; padding: 20px 48px; font-size: 17px; font-weight: 800; color: #6366f1; text-decoration: none; border-radius: 10px; background-color: #ffffff; letter-spacing: 0.3px;">
                                                         Solicitar Demo Gratuita →
                                                     </a>
                                                 </td>
@@ -228,7 +224,7 @@ export const emailFroitHTML = (contenido, nombre = "Cliente") => {
                                         <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
                                             <tr>
                                                 <td align="center" style="border-radius: 10px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);" class="mobile-button">
-                                                    <a href="https://froit.com/comenzar" style="display: inline-block; padding: 20px 48px; font-size: 18px; font-weight: 800; color: #ffffff; text-decoration: none; border-radius: 10px; letter-spacing: 0.3px;">
+                                                    <a href="https://www.froit.com.ar" style="display: inline-block; padding: 20px 48px; font-size: 18px; font-weight: 800; color: #ffffff; text-decoration: none; border-radius: 10px; letter-spacing: 0.3px;">
                                                         Comenzar Ahora →
                                                     </a>
                                                 </td>
@@ -251,18 +247,13 @@ export const emailFroitHTML = (contenido, nombre = "Cliente") => {
                                         <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
                                             <tr>
                                                 <td style="padding: 0 12px;">
-                                                    <a href="https://twitter.com/froit" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-                                                        <img src="https://cdn-icons-png.flaticon.com/32/733/733579.png" alt="Twitter" width="22" height="22" style="display: inline-block; vertical-align: middle;">
-                                                    </a>
-                                                </td>
-                                                <td style="padding: 0 12px;">
-                                                    <a href="https://linkedin.com/company/froit" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-                                                        <img src="https://cdn-icons-png.flaticon.com/32/174/174857.png" alt="LinkedIn" width="22" height="22" style="display: inline-block; vertical-align: middle;">
-                                                    </a>
-                                                </td>
-                                                <td style="padding: 0 12px;">
                                                     <a href="https://instagram.com/froit" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
                                                         <img src="https://cdn-icons-png.flaticon.com/32/174/174855.png" alt="Instagram" width="22" height="22" style="display: inline-block; vertical-align: middle;">
+                                                    </a>
+                                                </td>
+                                                <td style="padding: 0 12px;">
+                                                    <a href="https://facebook.com/froit" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                                                        <img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="22" height="22" style="display: inline-block; vertical-align: middle;">
                                                     </a>
                                                 </td>
                                                 <td style="padding: 0 12px;">
@@ -281,23 +272,11 @@ export const emailFroitHTML = (contenido, nombre = "Cliente") => {
                                         <p style="margin: 0; font-size: 16px; line-height: 26px; color: #cbd5e1;">
                                             <strong style="color: #ffffff; font-size: 18px; font-weight: 700;">Froit - Soluciones IA</strong><br>
                                             <span style="color: #94a3b8;">Tu partner en transformación digital</span><br><br>
-                                            <a href="tel:+1234567890" style="color: #c7d2fe; text-decoration: none; font-weight: 500;">+1 (234) 567-890</a> | 
-                                            <a href="mailto:hola@froit.com" style="color: #c7d2fe; text-decoration: none; font-weight: 500;">hola@froit.com</a><br>
-                                            <a href="https://froit.com" style="color: #a5b4fc; text-decoration: none; font-weight: 600;">www.froit.com</a>
+                                            <a href="https://www.froit.com.ar" style="color: #a5b4fc; text-decoration: none; font-weight: 600;">www.froit.com.ar</a>
                                         </p>
                                     </td>
                                 </tr>
                                 
-                                <!-- Unsubscribe -->
-                                <tr>
-                                    <td align="center" style="padding-top: 24px; border-top: 1px solid #334155;">
-                                        <p style="margin: 0; font-size: 13px; line-height: 24px; color: #64748b;">
-                                            Recibiste este email porque estás suscrito a nuestro newsletter de Froit.<br>
-                                            <a href="https://froit.com/preferencias" style="color: #94a3b8; text-decoration: underline; font-weight: 500;">Gestionar preferencias</a> | 
-                                            <a href="https://froit.com/unsub" style="color: #94a3b8; text-decoration: underline; font-weight: 500;">Cancelar suscripción</a>
-                                        </p>
-                                    </td>
-                                </tr>
                                 
                             </table>
                         </td>
