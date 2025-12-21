@@ -247,17 +247,17 @@ export const emailFroitHTML = (contenido, nombre = "Cliente") => {
                                         <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
                                             <tr>
                                                 <td style="padding: 0 12px;">
-                                                    <a href="https://instagram.com/froit" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                                                    <a href="https://www.instagram.com/froit.ia/?igsh=bXBzZm05Z2R2a3J5#" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
                                                         <img src="https://cdn-icons-png.flaticon.com/32/174/174855.png" alt="Instagram" width="22" height="22" style="display: inline-block; vertical-align: middle;">
                                                     </a>
                                                 </td>
                                                 <td style="padding: 0 12px;">
-                                                    <a href="https://facebook.com/froit" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                                                    <a href="https://www.facebook.com/profile.php?id=61583388711132&sk=reviews" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
                                                         <img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="22" height="22" style="display: inline-block; vertical-align: middle;">
                                                     </a>
                                                 </td>
                                                 <td style="padding: 0 12px;">
-                                                    <a href="https://wa.me/1234567890" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                                                    <a href="https://wa.me/5493878256162?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20las%20soluciones%20de%20IA%20de%20Froit" style="text-decoration: none; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #334155 0%, #475569 100%); border-radius: 50%; text-align: center; line-height: 48px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
                                                         <img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="22" height="22" style="display: inline-block; vertical-align: middle;">
                                                     </a>
                                                 </td>
