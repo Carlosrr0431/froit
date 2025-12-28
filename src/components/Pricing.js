@@ -73,8 +73,8 @@ const Pricing = () => {
   }, 0);
 
   return (
-    <section id="pricing" className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-6">
+    <section id="pricing" className="py-16 sm:py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -82,7 +82,7 @@ const Pricing = () => {
           className="max-w-6xl mx-auto"
         >
           {/* Header */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-10 sm:mb-12 px-2">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
               <span className="text-gray-900 dark:text-white">Un plan </span>
               <span className="gradient-text">simple y claro</span>
@@ -92,7 +92,7 @@ const Pricing = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
             {/* Left: Main Plan Card */}
             <div className="lg:col-span-2">
               <motion.div

@@ -81,7 +81,7 @@ const HowItWorks = () => {
   };
 
   return (
-    <section id="how-it-works" className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 relative overflow-hidden">
+    <section id="how-it-works" className="py-14 sm:py-24 lg:py-32 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 relative overflow-hidden">
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-72 h-72 sm:w-96 sm:h-96 bg-gradient-to-r from-blue-200/20 to-purple-200/20 dark:from-blue-800/20 dark:to-purple-800/20 rounded-full filter blur-3xl animate-pulse" />
@@ -109,14 +109,14 @@ const HowItWorks = () => {
         ))}
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-6xl">
         {/* Enhanced Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1 }}
-          className="text-center mb-12 sm:mb-16 lg:mb-20"
+          className="text-center mb-12 sm:mb-16 lg:mb-20 px-2"
         >
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
@@ -142,7 +142,7 @@ const HowItWorks = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed font-light px-4"
+            className="text-base sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed font-light px-2 sm:px-4"
             style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
           >
             Proceso de configuración en{' '}
@@ -169,7 +169,7 @@ const HowItWorks = () => {
             </div>
             
             {/* Mobile Connecting Line */}
-            <div className="lg:hidden absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-500 via-purple-500 to-orange-500 rounded-full"></div>
+            <div className="lg:hidden absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-500 via-purple-500 to-orange-500 rounded-full"></div>
 
             {steps.map((step, index) => {
               const IconComponent = step.icon;
@@ -187,7 +187,7 @@ const HowItWorks = () => {
                   <div className={`w-full lg:w-5/12 ${isEven ? 'lg:pr-8 xl:pr-16' : 'lg:pl-8 xl:pl-16'} mb-8 lg:mb-0 ${!isEven ? 'lg:order-3' : ''}`}>
                     <motion.div
                       whileHover={{ scale: 1.01, y: -3 }}
-                      className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50 overflow-hidden ml-16 lg:ml-0"
+                      className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-5 sm:p-7 lg:p-10 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50 overflow-hidden ml-12 sm:ml-14 lg:ml-0"
                     >
                       {/* Card Background Effect */}
                       <div className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-3 rounded-2xl sm:rounded-3xl`} />
@@ -199,7 +199,7 @@ const HowItWorks = () => {
                       </div>
 
                       <div className="flex items-start mb-4 sm:mb-6">
-                        <div className={`flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${step.color} rounded-xl sm:rounded-2xl flex items-center justify-center text-white font-black text-lg sm:text-2xl mr-4 sm:mr-6 shadow-md`} style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                        <div className={`flex-shrink-0 w-11 h-11 sm:w-16 sm:h-16 bg-gradient-to-br ${step.color} rounded-xl sm:rounded-2xl flex items-center justify-center text-white font-black text-lg sm:text-2xl mr-4 sm:mr-6 shadow-md`} style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                           {step.number}
                         </div>
                         <div className="flex-1">
@@ -210,7 +210,7 @@ const HowItWorks = () => {
                         </div>
                       </div>
                       
-                      <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed font-light" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                      <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-300 mb-5 sm:mb-8 leading-relaxed font-light" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                         {step.description}
                       </p>
 
@@ -238,9 +238,9 @@ const HowItWorks = () => {
                       {/* Main Icon */}
                       <motion.div
                         whileHover={{ scale: 1.1, rotate: 3 }}
-                        className={`relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br ${step.color} rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg z-10`}
+                        className={`relative w-14 h-14 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br ${step.color} rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg z-10`}
                       >
-                        <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
+                        <IconComponent className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
                       </motion.div>
                       
                       {/* Pulsing Ring */}
@@ -277,13 +277,13 @@ const HowItWorks = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="mt-16 sm:mt-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-lg border border-gray-200/50 dark:border-gray-700/50 max-w-5xl mx-auto"
+          className="mt-14 sm:mt-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 shadow-lg border border-gray-200/50 dark:border-gray-700/50 max-w-5xl mx-auto"
         >
           <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center text-gray-900 dark:text-white mb-6 sm:mb-8 leading-tight" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
             Flujo de Automatización
           </h3>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-4">
             {[
               { 
                 icon: MessageCircle, 

@@ -121,7 +121,7 @@ const Hero = ({ isLogoInHeader = false }) => {
   return (
     <section
       ref={ref}
-      className="relative min-h-screen h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 overflow-hidden flex items-center justify-center transition-colors duration-500"
+      className="relative min-h-[92vh] sm:min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 overflow-hidden flex items-center justify-center transition-colors duration-500"
     >
       {/* Logo en Hero Desktop - z-index bajo para no superponerse */}
       {!isLogoInHeader && (
@@ -396,7 +396,7 @@ const Hero = ({ isLogoInHeader = false }) => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="flex flex-col items-center text-center space-y-4 sm:space-y-5 md:space-y-6 pt-32 md:pt-11"
+            className="flex flex-col items-center text-center space-y-4 sm:space-y-5 md:space-y-6 pt-24 sm:pt-16 md:pt-11"
           >
             {/* Modern Title - Better Mobile Spacing */}
             <motion.div variants={itemVariants} className="w-full">

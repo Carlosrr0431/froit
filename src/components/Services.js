@@ -77,7 +77,7 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-20 bg-gradient-to-b from-slate-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
+    <section id="services" className="py-16 sm:py-20 bg-gradient-to-b from-slate-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM5Q0EzQUYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItMnptMC0yaDJ2Mmgtdi0yem0wLTJ2LTJoMnYyaC0yem0tMiAwdi0yaDJ2Mmgtdi0yem0tMiAwaC0ydjJoMnYtMnptMCAydjJoLTJ2LTJoMnptMCAyaDJ2Mmgtdi0yem0yIDB2Mmgydi0yaC0yem0wLTJoMnYyaC0ydi0yem0yLTJoMnYyaC0ydi0yem0wIDJ2Mmgydi0yaC0yem0tMi0ydjJoMnYtMmgtMnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40"></div>
 
@@ -107,14 +107,14 @@ const Services = () => {
         className="absolute bottom-20 left-10 w-32 h-32 bg-gradient-to-br from-green-400/20 to-emerald-400/20 rounded-full blur-3xl"
       />
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -129,13 +129,13 @@ const Services = () => {
             </span>
           </motion.div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 px-4" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 px-2 sm:px-4 leading-tight" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
             <span className="text-gray-900 dark:text-white">Todo lo que tu negocio necesita</span>
             <br />
             <span className="gradient-text">con un agente IA de WhatsApp</span>
           </h2>
           
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed px-2 sm:px-4">
             Agente IA inteligente + CRM personalizado + microservicios potentes,
             <br className="hidden md:block" />
             diseñados específicamente para hacer crecer tu negocio
@@ -143,7 +143,7 @@ const Services = () => {
         </motion.div>
 
         {/* Main Services */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16 max-w-7xl mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7 lg:gap-8 mb-12 sm:mb-16 max-w-7xl mx-auto px-2 sm:px-4">
           {mainServices.map((service, index) => {
             const Icon = service.icon;
             return (
@@ -156,7 +156,7 @@ const Services = () => {
                 className="group relative"
               >
                 {/* Card */}
-                <div className="relative bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div className="relative bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-5 sm:p-7 lg:p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 overflow-hidden">
                   {/* Gradient Background on Hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
                   
@@ -164,27 +164,27 @@ const Services = () => {
                   <div className="relative z-10">
                     {/* Icon */}
                     <motion.div
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${service.gradient} mb-6 shadow-lg`}
+                      whileHover={{ scale: 1.05, rotate: 3 }}
+                      className={`inline-flex p-3.5 sm:p-4 rounded-2xl bg-gradient-to-br ${service.gradient} mb-5 sm:mb-6 shadow-lg`}
                     >
-                      <Icon className="w-8 h-8 text-white" />
+                      <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                     </motion.div>
 
                     {/* Title */}
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                       {service.title}
                     </h3>
-                    <p className={`text-sm font-semibold text-${service.accentColor}-600 dark:text-${service.accentColor}-400 mb-4`}>
+                    <p className={`text-sm sm:text-base font-semibold text-${service.accentColor}-600 dark:text-${service.accentColor}-400 mb-3 sm:mb-4`}>
                       {service.subtitle}
                     </p>
 
                     {/* Description */}
-                    <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                    <p className="text-gray-600 dark:text-gray-300 mb-5 sm:mb-6 leading-relaxed text-sm sm:text-base">
                       {service.description}
                     </p>
 
                     {/* Benefits */}
-                    <div className="space-y-3">
+                    <div className="space-y-2.5 sm:space-y-3">
                       {service.benefits.map((benefit, idx) => (
                         <motion.div
                           key={idx}
@@ -197,7 +197,7 @@ const Services = () => {
                           <div className={`flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-br ${service.gradient} flex items-center justify-center`}>
                             <Zap className="w-3 h-3 text-white" />
                           </div>
-                          <span className="text-sm text-gray-700 dark:text-gray-300">{benefit}</span>
+                          <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-snug">{benefit}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -235,10 +235,10 @@ const Services = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-16 max-w-4xl mx-auto"
+          className="mb-12 sm:mb-16 max-w-4xl mx-auto px-2 sm:px-0"
         >
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-8 border border-gray-200 dark:border-gray-600">
-            <div className="text-center mb-8">
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-gray-200 dark:border-gray-600">
+            <div className="text-center mb-6 sm:mb-8">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                 Integración Perfecta
               </h3>
