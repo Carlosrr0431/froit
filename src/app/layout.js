@@ -81,8 +81,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="es" className="scroll-smooth">
+    <html lang="es" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        {/* Force light mode before React hydrates */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
+            try { localStorage.setItem('theme', 'light'); } catch(e) {}
+          })()
+        ` }} />
         {/* Google Tag Manager */}
         <Script id="google-tag-manager" strategy="afterInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

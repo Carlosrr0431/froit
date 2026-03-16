@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+/* Override Tailwind v4 dark mode: use .dark class instead of prefers-color-scheme */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Modern CSS Variables for AI Startup Theme */
 :root {
   --background: #ffffff;
@@ -17,8 +20,8 @@
 
 /* Light Mode Styles */
 :root:not(.dark) {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #ffffff;
+  --foreground: #1e293b;
 }
 
 /* Dark Mode Styles */
@@ -56,7 +59,7 @@ h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, select {
 
 /* Light mode specific styles */
 body:not(.dark) {
-  background: linear-gradient(to bottom, #f8fafc 0%, #f2f4f7 50%, #e5e7eb 100%);
+  background: #ffffff;
 }
 
 /* Dark mode specific styles */
@@ -88,10 +91,10 @@ body:not(.dark) {
 
 /* Modern Glass Effects */
 .glass-effect {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .dark .glass-effect {
@@ -101,19 +104,19 @@ body:not(.dark) {
 
 /* Modern Button Styles */
 .btn-primary {
-  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  background: linear-gradient(to right, #3b82f6, #6366f1);
   color: white;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2);
   transform: scale(1);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(to right, #2563eb, #7c3aed);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(to right, #2563eb, #4f46e5);
+  box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.3);
   transform: scale(1.05);
 }
 

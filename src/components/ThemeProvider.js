@@ -5,18 +5,17 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('dark'); // Dark mode por defecto
+  const [theme, setTheme] = useState('light'); // Light mode por defecto
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Verificar si hay una preferencia guardada
+    // Forzar light mode - limpiar preferencia anterior si era dark
     const savedTheme = localStorage.getItem('theme');
-    
-    if (savedTheme) {
-      setTheme(savedTheme);
+    if (savedTheme === 'dark') {
+      localStorage.setItem('theme', 'light');
     }
-    // Si no hay preferencia guardada, mantener dark mode por defecto
+    // Mantener light mode por defecto
   }, []);
 
   useEffect(() => {

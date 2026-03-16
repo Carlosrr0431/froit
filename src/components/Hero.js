@@ -121,7 +121,7 @@ const Hero = ({ isLogoInHeader = false }) => {
   return (
     <section
       ref={ref}
-      className="relative min-h-[92vh] sm:min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 overflow-hidden flex items-center justify-center transition-colors duration-500"
+      className="relative min-h-[92vh] sm:min-h-screen bg-gradient-to-br from-white via-blue-50/80 to-indigo-50/60 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 overflow-hidden flex items-center justify-center transition-colors duration-500"
     >
       {/* Logo en Hero Desktop - z-index bajo para no superponerse */}
       {!isLogoInHeader && (
@@ -152,12 +152,12 @@ const Hero = ({ isLogoInHeader = false }) => {
       {/* Enhanced Background Effects - Optimized for Mobile */}
       <motion.div style={{ y, opacity }} className="absolute inset-0">
         {/* Mobile: Solo 2 orbs estáticos con blur suave */}
-        <div className="sm:hidden absolute top-0 left-0 w-[300px] h-[300px] bg-gradient-to-r from-blue-500/15 to-cyan-500/15 dark:from-blue-500/10 dark:to-cyan-500/10 rounded-full filter blur-2xl"></div>
-        <div className="sm:hidden absolute bottom-0 right-0 w-[350px] h-[350px] bg-gradient-to-r from-purple-500/15 to-pink-500/15 dark:from-purple-500/10 dark:to-pink-500/10 rounded-full filter blur-2xl"></div>
+        <div className="sm:hidden absolute top-0 left-0 w-[300px] h-[300px] bg-gradient-to-r from-blue-300/20 to-cyan-300/20 dark:from-blue-500/10 dark:to-cyan-500/10 rounded-full filter blur-2xl"></div>
+        <div className="sm:hidden absolute bottom-0 right-0 w-[350px] h-[350px] bg-gradient-to-r from-purple-300/20 to-pink-300/20 dark:from-purple-500/10 dark:to-pink-500/10 rounded-full filter blur-2xl"></div>
 
         {/* Desktop: Large animated gradient orbs */}
         <motion.div
-          className="hidden sm:block absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-r from-blue-500/30 to-cyan-500/30 dark:from-blue-500/20 dark:to-cyan-500/20 rounded-full filter blur-3xl"
+          className="hidden sm:block absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-r from-blue-300/25 to-cyan-200/25 dark:from-blue-500/20 dark:to-cyan-500/20 rounded-full filter blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             x: [0, 50, 0],
@@ -171,7 +171,7 @@ const Hero = ({ isLogoInHeader = false }) => {
           }}
         />
         <motion.div
-          className="hidden sm:block absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/25 to-pink-500/25 dark:from-purple-500/15 dark:to-pink-500/15 rounded-full filter blur-3xl"
+          className="hidden sm:block absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-r from-purple-300/20 to-pink-200/20 dark:from-purple-500/15 dark:to-pink-500/15 rounded-full filter blur-3xl"
           animate={{
             scale: [1, 1.3, 1],
             x: [0, -30, 0],
@@ -186,7 +186,7 @@ const Hero = ({ isLogoInHeader = false }) => {
           }}
         />
         <motion.div
-          className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-r from-indigo-500/20 to-blue-500/20 dark:from-indigo-500/15 dark:to-blue-500/15 rounded-full filter blur-3xl"
+          className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-r from-indigo-200/20 to-blue-200/20 dark:from-indigo-500/15 dark:to-blue-500/15 rounded-full filter blur-3xl"
           animate={{
             scale: [1, 1.4, 1],
             rotate: [0, 180, 360],
@@ -212,14 +212,14 @@ const Hero = ({ isLogoInHeader = false }) => {
           }}
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.06) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%)",
             backgroundSize: "100% 100%",
           }}
         />
 
         {/* Grid pattern - Hidden on mobile */}
         <motion.div
-          className="hidden sm:block absolute inset-0 opacity-10 dark:opacity-5"
+          className="hidden sm:block absolute inset-0 opacity-[0.06] dark:opacity-5"
           animate={{
             opacity: [0.05, 0.15, 0.05],
           }}
@@ -240,8 +240,8 @@ const Hero = ({ isLogoInHeader = false }) => {
                 <path
                   d="M 50 0 L 0 0 0 50"
                   fill="none"
-                  stroke="#3b82f6"
-                  strokeWidth="1"
+                  stroke="#94a3b8"
+                  strokeWidth="0.5"
                 />
               </pattern>
             </defs>
@@ -253,7 +253,7 @@ const Hero = ({ isLogoInHeader = false }) => {
         {mobileParticles.map((particle) => (
           <motion.div
             key={`mobile-particle-${particle.id}`}
-            className="sm:hidden absolute bg-blue-400/30 dark:bg-blue-400/15 rounded-full"
+            className="sm:hidden absolute bg-indigo-400/25 dark:bg-blue-400/15 rounded-full"
             style={{
               width: '3px',
               height: '3px',
@@ -277,7 +277,7 @@ const Hero = ({ isLogoInHeader = false }) => {
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="hidden sm:block absolute bg-blue-400/40 dark:bg-blue-400/20 rounded-full"
+            className="hidden sm:block absolute bg-indigo-400/30 dark:bg-blue-400/20 rounded-full"
             style={{
               width: `${Math.random() * 4 + 2}px`,
               height: `${Math.random() * 4 + 2}px`,
@@ -372,7 +372,7 @@ const Hero = ({ isLogoInHeader = false }) => {
               }}
             >
               <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-400/5 dark:to-purple-400/5"
+                className="absolute inset-0 bg-gradient-to-br from-blue-400/5 to-indigo-400/5 dark:from-blue-400/5 dark:to-purple-400/5"
                 animate={{
                   opacity: [0, 0.4, 0],
                 }}
@@ -406,15 +406,15 @@ const Hero = ({ isLogoInHeader = false }) => {
                   fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
                 }}
               >
-                <span className="block text-slate-900 dark:text-white">
+                <span className="block text-slate-800 dark:text-white">
                   Agente IA{" "}
-                  <span className="font-bold" style={{ color: "#56c3e8" }}>
+                  <span className="font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
                     INTELIGENTE
                   </span>{" "}
                 </span>
-                <span className="block text-slate-900 dark:text-white">
+                <span className="block text-slate-800 dark:text-white">
                   para{" "}
-                  <span className="font-bold" style={{ color: "#6cbfa5" }}>
+                  <span className="font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
                     WHATSAPP
                   </span>{" "}
                 </span>
@@ -573,7 +573,7 @@ const Hero = ({ isLogoInHeader = false }) => {
                   y: -2,
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="group relative bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 hover:from-blue-500 hover:via-blue-600 hover:to-purple-500 text-white font-medium text-base sm:text-lg md:text-lg px-8 sm:px-10 py-3.5 sm:py-4 transition-all duration-300 inline-flex items-center justify-center shadow-2xl rounded-xl w-full sm:w-auto overflow-hidden"
+                className="group relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 text-white font-semibold text-base sm:text-lg md:text-lg px-8 sm:px-10 py-3.5 sm:py-4 transition-all duration-300 inline-flex items-center justify-center shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 rounded-2xl w-full sm:w-auto overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative z-10 mr-2">
@@ -589,14 +589,14 @@ const Hero = ({ isLogoInHeader = false }) => {
               className="pt-3 sm:pt-4 flex items-center justify-center gap-2"
             >
               <p 
-                className="text-sm sm:text-base font-semibold text-white"
+                className="text-sm sm:text-base font-semibold text-slate-600 dark:text-white"
                 style={{
                   fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
                 }}
               >
                 ¡Transforma conversaciones en conversiones!
               </p>
-              <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+              <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500 dark:text-blue-400" />
             </motion.div>
           </motion.div>
         </div>

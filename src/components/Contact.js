@@ -8,7 +8,7 @@ const Contact = () => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   return (
-    <section id="contact" className="py-14 sm:py-20 bg-white dark:bg-gray-900 relative">
+    <section id="contact" className="py-14 sm:py-20 bg-gradient-to-b from-slate-50/50 to-white dark:bg-gray-900 relative">
   <div className="container mx-auto px-4 sm:px-6 max-w-4xl lg:max-w-5xl">
         {/* Header - Más minimalista */}
         <motion.div
@@ -38,7 +38,7 @@ const Contact = () => {
           >
             <button
               onClick={() => setShowCalendar(!showCalendar)}
-              className="w-full group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-xl sm:rounded-2xl p-5 sm:p-7 text-white transition-all duration-300 hover:shadow-xl text-left"
+              className="w-full group relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl sm:rounded-2xl p-5 sm:p-7 text-white transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30 text-left"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -94,7 +94,7 @@ const Contact = () => {
                         scrolling="no"
                         title="Agendar reunión"
                       />
-                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 sm:h-12 bg-white" />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 sm:h-12 bg-white dark:bg-gray-800" />
                     </div>
                   </div>
                 </motion.div>
@@ -111,7 +111,7 @@ const Contact = () => {
             href="https://wa.me/5493878256162?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20FroIT"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full group relative bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 rounded-xl sm:rounded-2xl p-5 sm:p-7 text-white transition-all duration-300 hover:shadow-xl"
+            className="w-full group relative bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 rounded-xl sm:rounded-2xl p-5 sm:p-7 text-white transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30"
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">

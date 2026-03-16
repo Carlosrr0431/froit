@@ -109,7 +109,7 @@ const Features = () => {
   };
 
   return (
-    <section ref={ref} id="features" className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
+    <section ref={ref} id="features" className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-slate-50/80 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
       {/* Modern Background Effects */}
       <motion.div style={{ y }} className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full filter blur-3xl" />
@@ -191,7 +191,7 @@ const Features = () => {
                 }}
                 className="group relative h-full"
               >
-                <div className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50 h-full">
+                <div className="relative bg-white dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-md shadow-slate-200/50 hover:shadow-lg hover:shadow-slate-200/60 transition-all duration-300 border border-slate-100 dark:border-gray-700/50 h-full">
                   {/* Category Badge */}
                   <div className="absolute top-4 right-4">
                     <span className="px-2 py-1 text-xs font-semibold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full">
@@ -253,7 +253,7 @@ const Features = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative max-w-5xl mx-auto"
         >
-          <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl p-8 sm:p-12 lg:p-16 text-white overflow-hidden">
+          <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-8 sm:p-12 lg:p-16 text-white overflow-hidden shadow-xl shadow-blue-500/20">
             {/* Background pattern */}
             <div className="absolute inset-0 opacity-10">
               {[...Array(20)].map((_, i) => (
@@ -310,7 +310,7 @@ const Features = () => {
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-2xl min-w-[250px]"
+                  className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-blue-50 transition-colors shadow-lg min-w-[250px]"
                 >
                   Solicitar Demo
                 </motion.button>

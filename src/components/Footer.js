@@ -57,9 +57,9 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gray-900 text-white relative overflow-hidden">
+    <footer className="bg-gradient-to-b from-slate-50/50 to-white dark:bg-gray-900 text-slate-800 dark:text-white relative overflow-hidden border-t border-slate-100 dark:border-transparent">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzc0MTUxIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuMiIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30"></div>
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzc0MTUxIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuMiIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-[0.07] dark:opacity-30"></div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Main Footer Content */}
@@ -77,7 +77,7 @@ const Footer = () => {
         
             </div>
             
-            <p className="text-gray-300 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base max-w-2xl mx-auto px-4">
+            <p className="text-slate-600 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base max-w-2xl mx-auto px-4">
               Transformamos la atención al cliente con inteligencia artificial avanzada. 
               Agente IA de WhatsApp + CRM personalizado + Automatizaciones que tu negocio necesita.
             </p>
@@ -95,7 +95,7 @@ const Footer = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`text-gray-400 ${social.color} transition-colors p-2 hover:bg-gray-800 rounded-lg`}
+                    className={`text-slate-500 dark:text-gray-400 ${social.color} transition-colors p-2 hover:bg-slate-100 dark:hover:bg-gray-800 rounded-lg`}
                   >
                     <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
                   </a>
@@ -111,10 +111,10 @@ const Footer = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="py-8 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between"
+          className="py-8 border-t border-slate-200 dark:border-gray-800 flex flex-col md:flex-row items-center justify-between"
         >
           <div className="flex items-center mb-4 md:mb-0">
-            <p className="text-gray-400">
+            <p className="text-slate-500 dark:text-gray-400">
               © {currentYear} FroIT. Todos los derechos reservados.
             </p>
           </div>
@@ -131,7 +131,7 @@ const Footer = () => {
           transition={{ duration: 0.8 }}
           className="mb-8"
         >
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-4 sm:p-6 text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-4 sm:p-6 text-center shadow-lg shadow-blue-500/20">
             <h4 className="text-lg sm:text-xl font-bold mb-2">
               ¿Listo para potenciar tu WhatsApp con un agente IA?
             </h4>

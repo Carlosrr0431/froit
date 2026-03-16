@@ -64,7 +64,7 @@ const Stats = () => {
   ];
 
   return (
-    <section className="py-20 bg-white dark:bg-gray-900 relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-b from-white to-slate-50/50 dark:bg-gray-900 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDYwIDAgTCAwIDAgMCA2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjBmMGYwIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50 dark:opacity-20"></div>
 
@@ -102,7 +102,7 @@ const Stats = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow"
+                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md shadow-slate-200/50 border border-slate-100 dark:border-gray-700 hover:shadow-lg hover:shadow-slate-200/60 transition-shadow"
               >
                 <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${metric.color} mb-4`}>
                   <IconComponent className="w-6 h-6 text-white" />
@@ -136,7 +136,7 @@ const Stats = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700"
+            className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md shadow-slate-200/50 border border-slate-100 dark:border-gray-700"
           >
             <div className="flex items-center mb-6">
               <Clock className="w-6 h-6 text-blue-500 mr-3" />
@@ -149,7 +149,7 @@ const Stats = () => {
             </p>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={responseTimeData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis 
                   dataKey="name" 
                   stroke="#6b7280"
@@ -189,7 +189,7 @@ const Stats = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700"
+            className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md shadow-slate-200/50 border border-slate-100 dark:border-gray-700"
           >
             <div className="flex items-center mb-6">
               <TrendingUp className="w-6 h-6 text-green-500 mr-3" />
@@ -202,7 +202,7 @@ const Stats = () => {
             </p>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={conversionData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis 
                   dataKey="name" 
                   stroke="#6b7280"
@@ -239,7 +239,7 @@ const Stats = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700 max-w-2xl mx-auto"
+          className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md shadow-slate-200/50 border border-slate-100 dark:border-gray-700 max-w-2xl mx-auto"
         >
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">

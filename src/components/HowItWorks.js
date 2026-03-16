@@ -81,7 +81,7 @@ const HowItWorks = () => {
   };
 
   return (
-    <section id="how-it-works" className="py-14 sm:py-24 lg:py-32 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 relative overflow-hidden">
+    <section id="how-it-works" className="py-14 sm:py-24 lg:py-32 bg-gradient-to-b from-slate-50/80 to-white dark:from-gray-800 dark:to-gray-900 relative overflow-hidden">
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-72 h-72 sm:w-96 sm:h-96 bg-gradient-to-r from-blue-200/20 to-purple-200/20 dark:from-blue-800/20 dark:to-purple-800/20 rounded-full filter blur-3xl animate-pulse" />
@@ -123,7 +123,7 @@ const HowItWorks = () => {
             whileInView={{ scale: 1, rotate: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 border border-blue-200 dark:border-blue-700 rounded-full text-blue-700 dark:text-blue-300 text-xs sm:text-sm font-bold mb-6 sm:mb-8 backdrop-blur-sm"
+            className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-purple-900/30 border border-blue-200/60 dark:border-blue-700 rounded-full text-blue-600 dark:text-blue-300 text-xs sm:text-sm font-bold mb-6 sm:mb-8 backdrop-blur-sm"
             style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
           >
             <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-2 sm:mr-3 animate-spin" />
@@ -187,7 +187,7 @@ const HowItWorks = () => {
                   <div className={`w-full lg:w-5/12 ${isEven ? 'lg:pr-8 xl:pr-16' : 'lg:pl-8 xl:pl-16'} mb-8 lg:mb-0 ${!isEven ? 'lg:order-3' : ''}`}>
                     <motion.div
                       whileHover={{ scale: 1.01, y: -3 }}
-                      className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-5 sm:p-7 lg:p-10 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50 overflow-hidden ml-12 sm:ml-14 lg:ml-0"
+                      className="relative bg-white dark:bg-gray-900/90 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-5 sm:p-7 lg:p-10 shadow-md shadow-slate-200/60 hover:shadow-xl hover:shadow-slate-300/50 transition-all duration-300 border border-slate-100 dark:border-gray-700/50 overflow-hidden ml-12 sm:ml-14 lg:ml-0"
                     >
                       {/* Card Background Effect */}
                       <div className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-3 rounded-2xl sm:rounded-3xl`} />
@@ -277,7 +277,7 @@ const HowItWorks = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="mt-14 sm:mt-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 shadow-lg border border-gray-200/50 dark:border-gray-700/50 max-w-5xl mx-auto"
+          className="mt-14 sm:mt-20 bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 shadow-md shadow-slate-200/50 border border-slate-100 dark:border-gray-700/50 max-w-5xl mx-auto"
         >
           <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center text-gray-900 dark:text-white mb-6 sm:mb-8 leading-tight" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
             Flujo de Automatización
@@ -358,7 +358,7 @@ const HowItWorks = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-center mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700"
+            className="text-center mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-slate-100 dark:border-gray-700"
           >
             <h4 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
               Comienza en minutos
@@ -371,7 +371,7 @@ const HowItWorks = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={scrollToContact}
-                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center"
+                className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold text-sm sm:text-base transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30 flex items-center justify-center"
                 style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
               >
                 Solicitar Acceso
@@ -382,7 +382,7 @@ const HowItWorks = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={scrollToContact}
-                className="w-full sm:w-auto border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300"
+                className="w-full sm:w-auto border-2 border-slate-200 dark:border-gray-600 text-slate-600 dark:text-gray-300 hover:border-blue-400 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold text-sm sm:text-base transition-all duration-300"
                 style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
               >
                 Consultar Información

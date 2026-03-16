@@ -72,7 +72,7 @@ const Header = ({ isLogoInHeader = false }) => {
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 blur-2xl rounded-full" />
           
           {/* Main container - Centered content */}
-          <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/50 dark:border-slate-700/50 rounded-full shadow-lg px-3.5 py-1.5 h-[40px]">
+          <div className="relative bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/60 dark:border-slate-700/50 rounded-full shadow-md shadow-slate-200/50 px-3.5 py-1.5 h-[40px]">
             <div className="flex items-center justify-center gap-4 h-full">
               {/* Logo que aparece en el header desktop - Fixed, siempre visible */}
               <AnimatePresence mode="wait">
@@ -167,7 +167,7 @@ const Header = ({ isLogoInHeader = false }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => scrollToSection('contact')}
-                className="px-3.5 py-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold text-xs rounded-full transition-all duration-200 shadow-md whitespace-nowrap"
+                className="px-3.5 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-xs rounded-full transition-all duration-200 shadow-md shadow-blue-500/20 whitespace-nowrap"
               >
                 Comenzar
               </motion.button>
@@ -188,7 +188,7 @@ const Header = ({ isLogoInHeader = false }) => {
           <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-500/10 to-transparent blur-xl" />
           
           {/* Header container */}
-          <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50 shadow-lg">
+          <div className="relative bg-white/85 dark:bg-slate-900/90 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-700/50 shadow-sm">
             <div className="flex items-center justify-between px-4 py-3">
               {/* Menu Button */}
               <motion.button

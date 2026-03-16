@@ -73,7 +73,7 @@ const Pricing = () => {
   }, 0);
 
   return (
-    <section id="pricing" className="py-16 sm:py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <section id="pricing" className="py-16 sm:py-20 bg-gradient-to-b from-white to-slate-50/80 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -99,7 +99,7 @@ const Pricing = () => {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white h-full shadow-2xl"
+                className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white h-full shadow-xl shadow-blue-500/20"
               >
                 <div className="flex flex-col sm:flex-row items-start justify-between mb-6 gap-4">
                   <div className="flex-1">
@@ -241,8 +241,8 @@ const Pricing = () => {
                         whileTap={{ scale: 0.98 }}
                         className={`w-full text-left p-4 sm:p-5 rounded-xl sm:rounded-2xl transition-all relative ${
                           isSelected
-                            ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg'
-                            : 'bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-md'
+                            ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/20'
+                            : 'bg-white dark:bg-gray-800 border-2 border-slate-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-purple-600 hover:shadow-md shadow-sm'
                         }`}
                       >
                         {isSelected && (
