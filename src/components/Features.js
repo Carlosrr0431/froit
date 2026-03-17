@@ -109,7 +109,7 @@ const Features = () => {
   };
 
   return (
-    <section ref={ref} id="features" className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-slate-50/80 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
+    <section ref={ref} id="features" className="py-20 sm:py-28 lg:py-32 bg-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
       {/* Modern Background Effects */}
       <motion.div style={{ y }} className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full filter blur-3xl" />
@@ -142,15 +142,15 @@ const Features = () => {
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 border border-blue-200 dark:border-blue-700 rounded-full text-blue-700 dark:text-blue-300 text-sm font-bold mb-6 backdrop-blur-sm"
+            className="inline-flex items-center px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-600 dark:text-blue-300 text-xs font-medium mb-6"
           >
             <Sparkles className="w-4 h-4 mr-2" />
             <span>Soluciones Tecnológicas</span>
           </motion.div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
-            <span className="block text-gray-900 dark:text-white mb-2">Agente IA inteligente</span>
-            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 leading-tight tracking-[-0.02em]" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
+            <span className="block text-gray-900 dark:text-white">Agente IA inteligente</span>
+            <span className="block gradient-text">
               para tu negocio
             </span>
           </h2>
@@ -161,7 +161,7 @@ const Features = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed font-light"
-            style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
+            style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}
           >
             Herramientas de inteligencia artificial y microservicios diseñados para{' '}
             <span className="font-semibold text-blue-600 dark:text-blue-400">
@@ -191,7 +191,7 @@ const Features = () => {
                 }}
                 className="group relative h-full"
               >
-                <div className="relative bg-white dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-md shadow-slate-200/50 hover:shadow-lg hover:shadow-slate-200/60 transition-all duration-300 border border-slate-100 dark:border-gray-700/50 h-full">
+                <div className="relative bg-white dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200/80 dark:border-gray-700/50 h-full">
                   {/* Category Badge */}
                   <div className="absolute top-4 right-4">
                     <span className="px-2 py-1 text-xs font-semibold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full">
@@ -212,18 +212,18 @@ const Features = () => {
 
                   {/* Content */}
                   <div className="relative z-10">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
                       {feature.title}
                     </h3>
                     
-                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4 font-light" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4 font-light" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
                       {feature.description}
                     </p>
 
                     {/* Benefits List */}
                     <ul className="space-y-2">
                       {feature.benefits.map((benefit, bIndex) => (
-                        <li key={bIndex} className="flex items-center text-xs text-gray-500 dark:text-gray-400" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                        <li key={bIndex} className="flex items-center text-xs text-gray-500 dark:text-gray-400" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
                           <CheckCircle className="w-3 h-3 text-green-500 mr-2 flex-shrink-0" />
                           <span className="leading-tight">{benefit}</span>
                         </li>
@@ -253,7 +253,7 @@ const Features = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative max-w-5xl mx-auto"
         >
-          <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-8 sm:p-12 lg:p-16 text-white overflow-hidden shadow-xl shadow-blue-500/20">
+          <div className="relative bg-slate-900 dark:bg-gradient-to-r dark:from-blue-600 dark:via-indigo-600 dark:to-purple-600 rounded-3xl p-8 sm:p-12 lg:p-16 text-white overflow-hidden">
             {/* Background pattern */}
             <div className="absolute inset-0 opacity-10">
               {[...Array(20)].map((_, i) => (
@@ -283,8 +283,8 @@ const Features = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight"
-                style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
+                className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-4 leading-tight tracking-[-0.02em]"
+                style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}
               >
                 Prueba nuestra demo gratuita
               </motion.h3>
@@ -295,7 +295,7 @@ const Features = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-lg sm:text-xl lg:text-2xl mb-8 opacity-90 max-w-3xl mx-auto font-light leading-relaxed"
-                style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
+                style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}
               >
                 Configura tu cuenta y comienza a potenciar tu negocio con un agente IA de WhatsApp en minutos
               </motion.p>
@@ -310,7 +310,7 @@ const Features = () => {
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-blue-50 transition-colors shadow-lg min-w-[250px]"
+                  className="w-full sm:w-auto bg-white text-slate-900 px-8 py-4 rounded-full font-medium text-base hover:bg-slate-100 transition-colors min-w-[220px]"
                 >
                   Solicitar Demo
                 </motion.button>
@@ -318,7 +318,7 @@ const Features = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto border-2 border-white text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/10 transition-colors backdrop-blur-sm min-w-[220px]"
+                  className="w-full sm:w-auto border border-white/30 text-white px-8 py-4 rounded-full font-medium text-base hover:bg-white/10 transition-colors min-w-[220px]"
                 >
                   Consultar Precios
                 </motion.button>

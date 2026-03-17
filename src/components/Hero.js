@@ -6,87 +6,12 @@ import {
   useTransform,
   AnimatePresence,
 } from "framer-motion";
-import { ArrowRight, Sparkles, Rocket } from "lucide-react";
-import { useRef, useState, useEffect, useMemo } from "react";
+import { ArrowRight } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
 import AnimatedFroitLogo from "./AnimatedFroitLogo";
 
 const Hero = ({ isLogoInHeader = false }) => {
   const ref = useRef(null);
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [squarePositions, setSquarePositions] = useState([]);
-
-  // Función para generar posiciones aleatorias sin repetir
-  const generateRandomPositions = (count) => {
-    const positions = [];
-    const usedAreas = new Set();
-    
-    for (let i = 0; i < count; i++) {
-      let attempts = 0;
-      let position;
-      
-      do {
-        const left = Math.floor(Math.random() * 8) * 12 + 10; // Grid de 8 columnas
-        const top = Math.floor(Math.random() * 6) * 15 + 10; // Grid de 6 filas
-        const key = `${left}-${top}`;
-        
-        if (!usedAreas.has(key)) {
-          position = { left, top, key };
-          usedAreas.add(key);
-          break;
-        }
-        attempts++;
-      } while (attempts < 50);
-      
-      if (position) {
-        positions.push({
-          id: i,
-          left: position.left,
-          top: position.top,
-          delay: Math.random() * 4,
-        });
-      }
-    }
-    
-    return positions;
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 640);
-    };
-    
-    // Set initial value
-    handleResize();
-    
-    // Add event listener
-    window.addEventListener('resize', handleResize);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Inicializar posiciones de cuadrantes
-  useEffect(() => {
-    setSquarePositions(generateRandomPositions(5));
-    
-    // Cambiar posiciones cada 8 segundos
-    const interval = setInterval(() => {
-      setSquarePositions(generateRandomPositions(5));
-    }, 8000);
-    
-    return () => clearInterval(interval);
-  }, []);
-
-  // Generar posiciones aleatorias para partículas móviles una sola vez
-  const mobileParticles = useMemo(() => 
-    Array.from({ length: 6 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 90 + 5,
-      top: Math.random() * 90 + 5,
-      duration: 5 + i * 0.5,
-      delay: i * 0.7,
-    })), []
-  );
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -149,244 +74,29 @@ const Hero = ({ isLogoInHeader = false }) => {
         </motion.div>
       )}
 
-      {/* Enhanced Background Effects - Optimized for Mobile */}
+      {/* Minimal Background Effects */}
       <motion.div style={{ y, opacity }} className="absolute inset-0">
-        {/* Mobile: Solo 2 orbs estáticos con blur suave */}
-        <div className="sm:hidden absolute top-0 left-0 w-[300px] h-[300px] bg-gradient-to-r from-blue-300/20 to-cyan-300/20 dark:from-blue-500/10 dark:to-cyan-500/10 rounded-full filter blur-2xl"></div>
-        <div className="sm:hidden absolute bottom-0 right-0 w-[350px] h-[350px] bg-gradient-to-r from-purple-300/20 to-pink-300/20 dark:from-purple-500/10 dark:to-pink-500/10 rounded-full filter blur-2xl"></div>
+        {/* Mobile: 2 subtle orbs */}
+        <div className="sm:hidden absolute -top-20 -left-20 w-[350px] h-[350px] bg-blue-200/30 rounded-full filter blur-3xl"></div>
+        <div className="sm:hidden absolute -bottom-20 -right-20 w-[300px] h-[300px] bg-indigo-200/25 rounded-full filter blur-3xl"></div>
 
-        {/* Desktop: Large animated gradient orbs */}
+        {/* Desktop: Soft animated orbs */}
         <motion.div
-          className="hidden sm:block absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-r from-blue-300/25 to-cyan-200/25 dark:from-blue-500/20 dark:to-cyan-500/20 rounded-full filter blur-3xl"
+          className="hidden sm:block absolute -top-32 -left-32 w-[600px] h-[600px] bg-blue-100/40 dark:bg-blue-500/10 rounded-full filter blur-3xl"
           animate={{
-            scale: [1, 1.2, 1],
-            x: [0, 50, 0],
-            y: [0, 30, 0],
+            scale: [1, 1.1, 1],
+            opacity: [0.4, 0.6, 0.4],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="hidden sm:block absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-indigo-100/30 dark:bg-indigo-500/10 rounded-full filter blur-3xl"
+          animate={{
+            scale: [1, 1.15, 1],
             opacity: [0.3, 0.5, 0.3],
           }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
-        <motion.div
-          className="hidden sm:block absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-r from-purple-300/20 to-pink-200/20 dark:from-purple-500/15 dark:to-pink-500/15 rounded-full filter blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            x: [0, -30, 0],
-            y: [0, -50, 0],
-            opacity: [0.25, 0.4, 0.25],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
-        <motion.div
-          className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-r from-indigo-200/20 to-blue-200/20 dark:from-indigo-500/15 dark:to-blue-500/15 rounded-full filter blur-3xl"
-          animate={{
-            scale: [1, 1.4, 1],
-            rotate: [0, 180, 360],
-            opacity: [0.2, 0.35, 0.2],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-        />
-
-        {/* Animated wave effect - Hidden on mobile */}
-        <motion.div
-          className="hidden sm:block absolute inset-0"
-          animate={{
-            backgroundPosition: ["0% 0%", "100% 100%"],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.06) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%)",
-            backgroundSize: "100% 100%",
-          }}
-        />
-
-        {/* Grid pattern - Hidden on mobile */}
-        <motion.div
-          className="hidden sm:block absolute inset-0 opacity-[0.06] dark:opacity-5"
-          animate={{
-            opacity: [0.05, 0.15, 0.05],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern
-                id="tech-grid"
-                width="50"
-                height="50"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 50 0 L 0 0 0 50"
-                  fill="none"
-                  stroke="#94a3b8"
-                  strokeWidth="0.5"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#tech-grid)" />
-          </svg>
-        </motion.div>
-
-        {/* Mobile: 6 partículas con posiciones aleatorias */}
-        {mobileParticles.map((particle) => (
-          <motion.div
-            key={`mobile-particle-${particle.id}`}
-            className="sm:hidden absolute bg-indigo-400/25 dark:bg-blue-400/15 rounded-full"
-            style={{
-              width: '3px',
-              height: '3px',
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-            }}
-            animate={{
-              y: [0, -50, 0],
-              opacity: [0.2, 0.6, 0.2],
-            }}
-            transition={{
-              duration: particle.duration,
-              repeat: Infinity,
-              ease: "linear",
-              delay: particle.delay,
-            }}
-          />
-        ))}
-
-        {/* Desktop: Enhanced floating particles */}
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="hidden sm:block absolute bg-indigo-400/30 dark:bg-blue-400/20 rounded-full"
-            style={{
-              width: `${Math.random() * 4 + 2}px`,
-              height: `${Math.random() * 4 + 2}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              scale: [0, 1.5, 0],
-              opacity: [0, 0.8, 0],
-              y: [0, -50 - Math.random() * 50, -100 - Math.random() * 50],
-              x: [0, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 150],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 4,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: "easeOut",
-            }}
-          />
-        ))}
-
-        {/* Mobile: 5 cuadrantes con posiciones dinámicas que cambian */}
-        {squarePositions.map((square) => (
-          <motion.div
-            key={`mobile-square-${square.id}-${square.left}-${square.top}`}
-            className="sm:hidden absolute border border-blue-500/0 dark:border-blue-400/0 w-[40px] h-[40px]"
-            initial={{ 
-              left: `${square.left}%`,
-              top: `${square.top}%`,
-              opacity: 0 
-            }}
-            animate={{
-              opacity: 1,
-              borderColor: [
-                "rgba(59, 130, 246, 0)",
-                "rgba(59, 130, 246, 0.3)",
-                "rgba(59, 130, 246, 0)",
-              ],
-            }}
-            exit={{ opacity: 0 }}
-            transition={{
-              opacity: { duration: 0.5 },
-              borderColor: {
-                duration: 3.5,
-                repeat: Infinity,
-                delay: square.delay,
-                ease: "linear",
-                repeatDelay: 1.5,
-              }
-            }}
-          />
-        ))}
-
-        {/* Desktop: Glowing grid squares */}
-        {[...Array(8)].map((_, i) => {
-          const gridSize = 50;
-          const randomGridX = Math.floor(Math.random() * 20);
-          const randomGridY = Math.floor(Math.random() * 12);
-          const leftPosition = randomGridX * gridSize;
-          const topPosition = randomGridY * gridSize;
-          const randomDelay = Math.random() * 8;
-          const randomDuration = 4 + Math.random() * 3;
-
-          return (
-            <motion.div
-              key={`square-${i}`}
-              className="hidden sm:block absolute border border-blue-500/0 dark:border-blue-400/0"
-              style={{
-                left: `${leftPosition}px`,
-                top: `${topPosition}px`,
-                width: "50px",
-                height: "50px",
-              }}
-              animate={{
-                borderColor: [
-                  "rgba(59, 130, 246, 0)",
-                  "rgba(59, 130, 246, 0.4)",
-                  "rgba(59, 130, 246, 0)",
-                ],
-                boxShadow: [
-                  "0 0 0px rgba(59, 130, 246, 0)",
-                  "0 0 15px rgba(59, 130, 246, 0.3)",
-                  "0 0 0px rgba(59, 130, 246, 0)",
-                ],
-              }}
-              transition={{
-                duration: randomDuration,
-                repeat: Infinity,
-                delay: randomDelay,
-                ease: "easeInOut",
-                repeatDelay: 2,
-              }}
-            >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-blue-400/5 to-indigo-400/5 dark:from-blue-400/5 dark:to-purple-400/5"
-                animate={{
-                  opacity: [0, 0.4, 0],
-                }}
-                transition={{
-                  duration: randomDuration,
-                  repeat: Infinity,
-                  delay: randomDelay,
-                  ease: "easeInOut",
-                  repeatDelay: 2,
-                }}
-              />
-            </motion.div>
-          );
-        })}
       </motion.div>
 
       {/* Content Container - Optimized for Mobile */}
@@ -398,168 +108,33 @@ const Hero = ({ isLogoInHeader = false }) => {
             animate="visible"
             className="flex flex-col items-center text-center space-y-4 sm:space-y-5 md:space-y-6 pt-24 sm:pt-16 md:pt-11"
           >
-            {/* Modern Title - Better Mobile Spacing */}
+            {/* Title */}
             <motion.div variants={itemVariants} className="w-full">
-              <h1
-                className="text-4xl xs:text-5xl sm:text-5xl md:text-5xl lg:text-4xl xl:text-5xl font-light leading-[1.1] tracking-tight"
-                style={{
-                  fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
-                }}
-              >
-                <span className="block text-slate-800 dark:text-white">
-                  Agente IA{" "}
-                  <span className="font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-                    INTELIGENTE
-                  </span>{" "}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl font-semibold leading-[1.08] tracking-[-0.03em] text-slate-900 dark:text-white">
+                Agente IA{" "}
+                <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                  Inteligente
                 </span>
-                <span className="block text-slate-800 dark:text-white">
-                  para{" "}
-                  <span className="font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
-                    WHATSAPP
-                  </span>{" "}
+                <br />
+                para{" "}
+                <span className="bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
+                  WhatsApp
                 </span>
               </h1>
             </motion.div>
 
-            {/* Value Proposition - Static on Mobile, Animated on Desktop */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-2 md:gap-3 max-w-3xl mx-auto px-4 sm:px-2"
-            >
-              {/* Primera frase - Sin animación en móvil */}
-              {!isDesktop ? (
-                <p 
-                  className="text-xs sm:text-sm md:text-base lg:text-base text-slate-700 dark:text-gray-300 leading-tight font-light text-center sm:text-right flex-1 max-w-[240px] sm:max-w-[280px] md:max-w-[320px]"
-                  style={{
-                    fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
-                  }}
-                >
-                  Agente IA de WhatsApp con{" "}
-                  <span className="text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text font-medium">
-                    CRM personalizado
-                  </span>{" "}
-           
-                </p>
-              ) : (
-                <motion.p 
-                  className="text-xs sm:text-sm md:text-base lg:text-base text-slate-700 dark:text-gray-300 leading-tight font-light text-center sm:text-right flex-1 max-w-[240px] sm:max-w-[280px] md:max-w-[320px]"
-                  style={{
-                    fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
-                  }}
-                  animate={{
-                    x: [0, 0, -12, -12, 0]
-                  }}
-                  transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: [0.4, 0, 0.2, 1],
-                    times: [0, 0.2, 0.5, 0.7, 1]
-                  }}
-                >
-                  Agente IA de WhatsApp con{" "}
-                  <span className="text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text font-medium">
-                    CRM personalizado
-                  </span>{" "}
-                 
-                </motion.p>
-              )}
-              
-              <motion.div
-                className="relative flex items-center justify-center flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
-              >
-                {/* Animated border tracing the plus sign */}
-                <svg 
-                  className="absolute inset-0 w-full h-full"
-                  viewBox="0 0 100 100"
-                  style={{ overflow: 'visible' }}
-                >
-                  {/* Plus sign path */}
-                  <motion.path
-                    d="M 45 10 L 55 10 L 55 45 L 90 45 L 90 55 L 55 55 L 55 90 L 45 90 L 45 55 L 10 55 L 10 45 L 45 45 Z"
-                    fill="url(#plusFillGradient)"
-                    stroke="url(#plusGradient)"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ 
-                      pathLength: [0, 0, 1, 1, 0],
-                      opacity: [0, 0, 1, 1, 0]
-                    }}
-                    transition={{
-                      duration: 6,
-                      repeat: Infinity,
-                      ease: [0.4, 0, 0.2, 1],
-                      times: [0, 0.2, 0.5, 0.7, 1]
-                    }}
-                  />
-                  <defs>
-                    <linearGradient id="plusGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#3b82f6" />
-                      <stop offset="50%" stopColor="#8b5cf6" />
-                      <stop offset="100%" stopColor="#06b6d4" />
-                    </linearGradient>
-                    <linearGradient id="plusFillGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="rgba(59, 130, 246, 0.3)" />
-                      <stop offset="50%" stopColor="rgba(139, 92, 246, 0.3)" />
-                      <stop offset="100%" stopColor="rgba(6, 182, 212, 0.3)" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                
-                {/* Subtle pulsing glow */}
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg blur-lg"
-                  animate={{
-                    opacity: [0.2, 0.5, 0.2]
-                  }}
-                  transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: [0.4, 0, 0.2, 1]
-                  }}
-                />
-              </motion.div>
-              
-              {/* Segunda frase - Sin animación en móvil */}
-              {!isDesktop ? (
-                <p 
-                  className="text-xs sm:text-sm md:text-base lg:text-base text-slate-700 dark:text-gray-300 leading-tight font-light text-center sm:text-left flex-1 max-w-[240px] sm:max-w-[280px] md:max-w-[320px]"
-                  style={{
-                    fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
-                  }}
-                >
-                  Automatizaciones {" "}
-                  <span className="font-normal text-slate-700 dark:text-gray-300">en cada área de tu negocio
-                  </span>
-                </p>
-              ) : (
-                <motion.p 
-                  className="text-xs sm:text-sm md:text-base lg:text-base text-slate-700 dark:text-gray-300 leading-tight font-light text-center sm:text-left flex-1 max-w-[240px] sm:max-w-[280px] md:max-w-[320px]"
-                  style={{
-                    fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
-                  }}
-                  animate={{
-                    x: [0, 0, 12, 12, 0]
-                  }}
-                  transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: [0.4, 0, 0.2, 1],
-                    times: [0, 0.2, 0.5, 0.7, 1]
-                  }}
-                >
-                  Automatizaciones {" "}
-                  <span className="font-normal text-slate-700 dark:text-gray-300">en cada área de tu negocio
-                  </span>
-                </motion.p>
-              )}
+            {/* Subtitle */}
+            <motion.div variants={itemVariants} className="max-w-xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
+                CRM personalizado con automatizaciones inteligentes
+                para cada área de tu negocio.
+              </p>
             </motion.div>
 
-            {/* CTA Buttons - Better Mobile Size */}
+            {/* CTA Button */}
             <motion.div
               variants={itemVariants}
-              className="flex justify-center w-full max-w-md mx-auto pt-2 sm:pt-3"
+              className="flex justify-center w-full max-w-md mx-auto pt-2 sm:pt-4"
             >
               <motion.button
                 onClick={() =>
@@ -567,37 +142,22 @@ const Hero = ({ isLogoInHeader = false }) => {
                     .getElementById("contact")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.7)",
-                  y: -2,
-                }}
+                whileHover={{ scale: 1.03, y: -1 }}
                 whileTap={{ scale: 0.98 }}
-                className="group relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 text-white font-semibold text-base sm:text-lg md:text-lg px-8 sm:px-10 py-3.5 sm:py-4 transition-all duration-300 inline-flex items-center justify-center shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 rounded-2xl w-full sm:w-auto overflow-hidden"
+                className="group bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-900 font-medium text-base sm:text-lg px-8 sm:px-10 py-3.5 sm:py-4 transition-all duration-200 inline-flex items-center justify-center rounded-full w-full sm:w-auto"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative z-10 mr-2">
-                  Potencia tu negocio ahora
-                </span>
-                <ArrowRight className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform duration-200" />
+                Potencia tu negocio ahora
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-0.5 transition-transform duration-200" />
               </motion.button>
             </motion.div>
 
-            {/* Trust Line - Better Mobile Visibility */}
-            <motion.div 
-              variants={itemVariants} 
-              className="pt-3 sm:pt-4 flex items-center justify-center gap-2"
+            {/* Trust Line */}
+            <motion.p 
+              variants={itemVariants}
+              className="text-sm text-slate-400 dark:text-slate-500 font-normal pt-2"
             >
-              <p 
-                className="text-sm sm:text-base font-semibold text-slate-600 dark:text-white"
-                style={{
-                  fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
-                }}
-              >
-                ¡Transforma conversaciones en conversiones!
-              </p>
-              <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500 dark:text-blue-400" />
-            </motion.div>
+              Transforma conversaciones en conversiones
+            </motion.p>
           </motion.div>
         </div>
       </div>

@@ -64,7 +64,7 @@ const Stats = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-slate-50/50 dark:bg-gray-900 relative overflow-hidden">
+    <section className="py-20 sm:py-28 bg-slate-50/50 dark:bg-gray-900 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDYwIDAgTCAwIDAgMCA2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZjBmMGYwIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50 dark:opacity-20"></div>
 
@@ -77,15 +77,15 @@ const Stats = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full text-sm font-semibold mb-4" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+          <span className="inline-block px-3.5 py-1.5 bg-slate-100 dark:bg-green-900/30 text-slate-600 dark:text-green-400 rounded-full text-xs font-medium mb-4" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
             Capacidades del Sistema
           </span>
-          <h2 className="text-4xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 tracking-[-0.02em]" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
             <span className="text-gray-900 dark:text-white">Tecnología que</span>
             <br />
             <span className="gradient-text">optimiza tu operación</span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
             Características técnicas de nuestra plataforma de automatización 
             con inteligencia artificial para WhatsApp Business.
           </p>
@@ -102,24 +102,24 @@ const Stats = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md shadow-slate-200/50 border border-slate-100 dark:border-gray-700 hover:shadow-lg hover:shadow-slate-200/60 transition-shadow"
+                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-slate-200/80 dark:border-gray-700 hover:shadow-md transition-shadow"
               >
                 <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${metric.color} mb-4`}>
                   <IconComponent className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
                   {metric.value}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-2" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                <p className="text-gray-600 dark:text-gray-300 mb-2" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
                   {metric.title}
                 </p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500 dark:text-gray-400" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                  <span className="text-sm text-gray-500 dark:text-gray-400" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
                     {metric.subtitle}
                   </span>
                   <span className={`text-sm font-semibold ${
                     metric.change.startsWith('+') ? 'text-green-500' : 'text-red-500'
-                  }`} style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+                  }`} style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
                     {metric.change}
                   </span>
                 </div>
@@ -140,11 +140,11 @@ const Stats = () => {
           >
             <div className="flex items-center mb-6">
               <Clock className="w-6 h-6 text-blue-500 mr-3" />
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
                 Tiempo de Respuesta
               </h3>
             </div>
-            <p className="text-gray-600 dark:text-gray-300 mb-6" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+            <p className="text-gray-600 dark:text-gray-300 mb-6" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
               Comparación de tiempos de respuesta entre gestión manual y automatizada (minutos)
             </p>
             <ResponsiveContainer width="100%" height={300}>

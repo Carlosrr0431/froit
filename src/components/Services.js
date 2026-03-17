@@ -77,9 +77,9 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-16 sm:py-20 bg-gradient-to-b from-white to-slate-50/80 dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
+    <section id="services" className="py-20 sm:py-28 bg-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
       {/* Animated Background */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM5Q0EzQUYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItMnptMC0yaDJ2Mmgtdi0yem0wLTJ2LTJoMnYyaC0yem0tMiAwdi0yaDJ2Mmgtdi0yem0tMiAwaC0ydjJoMnYtMnptMCAydjJoLTJ2LTJoMnptMCAyaDJ2Mmgtdi0yem0yIDB2Mmgydi0yaC0yem0wLTJoMnYyaC0ydi0yem0yLTJoMnYyaC0ydi0yem0wIDJ2Mmgydi0yaC0yem0tMi0ydjJoMnYtMmgtMnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40"></div>
+      <div className="absolute inset-0 opacity-0"></div>
 
       {/* Floating Elements */}
       <motion.div
@@ -121,16 +121,16 @@ const Services = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full mb-6 border border-blue-200/50 dark:border-transparent"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-full mb-6"
           >
-            <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            <span className="text-xs font-medium text-slate-600 dark:text-blue-400">
               Soluciones Completas
             </span>
           </motion.div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 px-2 sm:px-4 leading-tight" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
-            <span className="text-gray-900 dark:text-white">Todo lo que tu negocio necesita</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 sm:mb-5 px-2 sm:px-4 leading-tight tracking-[-0.02em]" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
+            <span className="text-slate-900 dark:text-white">Todo lo que tu negocio necesita</span>
             <br />
             <span className="gradient-text">con un agente IA de WhatsApp</span>
           </h2>
@@ -156,7 +156,7 @@ const Services = () => {
                 className="group relative"
               >
                 {/* Card */}
-                <div className="relative bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-5 sm:p-7 lg:p-8 shadow-md shadow-slate-200/60 hover:shadow-xl hover:shadow-slate-300/50 transition-all duration-500 border border-slate-100 dark:border-gray-700 overflow-hidden">
+                <div className="relative bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-5 sm:p-7 lg:p-8 shadow-sm hover:shadow-md transition-all duration-500 border border-slate-200/80 dark:border-gray-700 overflow-hidden">
                   {/* Gradient Background on Hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
                   
@@ -237,7 +237,7 @@ const Services = () => {
           transition={{ duration: 0.6 }}
           className="mb-12 sm:mb-16 max-w-4xl mx-auto px-2 sm:px-0"
         >
-          <div className="bg-gradient-to-r from-blue-50/70 to-purple-50/70 dark:from-gray-800 dark:to-gray-700 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-blue-100/50 dark:border-gray-600">
+          <div className="bg-slate-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-slate-200/60 dark:border-gray-600">
             <div className="text-center mb-6 sm:mb-8">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                 Integración Perfecta
@@ -309,7 +309,7 @@ const Services = () => {
                   whileHover={{ y: -8 }}
                   className="group relative"
                 >
-                  <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/50 transition-all duration-300 border border-slate-100 dark:border-gray-700 overflow-hidden">
+                  <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200/80 dark:border-gray-700 overflow-hidden">
                     {/* Gradient accent on hover */}
                     <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${micro.color} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300`} />
                     
@@ -348,7 +348,7 @@ const Services = () => {
                 contactSection.scrollIntoView({ behavior: 'smooth' });
               }
             }}
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-105"
+            className="inline-flex items-center gap-3 bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-900 px-8 py-4 rounded-full font-medium transition-all duration-200 hover:scale-[1.02]"
           >
             <Sparkles className="w-5 h-5" />
             Descubre cómo funciona todo junto

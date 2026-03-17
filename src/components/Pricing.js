@@ -73,7 +73,7 @@ const Pricing = () => {
   }, 0);
 
   return (
-    <section id="pricing" className="py-16 sm:py-20 bg-gradient-to-b from-white to-slate-50/80 dark:from-gray-900 dark:to-gray-800">
+    <section id="pricing" className="py-20 sm:py-28 bg-white dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -83,7 +83,7 @@ const Pricing = () => {
         >
           {/* Header */}
           <div className="text-center mb-10 sm:mb-12 px-2">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 tracking-[-0.02em]" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
               <span className="text-gray-900 dark:text-white">Un plan </span>
               <span className="gradient-text">simple y claro</span>
             </h2>
@@ -99,7 +99,7 @@ const Pricing = () => {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white h-full shadow-xl shadow-blue-500/20"
+                className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-blue-600 dark:via-indigo-600 dark:to-purple-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white h-full shadow-lg"
               >
                 <div className="flex flex-col sm:flex-row items-start justify-between mb-6 gap-4">
                   <div className="flex-1">

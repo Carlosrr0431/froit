@@ -142,7 +142,7 @@ const MobileMenu = ({ isOpen, onClose, activeSection, scrollToSection }) => {
                         whileTap={{ scale: 0.95 }}
                         className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 ${
                           isActive
-                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/30'
+                            ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
                             : 'bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                         }`}
                       >
@@ -172,7 +172,7 @@ const MobileMenu = ({ isOpen, onClose, activeSection, scrollToSection }) => {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleItemClick('contact')}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg shadow-blue-500/30 transition-all duration-200 flex items-center justify-center gap-2"
+                  className="w-full bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-900 font-medium py-3.5 px-4 rounded-full transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <Sparkles className="w-5 h-5" />
                   <span>Comenzar Ahora</span>

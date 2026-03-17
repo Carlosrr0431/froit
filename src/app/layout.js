@@ -1,13 +1,13 @@
 import "./globals.css";
 import { ThemeProvider } from '@/components/ThemeProvider';
 import Providers from '@/components/Providers';
-import { Montserrat } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import Script from 'next/script';
 
-const montserrat = Montserrat({ 
+const inter = Inter({ 
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600'], // Pesos más ligeros
-  variable: '--font-montserrat',
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -112,7 +112,7 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
         <link rel="manifest" href="/assets/site.webmanifest" />
       </head>
-      <body className={`${montserrat.variable} antialiased font-sans`}>
+      <body className={`${inter.variable} antialiased font-sans`}>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe 

@@ -57,7 +57,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gradient-to-b from-slate-50/50 to-white dark:bg-gray-900 text-slate-800 dark:text-white relative overflow-hidden border-t border-slate-100 dark:border-transparent">
+    <footer className="bg-white dark:bg-gray-900 text-slate-800 dark:text-white relative overflow-hidden border-t border-slate-100 dark:border-transparent">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzc0MTUxIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuMiIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-[0.07] dark:opacity-30"></div>
 
@@ -131,7 +131,7 @@ const Footer = () => {
           transition={{ duration: 0.8 }}
           className="mb-8"
         >
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-4 sm:p-6 text-center shadow-lg shadow-blue-500/20">
+          <div className="bg-slate-900 dark:bg-slate-800 rounded-2xl p-4 sm:p-6 text-center">
             <h4 className="text-lg sm:text-xl font-bold mb-2">
               ¿Listo para potenciar tu WhatsApp con un agente IA?
             </h4>
@@ -141,7 +141,7 @@ const Footer = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
               <button 
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="w-full sm:w-auto bg-white text-blue-600 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
+                className="w-full sm:w-auto bg-white text-slate-900 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-medium hover:bg-slate-100 transition-colors text-sm sm:text-base"
               >
                 Comenzar
               </button>

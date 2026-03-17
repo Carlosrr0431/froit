@@ -8,7 +8,7 @@ const Contact = () => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   return (
-    <section id="contact" className="py-14 sm:py-20 bg-gradient-to-b from-slate-50/50 to-white dark:bg-gray-900 relative">
+    <section id="contact" className="py-20 sm:py-28 bg-slate-50/50 dark:bg-gray-900 relative">
   <div className="container mx-auto px-4 sm:px-6 max-w-4xl lg:max-w-5xl">
         {/* Header - Más minimalista */}
         <motion.div
@@ -18,10 +18,10 @@ const Contact = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-10 sm:mb-14 px-2"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 tracking-[-0.02em] text-gray-900 dark:text-white" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
             Hablemos
           </h2>
-          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
             Elige cómo prefieres contactarnos
           </p>
         </motion.div>
@@ -38,7 +38,7 @@ const Contact = () => {
           >
             <button
               onClick={() => setShowCalendar(!showCalendar)}
-              className="w-full group relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl sm:rounded-2xl p-5 sm:p-7 text-white transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30 text-left"
+              className="w-full group relative bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-500 rounded-xl sm:rounded-2xl p-5 sm:p-7 text-white transition-all duration-200 text-left"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -111,7 +111,7 @@ const Contact = () => {
             href="https://wa.me/5493878256162?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20FroIT"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full group relative bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 rounded-xl sm:rounded-2xl p-5 sm:p-7 text-white transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30"
+            className="w-full group relative bg-emerald-600 hover:bg-emerald-500 rounded-xl sm:rounded-2xl p-5 sm:p-7 text-white transition-all duration-200"
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">

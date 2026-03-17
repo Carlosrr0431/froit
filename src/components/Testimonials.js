@@ -98,7 +98,7 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="py-20 bg-slate-50/80 dark:bg-gray-800 relative overflow-hidden">
+    <section className="py-20 sm:py-28 bg-white dark:bg-gray-800 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute top-20 right-20 w-40 h-40 bg-blue-200 dark:bg-blue-800 rounded-full mix-blend-multiply filter blur-xl opacity-30"></div>
@@ -140,7 +140,7 @@ const Testimonials = () => {
             <motion.div
               key={testimonial.id}
               variants={itemVariants}
-              className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-md shadow-slate-200/50 border border-slate-100 dark:border-gray-700 hover:shadow-lg hover:shadow-slate-200/60 transition-all duration-300 relative"
+              className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-slate-200/80 dark:border-gray-700 hover:shadow-md transition-all duration-300 relative"
             >
               {/* Quote Icon */}
               <div className="absolute top-6 right-6 text-blue-500 opacity-20">

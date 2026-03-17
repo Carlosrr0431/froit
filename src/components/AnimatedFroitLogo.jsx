@@ -77,7 +77,7 @@ const AnimatedFroitLogo = ({ className = "", isStatic = false }) => {
               fill: #6cbfa5;
             }
             .cls-2 {
-              fill: #fff;
+              fill: #826aac;
             }
             .cls-3 {
               fill: #56c3e8;
@@ -126,17 +126,7 @@ const AnimatedFroitLogo = ({ className = "", isStatic = false }) => {
             scale: { duration: 1.3, ease: "easeInOut" },
             rotate: { duration: 1.3, ease: "easeInOut" },
           }}
-          style={{
-            filter: 'drop-shadow(0 0 12px rgba(108, 191, 165, 0.8))',
-          }}
-        >
-          <motion.animate
-            attributeName="opacity"
-            values="0.8;1;0.8"
-            dur="1.8s"
-            repeatCount="indefinite"
-          />
-        </motion.rect>
+        />
         
         {/* Cuadrado azul - movimiento aleatorio */}
         <motion.rect 
@@ -156,17 +146,7 @@ const AnimatedFroitLogo = ({ className = "", isStatic = false }) => {
             rotate: { duration: 1.4, ease: "easeInOut" },
             delay: 0.08,
           }}
-          style={{
-            filter: 'drop-shadow(0 0 12px rgba(86, 195, 232, 0.8))',
-          }}
-        >
-          <motion.animate
-            attributeName="opacity"
-            values="0.8;1;0.8"
-            dur="1.8s"
-            repeatCount="indefinite"
-          />
-        </motion.rect>
+        />
         
         {/* Cuadrado morado - movimiento aleatorio */}
         <motion.rect 
@@ -186,17 +166,7 @@ const AnimatedFroitLogo = ({ className = "", isStatic = false }) => {
             rotate: { duration: 1.35, ease: "easeInOut" },
             delay: 0.15,
           }}
-          style={{
-            filter: 'drop-shadow(0 0 12px rgba(130, 106, 172, 0.8))',
-          }}
-        >
-          <motion.animate
-            attributeName="opacity"
-            values="0.8;1;0.8"
-            dur="1.8s"
-            repeatCount="indefinite"
-          />
-        </motion.rect>
+        />
       </g>
     </svg>
   );

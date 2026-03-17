@@ -68,11 +68,8 @@ const Header = ({ isLogoInHeader = false }) => {
         className="hidden md:block fixed top-7 left-1/2 -translate-x-1/2 z-50"
       >
         <div className="relative">
-          {/* Subtle glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 blur-2xl rounded-full" />
-          
-          {/* Main container - Centered content */}
-          <div className="relative bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/60 dark:border-slate-700/50 rounded-full shadow-md shadow-slate-200/50 px-3.5 py-1.5 h-[40px]">
+          {/* Main container */}
+          <div className="relative bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/50 dark:border-slate-700/50 rounded-full shadow-sm px-3.5 py-1.5 h-[40px]">
             <div className="flex items-center justify-center gap-4 h-full">
               {/* Logo que aparece en el header desktop - Fixed, siempre visible */}
               <AnimatePresence mode="wait">
@@ -143,14 +140,14 @@ const Header = ({ isLogoInHeader = false }) => {
                       {isActive && (
                         <motion.div
                           layoutId="activePill"
-                          className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"
+                          className="absolute inset-0 bg-slate-900 dark:bg-white rounded-full"
                           transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                         />
                       )}
                       <span className={`relative z-10 transition-colors ${
                         isActive 
-                          ? 'text-white' 
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                          ? 'text-white dark:text-slate-900' 
+                          : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                       }`}>
                         {item.label}
                       </span>
@@ -167,7 +164,7 @@ const Header = ({ isLogoInHeader = false }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => scrollToSection('contact')}
-                className="px-3.5 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-xs rounded-full transition-all duration-200 shadow-md shadow-blue-500/20 whitespace-nowrap"
+                className="px-4 py-1 bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-900 font-medium text-xs rounded-full transition-all duration-200 whitespace-nowrap"
               >
                 Comenzar
               </motion.button>
@@ -184,17 +181,14 @@ const Header = ({ isLogoInHeader = false }) => {
         className="md:hidden fixed top-0 left-0 right-0 z-50"
       >
         <div className="relative">
-          {/* Subtle glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-500/10 to-transparent blur-xl" />
-          
           {/* Header container */}
-          <div className="relative bg-white/85 dark:bg-slate-900/90 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-700/50 shadow-sm">
+          <div className="relative bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50">
             <div className="flex items-center justify-between px-4 py-3">
               {/* Menu Button */}
               <motion.button
                 onClick={() => setIsMobileMenuOpen(true)}
                 whileTap={{ scale: 0.9 }}
-                className="p-2.5 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-800 dark:to-slate-700 hover:from-blue-100 hover:to-purple-100 dark:hover:from-slate-700 dark:hover:to-slate-600 transition-all duration-200 shadow-md"
+                className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200"
               >
                 <Menu className="w-6 h-6 text-slate-700 dark:text-slate-200" />
               </motion.button>
