@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  AlertTriangle, ArrowLeft, CalendarCheck, Check, CheckCircle2, Clock, Eye, FolderKanban, Info, LayoutDashboard,
+  AlertTriangle, ArrowLeft, CalendarCheck, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, Clock, Eye, FolderKanban, Info, LayoutDashboard,
   ListTodo, LogOut, MessageCircle, Pencil, Plus, QrCode, RefreshCw, Repeat, Send, Sparkles, Trash2, X,
 } from "lucide-react";
 import "./tareas.css";
@@ -68,6 +68,8 @@ export default function TareasPage() {
   const [view, setView] = useState("hoy");
   const [wa, setWa] = useState(null);
   const [toast, setToast] = useState(null);
+  const openNewRef = useRef(() => {});
+  const [modal, setModal] = useState(null); // { projectId }
   const [open, setOpen] = useState(true); // sidebar: se achica al ir al centro, se expande al pasar por él
 
   const notify = useCallback((text, bad) => setToast({ text, bad }), []);
@@ -92,6 +94,19 @@ export default function TareasPage() {
     await load();
   }, [load]);
 
+  // Atajo "C": nueva tarea (si no se está escribiendo en un campo)
+  useEffect(() => {
+    const onKey = (e) => {
+      const el = document.activeElement;
+      if (e.key.toLowerCase() !== "c" || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (el?.matches?.("input, textarea, select, [contenteditable]")) return;
+      e.preventDefault();
+      openNewRef.current();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   if (!data) {
     return (
       <div className="ft">
@@ -108,6 +123,9 @@ export default function TareasPage() {
   const pending = (p) => tasks.filter((t) => t.projectId === p.id && !isDone(t, today)).length;
   const [waLabel, waTone] = WA[wa?.status] ?? ["Verificando…", ""];
 
+  const openNew = () => projects.length && setModal({ projectId: project?.id });
+  openNewRef.current = openNew;
+
   const newProject = () => {
     const name = prompt("Nombre del proyecto");
     if (name?.trim()) act("addProject", { name, client: name, color: COLORS[projects.length % COLORS.length] });
@@ -118,6 +136,7 @@ export default function TareasPage() {
       <div className={`app ${open ? "" : "min"}`}>
         <aside className="side" onMouseEnter={() => setOpen(true)}>
           <div className="brand"><i><ListTodo size={20} /></i><div className="lb">Tareas<small>Proyectos y avisos</small></div></div>
+          <button className="newbtn" onClick={openNew} title="Nueva tarea (C)"><Plus size={18} /><span className="lb">Nueva tarea</span><kbd className="lb">C</kbd></button>
           <button className={`nav ${view === "hoy" ? "on" : ""}`} onClick={() => setView("hoy")} title="Hoy"><LayoutDashboard size={20} /><span className="lb">Hoy</span></button>
           <div className="label"><span className="lb">Proyectos</span><button className="btn ghost" style={{ padding: 2 }} onClick={newProject} title="Nuevo proyecto"><Plus size={16} /></button></div>
           {projects.map((p) => (
@@ -136,23 +155,148 @@ export default function TareasPage() {
 
         <main className="main" key={view} onMouseEnter={() => setOpen(false)}>
           {view === "hoy" && <Today {...{ projects, tasks, today, act, setView, newProject }} />}
-          {project && <ProjectView key={project.id} {...{ project, tasks, today, act, onDeleted: () => setView("hoy") }} />}
+          {project && <ProjectView key={project.id} {...{ project, tasks, today, act, openNew, onDeleted: () => setView("hoy") }} />}
           {view === "wa" && <WhatsApp {...{ wa, loadWa, settings, act, notify }} />}
         </main>
       </div>
+      {modal && <NewTaskModal projects={projects} defaultProject={modal.projectId} today={today} act={act} notify={notify} onClose={() => setModal(null)} />}
       {toast && <div className="toast">{toast.bad ? <AlertTriangle size={16} /> : <CheckCircle2 size={16} />}{toast.text}</div>}
     </div>
+  );
+}
+
+const addDays = (d, n) => new Date(Date.parse(`${d}T00:00:00Z`) + n * 86400000).toISOString().slice(0, 10);
+
+/** Chip de fecha con menú rápido (Hoy, Mañana, +1 semana, fecha exacta). */
+function DateChip({ value, today, onChange, placeholder = "Sin fecha" }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e) => !ref.current?.contains(e.target) && setOpen(false);
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [open]);
+
+  const d = value ? days(today, value) : null;
+  const tone = d === null ? "" : d < 0 ? "bad" : d === 0 ? "warn" : "";
+  const label = d === null ? placeholder : d === 0 ? "Hoy" : d === 1 ? "Mañana" : d === -1 ? "Ayer" : short(value);
+  const pick = (v) => { onChange(v); setOpen(false); };
+
+  return (
+    <span className="pop" ref={ref}>
+      <button type="button" className={`chip ${tone} ${value ? "set" : ""}`} onClick={() => setOpen((o) => !o)}>
+        <CalendarDays size={14} />{label}
+      </button>
+      {open && (
+        <div className="menu">
+          {[["Hoy", 0], ["Mañana", 1], ["En 1 semana", 7]].map(([l, n]) => (
+            <button key={l} type="button" onClick={() => pick(addDays(today, n))}>{l}<small>{short(addDays(today, n))}</small></button>
+          ))}
+          <input type="date" className="inp" value={value || ""} onChange={(e) => e.target.value && pick(e.target.value)} />
+          {value && <button type="button" className="rm" onClick={() => pick("")}><X size={13} />Quitar fecha</button>}
+        </div>
+      )}
+    </span>
+  );
+}
+
+/** Modal "Nueva tarea" estilo Linear: título grande, proyecto y fecha como chips. */
+function NewTaskModal({ projects, defaultProject, today, act, notify, onClose }) {
+  const [title, setTitle] = useState("");
+  const [projectId, setProjectId] = useState(defaultProject || projects[0]?.id);
+  const [due, setDue] = useState("");
+  const [daily, setDaily] = useState(false);
+  const [again, setAgain] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    const esc = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", esc);
+    return () => window.removeEventListener("keydown", esc);
+  }, [onClose]);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!title.trim() || busy) return;
+    setBusy(true);
+    await act("addTask", { projectId, title, due: daily ? "" : due, daily });
+    setBusy(false);
+    notify("Tarea creada");
+    if (again) { setTitle(""); setDue(""); } else onClose();
+  };
+
+  return (
+    <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+      <form className="modal" onSubmit={submit}>
+        <div className="modal-top">
+          <span className="crumb">Nueva tarea</span>
+          <button type="button" className="btn ghost" onClick={onClose} aria-label="Cerrar"><X size={16} /></button>
+        </div>
+        <input className="modal-title" autoFocus placeholder="¿Qué hay que hacer?" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <div className="chips">
+          {projects.map((p) => (
+            <button type="button" key={p.id} className={`chip ${projectId === p.id ? "on" : ""}`} onClick={() => setProjectId(p.id)}>
+              <span className="dot" style={{ background: p.color, width: 9, height: 9 }} />{p.name}
+            </button>
+          ))}
+        </div>
+        <div className="chips">
+          {!daily && <DateChip value={due} today={today} onChange={setDue} placeholder="Fecha límite" />}
+          <button type="button" className={`chip ${daily ? "on" : ""}`} onClick={() => setDaily((v) => !v)}><Repeat size={14} />Todos los días</button>
+        </div>
+        <div className="modal-foot">
+          <label className="chk"><input type="checkbox" checked={again} onChange={(e) => setAgain(e.target.checked)} />Crear otra</label>
+          <div className="row gap-s">
+            <button type="button" className="btn" onClick={onClose}>Cancelar</button>
+            <button className="btn primary" disabled={!title.trim() || busy}>Crear tarea<kbd>↵</kbd></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+/** Fila para agregar una tarea sin salir de la lista. */
+function QuickAdd({ projectId, daily, today, act }) {
+  const [title, setTitle] = useState("");
+  const [due, setDue] = useState("");
+  const submit = (e) => {
+    e.preventDefault();
+    if (!title.trim()) return;
+    act("addTask", { projectId, title, due: daily ? "" : due, daily });
+    setTitle(""); setDue("");
+  };
+  return (
+    <form className="qa" onSubmit={submit}>
+      <Plus size={16} />
+      <input placeholder={daily ? "Agregar tarea diaria…" : "Agregar tarea…"} value={title} onChange={(e) => setTitle(e.target.value)} />
+      {title.trim() && !daily && <DateChip value={due} today={today} onChange={setDue} />}
+      {title.trim() && <kbd>↵</kbd>}
+    </form>
+  );
+}
+
+function TaskGroup({ title, Icon, color, list, defaultOpen = true, children }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <section className="grp">
+      <button className="grp-h" onClick={() => setOpen((o) => !o)}>
+        {open ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
+        <Icon size={15} style={{ color }} /><span>{title}</span><small>{list.length}</small>
+      </button>
+      {open && <div className="grp-b">{children}</div>}
+    </section>
   );
 }
 
 function TaskRow({ t, today, act, project }) {
   const [edit, setEdit] = useState(false);
   const [title, setTitle] = useState(t.title);
-  const [due, setDue] = useState(t.due || "");
   const done = isDone(t, today);
 
   const save = () => {
-    act("updateTask", { id: t.id, title, due });
+    act("updateTask", { id: t.id, title, due: t.due || "" });
     setEdit(false);
   };
 
@@ -160,23 +304,16 @@ function TaskRow({ t, today, act, project }) {
     <div className={`task ${done ? "done" : ""}`}>
       <input type="checkbox" className="cb" checked={done} onChange={() => act("toggleTask", { id: t.id })} aria-label="Completar tarea" />
       {edit ? (
-        <>
-          <input className="inp t" style={{ flex: 1 }} autoFocus value={title} onChange={(e) => setTitle(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") setEdit(false); }} />
-          {!t.daily && <input type="date" className="inp" value={due} onChange={(e) => setDue(e.target.value)} />}
-          <button className="btn ghost" onClick={save} title="Guardar"><Check size={16} /></button>
-          <button className="btn ghost" onClick={() => setEdit(false)} title="Cancelar"><X size={16} /></button>
-        </>
+        <input className="t-edit" autoFocus value={title} onChange={(e) => setTitle(e.target.value)} onBlur={save} onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") { setTitle(t.title); setEdit(false); } }} />
       ) : (
-        <>
-          <span className="t" onDoubleClick={() => setEdit(true)}>{t.title}</span>
-          {project && <span className="pchip"><span className="dot" style={{ background: project.color, width: 9, height: 9 }} />{project.name}</span>}
-          {dueTag(t, today)}
-          <span className="acts">
-            <button className="btn ghost" onClick={() => setEdit(true)} title="Editar"><Pencil size={15} /></button>
-            <button className="btn ghost" onClick={() => act("deleteTask", { id: t.id })} title="Eliminar"><Trash2 size={15} /></button>
-          </span>
-        </>
+        <span className="t" onDoubleClick={() => setEdit(true)}>{t.title}</span>
       )}
+      {project && <span className="pchip"><span className="dot" style={{ background: project.color, width: 8, height: 8 }} />{project.name}</span>}
+      {t.daily ? <span className="chip static"><Repeat size={13} />Diaria</span> : <DateChip value={t.due} today={today} onChange={(v) => act("updateTask", { id: t.id, due: v })} />}
+      <span className="acts">
+        <button className="btn ghost" onClick={() => setEdit(true)} title="Editar"><Pencil size={14} /></button>
+        <button className="btn ghost" onClick={() => act("deleteTask", { id: t.id })} title="Eliminar"><Trash2 size={14} /></button>
+      </span>
     </div>
   );
 }
@@ -257,61 +394,48 @@ function Today({ projects, tasks, today, act, setView, newProject }) {
   );
 }
 
-const FILTERS = [["all", "Todas"], ["pending", "Pendientes"], ["done", "Hechas"], ["daily", "Diarias"]];
-
-function ProjectView({ project: p, tasks, today, act, onDeleted }) {
-  const [title, setTitle] = useState("");
-  const [due, setDue] = useState("");
-  const [daily, setDaily] = useState(false);
-  const [filter, setFilter] = useState("all");
+function ProjectView({ project: p, tasks, today, act, openNew, onDeleted }) {
   const own = tasks.filter((t) => t.projectId === p.id);
   const normal = own.filter((t) => !t.daily);
-  const done = normal.filter((t) => t.done).length;
-  const pct = normal.length ? Math.round((done / normal.length) * 100) : 0;
-  const shown = own
-    .filter((t) => filter === "all" || (filter === "pending" && !isDone(t, today)) || (filter === "done" && isDone(t, today)) || (filter === "daily" && t.daily))
-    .sort((a, b) => Number(isDone(a, today)) - Number(isDone(b, today)) || (a.due || "9").localeCompare(b.due || "9"));
-
-  const submit = (e) => {
-    e.preventDefault();
-    if (!title.trim()) return;
-    act("addTask", { projectId: p.id, title, due, daily });
-    setTitle(""); setDue(""); setDaily(false);
-  };
+  const todo = normal.filter((t) => !t.done).sort((a, b) => (a.due || "9").localeCompare(b.due || "9"));
+  const finished = normal.filter((t) => t.done);
+  const daily = own.filter((t) => t.daily);
+  const pct = normal.length ? Math.round((finished.length / normal.length) * 100) : 0;
+  const rowProps = { today, act };
 
   return (
     <>
-      <div className="row between" style={{ alignItems: "flex-start" }}>
-        <div className="row" style={{ gap: 16 }}>
-          <Ring pct={pct} color={p.color} size={64} stroke={7} />
-          <div>
-            <input className="inp" style={{ fontSize: 24, fontWeight: 750, letterSpacing: "-.03em", padding: "2px 8px", marginLeft: -8, background: "transparent" }} defaultValue={p.name} onBlur={(e) => e.target.value.trim() && e.target.value !== p.name && act("updateProject", { id: p.id, name: e.target.value })} />
-            <p className="sub" style={{ margin: "2px 0 0" }}>{normal.length ? `${done} de ${normal.length} tareas completadas` : "Sin tareas todavía"}</p>
-          </div>
-        </div>
-        <button className="btn danger" onClick={() => confirm(`¿Eliminar "${p.name}" y todas sus tareas?`) && (act("deleteProject", { id: p.id }), onDeleted())}><Trash2 size={15} />Eliminar</button>
-      </div>
+      <div className="crumbs"><span>Proyectos</span><ChevronRight size={14} /><span className="dot" style={{ background: p.color, width: 9, height: 9 }} />{p.name}</div>
 
-      <div className="card" style={{ marginTop: 22 }}>
-        <div className="row between" style={{ alignItems: "flex-end" }}>
-          <label className="fld">Cliente<input className="inp" defaultValue={p.client} onBlur={(e) => act("updateProject", { id: p.id, client: e.target.value })} /></label>
-          <label className="fld">Fecha límite<input type="date" className="inp" value={p.deadline || ""} onChange={(e) => act("updateProject", { id: p.id, deadline: e.target.value })} /></label>
-          <div className="fld">Color<div className="swatches">{COLORS.map((c) => <button key={c} className={p.color === c ? "on" : ""} style={{ background: c }} onClick={() => act("updateProject", { id: p.id, color: c })} aria-label={`Color ${c}`} />)}</div></div>
-          {deadlineTag(p.deadline, today)}
+      <div className="row between" style={{ margin: "14px 0 18px" }}>
+        <input className="h-edit" defaultValue={p.name} onBlur={(e) => e.target.value.trim() && e.target.value !== p.name && act("updateProject", { id: p.id, name: e.target.value })} />
+        <div className="row gap-s">
+          <button className="btn primary" onClick={openNew}><Plus size={15} />Nueva tarea<kbd>C</kbd></button>
+          <button className="btn ghost danger" title="Eliminar proyecto" onClick={() => confirm(`¿Eliminar "${p.name}" y todas sus tareas?`) && (act("deleteProject", { id: p.id }), onDeleted())}><Trash2 size={16} /></button>
         </div>
       </div>
 
-      <form className="card composer" onSubmit={submit}>
-        <Plus size={18} style={{ color: "var(--muted)" }} />
-        <input className="inp t" placeholder="Agregar una tarea…" value={title} onChange={(e) => setTitle(e.target.value)} />
-        <input type="date" className="inp" value={due} disabled={daily} onChange={(e) => setDue(e.target.value)} title="Fecha límite" />
-        <label className="chk"><input type="checkbox" checked={daily} onChange={(e) => setDaily(e.target.checked)} />Todos los días</label>
-        <button className="btn primary" disabled={!title.trim()}>Agregar</button>
-      </form>
+      <div className="props">
+        <label className="prop"><span>Cliente</span><input defaultValue={p.client} onBlur={(e) => act("updateProject", { id: p.id, client: e.target.value })} /></label>
+        <div className="prop"><span>Entrega</span><DateChip value={p.deadline} today={today} placeholder="Sin fecha límite" onChange={(v) => act("updateProject", { id: p.id, deadline: v })} /></div>
+        <div className="prop"><span>Color</span><div className="swatches">{COLORS.map((c) => <button key={c} className={p.color === c ? "on" : ""} style={{ background: c }} onClick={() => act("updateProject", { id: p.id, color: c })} aria-label={`Color ${c}`} />)}</div></div>
+        <div className="prop grow"><span>Progreso · {finished.length}/{normal.length}</span><div className="bar"><i style={{ width: `${pct}%`, background: p.color }} /></div></div>
+      </div>
 
-      <div className="card">
-        <div className="seg">{FILTERS.map(([k, l]) => <button key={k} className={filter === k ? "on" : ""} onClick={() => setFilter(k)}>{l}</button>)}</div>
-        {shown.length ? shown.map((t) => <TaskRow key={t.id} {...{ t, today, act }} />) : <div className="empty"><ListTodo size={26} />{own.length ? "No hay tareas en este filtro." : "Agregá la primera tarea de la lista."}</div>}
+      <div className="list">
+        <TaskGroup title="Por hacer" Icon={ListTodo} color="#4f46e5" list={todo}>
+          {todo.map((t) => <TaskRow key={t.id} t={t} {...rowProps} />)}
+          <QuickAdd projectId={p.id} today={today} act={act} />
+        </TaskGroup>
+        <TaskGroup title="Todos los días" Icon={Repeat} color="#059669" list={daily}>
+          {daily.map((t) => <TaskRow key={t.id} t={t} {...rowProps} />)}
+          <QuickAdd projectId={p.id} daily today={today} act={act} />
+        </TaskGroup>
+        {finished.length > 0 && (
+          <TaskGroup title="Hechas" Icon={CheckCircle2} color="#64748b" list={finished} defaultOpen={false}>
+            {finished.map((t) => <TaskRow key={t.id} t={t} {...rowProps} />)}
+          </TaskGroup>
+        )}
       </div>
     </>
   );
