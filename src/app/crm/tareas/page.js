@@ -68,6 +68,7 @@ export default function TareasPage() {
   const [view, setView] = useState("hoy");
   const [wa, setWa] = useState(null);
   const [toast, setToast] = useState(null);
+  const [open, setOpen] = useState(true); // sidebar: se achica al ir al centro, se expande al pasar por él
 
   const notify = useCallback((text, bad) => setToast({ text, bad }), []);
   const [error, setError] = useState("");
@@ -114,26 +115,26 @@ export default function TareasPage() {
 
   return (
     <div className="ft">
-      <div className="app">
-        <aside className="side">
-          <div className="brand"><i><ListTodo size={18} /></i><div>Tareas<small>Proyectos y avisos</small></div></div>
-          <button className={`nav ${view === "hoy" ? "on" : ""}`} onClick={() => setView("hoy")}><LayoutDashboard size={18} />Hoy</button>
-          <div className="label">Proyectos <button className="btn ghost" style={{ padding: 2 }} onClick={newProject} title="Nuevo proyecto"><Plus size={15} /></button></div>
+      <div className={`app ${open ? "" : "min"}`}>
+        <aside className="side" onMouseEnter={() => setOpen(true)}>
+          <div className="brand"><i><ListTodo size={20} /></i><div className="lb">Tareas<small>Proyectos y avisos</small></div></div>
+          <button className={`nav ${view === "hoy" ? "on" : ""}`} onClick={() => setView("hoy")} title="Hoy"><LayoutDashboard size={20} /><span className="lb">Hoy</span></button>
+          <div className="label"><span className="lb">Proyectos</span><button className="btn ghost" style={{ padding: 2 }} onClick={newProject} title="Nuevo proyecto"><Plus size={16} /></button></div>
           {projects.map((p) => (
-            <button key={p.id} className={`nav ${view === p.id ? "on" : ""}`} onClick={() => setView(p.id)}>
-              <span className="dot" style={{ background: p.color }} />{p.name}
+            <button key={p.id} className={`nav ${view === p.id ? "on" : ""}`} onClick={() => setView(p.id)} title={p.name}>
+              <span className="dot" style={{ background: p.color }} /><span className="lb">{p.name}</span>
               {pending(p) > 0 && <span className="n">{pending(p)}</span>}
             </button>
           ))}
           <div className="grow" />
-          <button className={`wa-card ${view === "wa" ? "on" : ""}`} onClick={() => setView("wa")}>
-            <b><MessageCircle size={16} color="#25d366" />WhatsApp</b>
-            <span className={`pill ${waTone}`} style={{ padding: 0, background: "none", marginLeft: -24 }}><i />{waLabel}</span>
+          <button className={`wa-card ${view === "wa" ? "on" : ""}`} onClick={() => setView("wa")} title={`WhatsApp · ${waLabel}`}>
+            <span className="ic"><MessageCircle size={22} color="#16a34a" /><i className={`sdot ${waTone}`} /></span>
+            <span className="lb"><b>WhatsApp</b><small>{waLabel}</small></span>
           </button>
-          <a className="exit" href="/crm"><ArrowLeft size={14} />Volver al CRM</a>
+          <a className="exit" href="/crm" title="Volver al CRM"><ArrowLeft size={16} /><span className="lb">Volver al CRM</span></a>
         </aside>
 
-        <main className="main" key={view}>
+        <main className="main" key={view} onMouseEnter={() => setOpen(false)}>
           {view === "hoy" && <Today {...{ projects, tasks, today, act, setView, newProject }} />}
           {project && <ProjectView key={project.id} {...{ project, tasks, today, act, onDeleted: () => setView("hoy") }} />}
           {view === "wa" && <WhatsApp {...{ wa, loadWa, settings, act, notify }} />}
@@ -144,7 +145,7 @@ export default function TareasPage() {
   );
 }
 
-function TaskRow({ t, today, act }) {
+function TaskRow({ t, today, act, project }) {
   const [edit, setEdit] = useState(false);
   const [title, setTitle] = useState(t.title);
   const [due, setDue] = useState(t.due || "");
@@ -168,6 +169,7 @@ function TaskRow({ t, today, act }) {
       ) : (
         <>
           <span className="t" onDoubleClick={() => setEdit(true)}>{t.title}</span>
+          {project && <span className="pchip"><span className="dot" style={{ background: project.color, width: 9, height: 9 }} />{project.name}</span>}
           {dueTag(t, today)}
           <span className="acts">
             <button className="btn ghost" onClick={() => setEdit(true)} title="Editar"><Pencil size={15} /></button>
@@ -179,22 +181,38 @@ function TaskRow({ t, today, act }) {
   );
 }
 
+function Group({ title, hint, Icon, color, list, projects, today, act }) {
+  if (!list.length) return null;
+  return (
+    <div className="card group">
+      <div className="group-h">
+        <div className="ic" style={{ background: `color-mix(in srgb, ${color} 14%, white)`, color }}><Icon size={18} /></div>
+        <div><h2>{title}</h2><small>{hint}</small></div>
+      </div>
+      {list.map((t) => <TaskRow key={t.id} {...{ t, today, act }} project={projects.find((p) => p.id === t.projectId)} />)}
+    </div>
+  );
+}
+
 function Today({ projects, tasks, today, act, setView, newProject }) {
   const pending = tasks.filter((t) => !isDone(t, today));
   const overdue = pending.filter((t) => !t.daily && t.due && t.due < today);
   const dueToday = pending.filter((t) => !t.daily && t.due === today);
-  const daily = tasks.filter((t) => t.daily);
-  const focus = tasks.filter((t) => t.daily || (!t.done && t.due && t.due <= today));
+  const dailyAll = tasks.filter((t) => t.daily);
+  const daily = dailyAll.filter((t) => !isDone(t, today));
+  const soon = pending.filter((t) => !t.daily && t.due && days(today, t.due) > 0 && days(today, t.due) <= 7);
+  const doneToday = dailyAll.length - daily.length;
   const pct = (p) => {
     const own = tasks.filter((t) => t.projectId === p.id && !t.daily);
     return own.length ? Math.round((own.filter((t) => t.done).length / own.length) * 100) : 0;
   };
   const stats = [
-    { n: pending.filter((t) => !t.daily).length, l: "Pendientes", Icon: ListTodo, c: "#5b5bf0" },
-    { n: overdue.length, l: "Vencidas", Icon: AlertTriangle, c: "#ef4444" },
-    { n: dueToday.length, l: "Para hoy", Icon: CalendarCheck, c: "#f59e0b" },
-    { n: `${daily.filter((t) => t.doneOn === today).length}/${daily.length}`, l: "Diarias hechas", Icon: Repeat, c: "#10b981" },
+    { n: pending.filter((t) => !t.daily).length, l: "Tareas pendientes", Icon: ListTodo, c: "#4f46e5" },
+    { n: overdue.length, l: "Vencidas", Icon: AlertTriangle, c: "#dc2626" },
+    { n: dueToday.length, l: "Vencen hoy", Icon: CalendarCheck, c: "#d97706" },
+    { n: `${doneToday}/${dailyAll.length}`, l: "Diarias hechas", Icon: Repeat, c: "#059669" },
   ];
+  const nothing = !overdue.length && !dueToday.length && !daily.length && !soon.length;
 
   return (
     <>
@@ -204,38 +222,37 @@ function Today({ projects, tasks, today, act, setView, newProject }) {
       <div className="stats">
         {stats.map(({ n, l, Icon, c }) => (
           <div className="stat" key={l}>
-            <div className="ic" style={{ background: `color-mix(in srgb, ${c} 14%, transparent)`, color: c }}><Icon size={20} /></div>
+            <div className="ic" style={{ background: `color-mix(in srgb, ${c} 13%, white)`, color: c }}><Icon size={22} /></div>
             <div><b>{n}</b><span>{l}</span></div>
           </div>
         ))}
       </div>
 
+      <div className="section-t">Tus proyectos</div>
       <div className="projects">
         {projects.map((p) => (
           <button key={p.id} className="pcard" style={{ "--c": p.color }} onClick={() => setView(p.id)}>
             <div className="top">
               <Ring pct={pct(p)} color={p.color} />
-              <div><strong>{p.name}</strong><small>{tasks.filter((t) => t.projectId === p.id && !isDone(t, today)).length} pendientes</small></div>
+              <div><strong>{p.name}</strong><small>{pending.filter((t) => t.projectId === p.id).length} pendientes</small></div>
             </div>
             {deadlineTag(p.deadline, today) || <span className="tag">Sin fecha límite</span>}
           </button>
         ))}
-        <button className="pcard" style={{ "--c": "var(--brand)", placeItems: "center", color: "var(--muted)", borderStyle: "dashed", boxShadow: "none" }} onClick={newProject}>
-          <Plus size={22} /><small>Nuevo proyecto</small>
-        </button>
+        <button className="pcard add" onClick={newProject}><Plus size={24} /><small>Nuevo proyecto</small></button>
       </div>
 
-      {projects.map((p) => {
-        const list = focus.filter((t) => t.projectId === p.id);
-        if (!list.length) return null;
-        return (
-          <div className="card" key={p.id}>
-            <div className="card-h"><h2 className="row gap-s"><span className="dot" style={{ background: p.color }} />{p.name}</h2></div>
-            {list.map((t) => <TaskRow key={t.id} {...{ t, today, act }} />)}
-          </div>
-        );
-      })}
-      {!focus.length && <div className="card empty"><Sparkles size={28} />Nada urgente para hoy. Sumá tareas desde cada proyecto.</div>}
+      <div className="section-t">Qué hacer</div>
+      <Group title="Vencidas" hint="Pasó la fecha, resolvelas primero" Icon={AlertTriangle} color="#dc2626" list={overdue} {...{ projects, today, act }} />
+      <Group title="Para hoy" hint="Vencen hoy" Icon={CalendarCheck} color="#d97706" list={dueToday} {...{ projects, today, act }} />
+      <Group title="Todos los días" hint="Rutinas que se reinician cada día" Icon={Repeat} color="#059669" list={daily} {...{ projects, today, act }} />
+      <Group title="Próximos 7 días" hint="Para ir adelantando" Icon={Clock} color="#4f46e5" list={soon} {...{ projects, today, act }} />
+      {nothing && (
+        <div className="card empty">
+          <Sparkles size={30} />
+          {tasks.length ? "¡Todo al día! No tenés nada pendiente por ahora." : "Todavía no cargaste tareas. Entrá a un proyecto y agregá la primera."}
+        </div>
+      )}
     </>
   );
 }
