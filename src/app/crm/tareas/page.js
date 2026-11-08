@@ -37,7 +37,7 @@ function Ring({ pct, color, size = 56, stroke = 6 }) {
   return (
     <div className="ring" style={{ "--s": `${size}px` }}>
       <svg width={size} height={size}>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--soft)" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#cdd3e6" strokeWidth={stroke} />
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - pct / 100)} style={{ transition: "stroke-dashoffset .5s" }} />
       </svg>
       <span>{pct}%</span>
@@ -302,7 +302,7 @@ function ProjectView({ project: p, tasks, today, act, onDeleted }) {
       </div>
 
       <form className="card composer" onSubmit={submit}>
-        <Plus size={18} color="var(--muted)" />
+        <Plus size={18} style={{ color: "var(--muted)" }} />
         <input className="inp t" placeholder="Agregar una tarea…" value={title} onChange={(e) => setTitle(e.target.value)} />
         <input type="date" className="inp" value={due} disabled={daily} onChange={(e) => setDue(e.target.value)} title="Fecha límite" />
         <label className="chk"><input type="checkbox" checked={daily} onChange={(e) => setDaily(e.target.checked)} />Todos los días</label>
@@ -406,7 +406,7 @@ function WhatsApp({ wa, loadWa, settings, act, notify }) {
             <div className="chatbg"><div className="bubble">{preview.replace(/\*([^*]+)\*/g, "$1").replace(/_([^_]+)_/g, "$1")}</div></div>
           ) : settings.log?.length ? (
             <div className="log">{settings.log.slice(0, 6).map((l) => (
-              <div key={l.at}>{l.ok ? <CheckCircle2 size={15} color="var(--ok)" /> : <AlertTriangle size={15} color="var(--bad)" />}{new Date(l.at).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" })} · {l.reason} · {l.message}</div>
+              <div key={l.at}>{l.ok ? <CheckCircle2 size={15} style={{ color: "var(--ok)" }} /> : <AlertTriangle size={15} style={{ color: "var(--bad)" }} />}{new Date(l.at).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" })} · {l.reason} · {l.message}</div>
             ))}</div>
           ) : <div className="empty"><Send size={24} />Todavía no se envió ningún resumen.</div>}
         </div>
