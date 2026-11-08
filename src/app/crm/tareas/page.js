@@ -30,7 +30,7 @@ const WA_HELP = {
 const api = (url, body) =>
   fetch(url, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : { cache: "no-store" }).then((r) => r.json());
 
-const isDone = (t, today) => (t.daily ? t.doneOn === today : t.done);
+import { isDone, nextDue, everyLabel } from "@/lib/tareas/recurrence";
 const days = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 86400000);
 const short = (d) => new Date(`${d}T00:00:00Z`).toLocaleDateString("es-AR", { timeZone: "UTC", day: "numeric", month: "short" });
 
@@ -211,13 +211,48 @@ function DateChip({ value, today, onChange, placeholder = "Sin fecha" }) {
   );
 }
 
+/** Chip de repetición: no se repite / todos los días / cada N días. */
+function RepeatChip({ every, onChange }) {
+  const [open, setOpen] = useState(false);
+  const [custom, setCustom] = useState("");
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e) => !ref.current?.contains(e.target) && setOpen(false);
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [open]);
+  const pick = (n) => { onChange(n); setOpen(false); };
+  return (
+    <span className="pop" ref={ref}>
+      <button type="button" className={`chip ${every ? "on set" : ""}`} onClick={() => setOpen((o) => !o)}>
+        <Repeat size={14} />{every ? everyLabel(every) : "No se repite"}
+      </button>
+      {open && (
+        <div className="menu">
+          {[[0, "No se repite"], [1, "Todos los días"], [2, "Cada 2 días"], [3, "Cada 3 días"], [7, "Cada semana"]].map(([n, l]) => (
+            <button key={n} type="button" onClick={() => pick(n)}>{l}{every === n ? <Check size={14} /> : null}</button>
+          ))}
+          <form className="custom" onSubmit={(e) => { e.preventDefault(); const n = parseInt(custom); if (n > 0) pick(Math.min(365, n)); }}>
+            <span>Cada</span>
+            <input type="number" min="1" max="365" className="inp" placeholder="N" value={custom} onChange={(e) => setCustom(e.target.value)} />
+            <span>días</span>
+            <button type="submit" className="btn" disabled={!(parseInt(custom) > 0)}>OK</button>
+          </form>
+        </div>
+      )}
+    </span>
+  );
+}
+
 /** Modal "Nueva tarea" estilo Linear: título grande, proyecto y fecha como chips. */
 function NewTaskModal({ projects, defaultProject, today, act, notify, onClose }) {
   const openTask = useContext(PanelCtx);
   const [title, setTitle] = useState("");
   const [projectId, setProjectId] = useState(defaultProject || projects[0]?.id);
   const [due, setDue] = useState("");
-  const [daily, setDaily] = useState(false);
+  const [every, setEvery] = useState(0); // 0 = no se repite
+  const daily = every > 0;
   const [again, setAgain] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -231,7 +266,7 @@ function NewTaskModal({ projects, defaultProject, today, act, notify, onClose })
     e.preventDefault();
     if (!title.trim() || busy) return;
     setBusy(true);
-    const r = await act("addTask", { projectId, title, due: daily ? "" : due, daily });
+    const r = await act("addTask", { projectId, title, due: daily ? "" : due, daily, every });
     setBusy(false);
     notify("Tarea creada");
     if (again) { setTitle(""); setDue(""); } else { onClose(); if (r?.id) openTask(r.id); }
@@ -254,7 +289,7 @@ function NewTaskModal({ projects, defaultProject, today, act, notify, onClose })
         </div>
         <div className="chips">
           {!daily && <DateChip value={due} today={today} onChange={setDue} placeholder="Fecha límite" />}
-          <button type="button" className={`chip ${daily ? "on" : ""}`} onClick={() => setDaily((v) => !v)}><Repeat size={14} />Todos los días</button>
+          <RepeatChip every={every} onChange={setEvery} />
         </div>
         <div className="modal-foot">
           <label className="chk"><input type="checkbox" checked={again} onChange={(e) => setAgain(e.target.checked)} />Crear otra</label>
@@ -305,7 +340,8 @@ function TaskRow({ t, today, act, project }) {
   const openTask = useContext(PanelCtx);
   const [edit, setEdit] = useState(false);
   const [title, setTitle] = useState(t.title);
-  const done = isDone(t, today);
+  const done = t.daily ? t.doneOn === today : isDone(t, today);
+  const later = t.daily && !done && nextDue(t, today) > today;
 
   const save = () => {
     act("updateTask", { id: t.id, title, due: t.due || "" });
@@ -313,7 +349,7 @@ function TaskRow({ t, today, act, project }) {
   };
 
   return (
-    <div className={`task ${done ? "done" : ""}`}>
+    <div className={`task ${done ? "done" : ""} ${later ? "later" : ""}`}>
       <input type="checkbox" className="cb" checked={done} onChange={() => act("toggleTask", { id: t.id })} aria-label="Completar tarea" />
       {edit ? (
         <input className="t-edit" autoFocus value={title} onChange={(e) => setTitle(e.target.value)} onBlur={save} onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") { setTitle(t.title); setEdit(false); } }} />
@@ -321,7 +357,7 @@ function TaskRow({ t, today, act, project }) {
         <span className="t" onClick={() => openTask(t.id)}>{t.title}{t.description ? <FileText size={13} className="hasdesc" /> : null}</span>
       )}
       {project && <span className="pchip"><span className="dot" style={{ background: project.color, width: 8, height: 8 }} />{project.name}</span>}
-      {t.daily ? <span className="chip static"><Repeat size={13} />Diaria</span> : <DateChip value={t.due} today={today} onChange={(v) => act("updateTask", { id: t.id, due: v })} />}
+      {t.daily ? <>{later && <span className="nextrun">Próxima: {short(nextDue(t, today))}</span>}<RepeatChip every={t.every} onChange={(v) => act("updateTask", { id: t.id, every: v })} /></> : <DateChip value={t.due} today={today} onChange={(v) => act("updateTask", { id: t.id, due: v })} />}
       <span className="acts">
         <button className="btn ghost" onClick={() => setEdit(true)} title="Editar"><Pencil size={14} /></button>
         <button className="btn ghost" onClick={() => act("deleteTask", { id: t.id })} title="Eliminar"><Trash2 size={14} /></button>
@@ -359,7 +395,7 @@ function TaskPanel({ task, project, today, act, notify, onClose }) {
   const uploads = useRef(0);
   const [title, setTitle] = useState(task.title);
   const [state, setState] = useState("saved"); // saved | saving | uploading
-  const done = isDone(task, today);
+  const done = task.daily ? task.doneOn === today : isDone(task, today);
 
   const save = useCallback(async () => {
     clearTimeout(timer.current);
@@ -440,7 +476,9 @@ function TaskPanel({ task, project, today, act, notify, onClose }) {
           <input value={title} onChange={(e) => setTitle(e.target.value)} onBlur={saveTitle} onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()} aria-label="Título" />
         </div>
         <div className="chips">
-          {task.daily ? <span className="chip static"><Repeat size={13} />Todos los días</span> : <DateChip value={task.due} today={today} onChange={(v) => act("updateTask", { id: task.id, due: v })} placeholder="Fecha límite" />}
+          {!task.daily && <DateChip value={task.due} today={today} onChange={(v) => act("updateTask", { id: task.id, due: v })} placeholder="Fecha límite" />}
+          <RepeatChip every={task.daily ? task.every : 0} onChange={(v) => act("updateTask", { id: task.id, every: v })} />
+          {task.daily && <span className="nextrun">{done ? "Hecha hoy · " : ""}Próxima: {nextDue(task, today) <= today ? "hoy" : short(nextDue(task, today))}{done ? ` → ${short(nextDue({ ...task, doneOn: today }, today))}` : ""}</span>}
         </div>
         <div className="panel-label"><span>Descripción</span><small className={`sv ${state}`}>{state === "saved" ? "Guardado" : state === "error" ? "Error al guardar" : "Guardando…"}</small></div>
         <div
@@ -476,7 +514,8 @@ function Today({ projects, tasks, today, act, setView, newProject }) {
   const dailyAll = tasks.filter((t) => t.daily);
   const daily = dailyAll.filter((t) => !isDone(t, today));
   const soon = pending.filter((t) => !t.daily && t.due && days(today, t.due) > 0 && days(today, t.due) <= 7);
-  const doneToday = dailyAll.length - daily.length;
+  const dueDaily = dailyAll.filter((t) => t.doneOn === today || nextDue(t, today) <= today);
+  const doneToday = dueDaily.filter((t) => t.doneOn === today).length;
   const pct = (p) => {
     const own = tasks.filter((t) => t.projectId === p.id && !t.daily);
     return own.length ? Math.round((own.filter((t) => t.done).length / own.length) * 100) : 0;
@@ -485,7 +524,7 @@ function Today({ projects, tasks, today, act, setView, newProject }) {
     { n: pending.filter((t) => !t.daily).length, l: "Tareas pendientes", Icon: ListTodo, c: "#4f46e5" },
     { n: overdue.length, l: "Vencidas", Icon: AlertTriangle, c: "#dc2626" },
     { n: dueToday.length, l: "Vencen hoy", Icon: CalendarCheck, c: "#d97706" },
-    { n: `${doneToday}/${dailyAll.length}`, l: "Diarias hechas", Icon: Repeat, c: "#059669" },
+    { n: `${doneToday}/${dueDaily.length}`, l: "Recurrentes hechas", Icon: Repeat, c: "#059669" },
   ];
   const nothing = !overdue.length && !dueToday.length && !daily.length && !soon.length;
 
@@ -521,7 +560,7 @@ function Today({ projects, tasks, today, act, setView, newProject }) {
       <div className={nothing ? "" : "list"}>
       <Group title="Vencidas" hint="Pasó la fecha, resolvelas primero" Icon={AlertTriangle} color="#dc2626" list={overdue} {...{ projects, today, act }} />
       <Group title="Para hoy" hint="Vencen hoy" Icon={CalendarCheck} color="#d97706" list={dueToday} {...{ projects, today, act }} />
-      <Group title="Todos los días" hint="Rutinas que se reinician cada día" Icon={Repeat} color="#059669" list={daily} {...{ projects, today, act }} />
+      <Group title="Recurrentes de hoy" hint="Rutinas que te tocan hoy" Icon={Repeat} color="#059669" list={daily} {...{ projects, today, act }} />
       <Group title="Próximos 7 días" hint="Para ir adelantando" Icon={Clock} color="#4f46e5" list={soon} {...{ projects, today, act }} />
       </div>
       {nothing && (
@@ -567,7 +606,7 @@ function ProjectView({ project: p, tasks, today, act, openNew, onDeleted }) {
           {todo.map((t) => <TaskRow key={t.id} t={t} {...rowProps} />)}
           <QuickAdd projectId={p.id} today={today} act={act} />
         </TaskGroup>
-        <TaskGroup title="Todos los días" Icon={Repeat} color="#059669" list={daily}>
+        <TaskGroup title="Recurrentes" Icon={Repeat} color="#059669" list={daily}>
           {daily.map((t) => <TaskRow key={t.id} t={t} {...rowProps} />)}
           <QuickAdd projectId={p.id} daily today={today} act={act} />
         </TaskGroup>

@@ -31,9 +31,10 @@ const actions = {
   async deleteProject({ id }) {
     must(await projects().delete().eq("id", id)); // las tareas se borran en cascada
   },
-  async addTask({ projectId, title, due, daily, description }) {
+  async addTask({ projectId, title, due, daily, every, description }) {
     if (!clean(title)) return;
     const row = { project_id: projectId, title: clean(title), due: daily ? null : due || null, daily: !!daily };
+    if (daily) Object.assign(row, { every_days: Math.min(365, Math.max(1, parseInt(every) || 1)), start_on: today() });
     if (description) row.description = cleanHtml(description);
     return must(await tasks().insert(row).select("id").single());
   },
@@ -43,12 +44,18 @@ const actions = {
     const upd = t.daily ? { done_on: t.done_on === today() ? null : today() } : { done: !t.done };
     must(await tasks().update(upd).eq("id", id));
   },
-  async updateTask({ id, title, due, description }) {
-    const t = must(await tasks().select("daily").eq("id", id).maybeSingle());
+  async updateTask({ id, title, due, every, description }) {
+    const t = must(await tasks().select("daily, done_on").eq("id", id).maybeSingle());
     if (!t) return;
     const upd = {};
     if (clean(title)) upd.title = clean(title);
-    if (!t.daily && due !== undefined) upd.due = due || null;
+    if (every !== undefined) {
+      // 0 = no se repite; N>0 = cada N días
+      const n = Math.min(365, Math.max(0, parseInt(every) || 0));
+      upd.daily = n > 0;
+      if (n > 0) { upd.every_days = n; upd.due = null; if (!t.daily) upd.start_on = today(); }
+      else upd.done_on = null;
+    } else if (!t.daily && due !== undefined) upd.due = due || null;
     if (description !== undefined) upd.description = cleanHtml(description);
     if (Object.keys(upd).length) must(await tasks().update(upd).eq("id", id));
   },

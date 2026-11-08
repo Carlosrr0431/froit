@@ -2,7 +2,8 @@ import { readAll, saveSettings } from "./store";
 import { today, nowHM, daysBetween, formatLong, formatShort } from "./dates";
 import { sendText } from "./whatsapp";
 
-export const isDone = (t, day) => (t.daily ? t.doneOn === day : !!t.done);
+import { isDone, everyLabel } from "./recurrence";
+export { isDone };
 
 export function buildSummary(data, day = today()) {
   const blocks = [];
@@ -32,12 +33,12 @@ export function buildSummary(data, day = today()) {
     const add = (icon, label, list) => {
       if (!list.length) return;
       lines.push(`${icon} _${label}_`);
-      list.slice(0, 8).forEach((t) => lines.push(`  • ${t.title}${!t.daily && t.due ? ` (${formatShort(t.due)})` : ""}`));
+      list.slice(0, 8).forEach((t) => lines.push(`  • ${t.title}${t.daily ? ` (${everyLabel(t.every).toLowerCase()})` : t.due ? ` (${formatShort(t.due)}${daysBetween(day, t.due) > 0 ? ` · en ${daysBetween(day, t.due)} d` : ""})` : ""}`));
       if (list.length > 8) lines.push(`  … y ${list.length - 8} más`);
     };
     add("⚠️", "Vencidas", overdue);
     add("📅", "Para hoy", dueToday);
-    add("🔁", "Diarias", daily);
+    add("🔁", "Recurrentes de hoy", daily);
     add("📝", "Pendientes", rest);
     if (lines.length > 1) {
       blocks.push(lines.join("\n"));
