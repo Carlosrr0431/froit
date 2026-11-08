@@ -1,4 +1,4 @@
-import { read, write } from "./store";
+import { readAll, saveSettings } from "./store";
 import { today, nowHM, daysBetween, formatLong, formatShort } from "./dates";
 import { sendText } from "./whatsapp";
 
@@ -23,22 +23,22 @@ export function buildSummary(data, day = today()) {
     const meta = [];
     if (p.deadline) {
       const d = daysBetween(day, p.deadline);
-      meta.push(d < 0 ? `🔴 vencido hace ${-d} d` : d === 0 ? "🔴 vence HOY" : `⏳ entrega en ${d} d (${formatShort(p.deadline)})`);
+      meta.push(d < 0 ? `?? vencido hace ${-d} d` : d === 0 ? "?? vence HOY" : `? entrega en ${d} d (${formatShort(p.deadline)})`);
     }
     if (pct !== null) meta.push(`${pct}%`);
-    if (meta.length) head += `  ${meta.join(" · ")}`;
+    if (meta.length) head += `  ${meta.join(" � ")}`;
 
     const lines = [head];
     const add = (icon, label, list) => {
       if (!list.length) return;
       lines.push(`${icon} _${label}_`);
-      list.slice(0, 8).forEach((t) => lines.push(`  • ${t.title}${!t.daily && t.due ? ` (${formatShort(t.due)})` : ""}`));
-      if (list.length > 8) lines.push(`  … y ${list.length - 8} más`);
+      list.slice(0, 8).forEach((t) => lines.push(`  � ${t.title}${!t.daily && t.due ? ` (${formatShort(t.due)})` : ""}`));
+      if (list.length > 8) lines.push(`  � y ${list.length - 8} m�s`);
     };
-    add("⚠️", "Vencidas", overdue);
-    add("📅", "Para hoy", dueToday);
-    add("🔁", "Diarias", daily);
-    add("📝", "Pendientes", rest);
+    add("??", "Vencidas", overdue);
+    add("??", "Para hoy", dueToday);
+    add("??", "Diarias", daily);
+    add("??", "Pendientes", rest);
     if (lines.length > 1) {
       blocks.push(lines.join("\n"));
       total += pending.length;
@@ -46,46 +46,44 @@ export function buildSummary(data, day = today()) {
   }
 
   if (!blocks.length) return null;
-  return `📋 *Resumen de tareas*\n${formatLong(day)}\n\nTenés *${total}* tarea${total === 1 ? "" : "s"} pendiente${total === 1 ? "" : "s"}.\n\n${blocks.join("\n\n")}`;
+  return `?? *Resumen de tareas*\n${formatLong(day)}\n\nTen�s *${total}* tarea${total === 1 ? "" : "s"} pendiente${total === 1 ? "" : "s"}.\n\n${blocks.join("\n\n")}`;
 }
 
-function log(data, entry) {
-  data.settings.log = [{ at: new Date().toISOString(), ...entry }, ...(data.settings.log || [])].slice(0, 20);
-}
+const trim = (o, n) => Object.fromEntries(Object.entries(o).slice(-n));
 
-/** Envía el resumen al número configurado. */
+/** Env?a el resumen al n?mero configurado y lo anota en el historial. */
 export async function sendReminder(reason = "manual") {
-  const data = read();
-  const text = buildSummary(data) ?? "✅ No tenés tareas pendientes. ¡Todo al día!";
+  const data = await readAll();
+  const text = buildSummary(data) ?? "? No ten?s tareas pendientes. ?Todo al d?a!";
   const r = await sendText(data.settings.phone, text);
-  const fresh = read();
-  log(fresh, { reason, ok: r.ok, message: r.ok ? "Enviado" : r.message || `Error ${r.status}` });
-  write(fresh);
+  const entry = { at: new Date().toISOString(), reason, ok: r.ok, message: r.ok ? "Enviado" : r.message || "Error" };
+  await saveSettings({ log: [entry, ...data.settings.log].slice(0, 20) });
   return r;
 }
 
-/** Revisado cada minuto: dispara los horarios configurados una vez por día. */
+/** Dispara los horarios configurados una vez por d?a (lo llama el cron / el programador local). */
 export async function tick() {
-  const data = read();
-  const { reminders, times = [], sent = {} } = data.settings;
+  const { settings } = await readAll();
+  const { reminders, times = [] } = settings;
   if (!reminders) return;
   const day = today();
-  const now = nowHM();
+  const [nh, nm] = nowHM().split(":").map(Number);
 
   for (const t of times) {
     const key = `${day} ${t}`;
     const [h, m] = t.split(":").map(Number);
-    const [nh, nm] = now.split(":").map(Number);
     const late = nh * 60 + nm - (h * 60 + m);
+    const sent = (await readAll()).settings.sent;
     if (late < 0 || late > 180 || sent[key]) continue;
-    // Tras un error, esperar 15 min antes de reintentar (cuida la línea).
+    // Tras un error, esperar 15 min antes de reintentar (cuida la l?nea).
     if (Date.now() - (sent[`${key} fail`] || 0) < 15 * 60_000) continue;
 
+    // Se reserva el horario antes de enviar para que dos ejecuciones no manden doble.
+    await saveSettings({ sent: trim({ ...sent, [key]: true }, 40) });
     const r = await sendReminder(`auto ${t}`);
-    const fresh = read();
-    fresh.settings.sent = Object.fromEntries(
-      Object.entries({ ...fresh.settings.sent, [r.ok ? key : `${key} fail`]: r.ok ? true : Date.now() }).slice(-40)
-    );
-    write(fresh);
+    if (!r.ok) {
+      const { [key]: _, ...rest } = (await readAll()).settings.sent;
+      await saveSettings({ sent: trim({ ...rest, [`${key} fail`]: Date.now() }, 40) });
+    }
   }
 }

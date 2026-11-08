@@ -1,4 +1,4 @@
-import { read, write, uid } from "@/lib/tareas/store";
+import { projects, tasks, saveSettings, must, db } from "@/lib/tareas/store";
 import { today } from "@/lib/tareas/dates";
 import { denyIfNoSession } from "@/lib/tareas/auth";
 
@@ -7,41 +7,48 @@ export const dynamic = "force-dynamic";
 const clean = (s) => String(s ?? "").trim();
 
 const actions = {
-  addProject(d, { name, client, color, deadline }) {
-    d.projects.push({ id: uid(), name: clean(name), client: clean(client), color: color || "#6366f1", deadline: deadline || null });
+  async addProject({ name, client, color, deadline }) {
+    if (!clean(name)) return;
+    must(await projects().insert({ name: clean(name), client: clean(client), color: color || "#5b5bf0", deadline: deadline || null }));
   },
-  updateProject(d, { id, ...patch }) {
-    const p = d.projects.find((x) => x.id === id);
-    if (!p) return;
-    for (const k of ["name", "client", "color", "deadline"]) if (k in patch) p[k] = patch[k] || (k === "deadline" ? null : p[k]);
+  async updateProject({ id, ...patch }) {
+    const upd = {};
+    if (clean(patch.name)) upd.name = clean(patch.name);
+    if ("client" in patch) upd.client = clean(patch.client);
+    if (patch.color) upd.color = patch.color;
+    if ("deadline" in patch) upd.deadline = patch.deadline || null;
+    if (Object.keys(upd).length) must(await projects().update(upd).eq("id", id));
   },
-  deleteProject(d, { id }) {
-    d.projects = d.projects.filter((p) => p.id !== id);
-    d.tasks = d.tasks.filter((t) => t.projectId !== id);
+  async deleteProject({ id }) {
+    must(await projects().delete().eq("id", id)); // las tareas se borran en cascada
   },
-  addTask(d, { projectId, title, due, daily }) {
+  async addTask({ projectId, title, due, daily }) {
     if (!clean(title)) return;
-    d.tasks.push({ id: uid(), projectId, title: clean(title), due: daily ? null : due || null, daily: !!daily, done: false, doneOn: null });
+    must(await tasks().insert({ project_id: projectId, title: clean(title), due: daily ? null : due || null, daily: !!daily }));
   },
-  toggleTask(d, { id }) {
-    const t = d.tasks.find((x) => x.id === id);
+  async toggleTask({ id }) {
+    const t = must(await tasks().select("daily, done, done_on").eq("id", id).maybeSingle());
     if (!t) return;
-    if (t.daily) t.doneOn = t.doneOn === today() ? null : today();
-    else t.done = !t.done;
+    const upd = t.daily ? { done_on: t.done_on === today() ? null : today() } : { done: !t.done };
+    must(await tasks().update(upd).eq("id", id));
   },
-  updateTask(d, { id, title, due }) {
-    const t = d.tasks.find((x) => x.id === id);
+  async updateTask({ id, title, due }) {
+    const t = must(await tasks().select("daily").eq("id", id).maybeSingle());
     if (!t) return;
-    if (clean(title)) t.title = clean(title);
-    if (!t.daily) t.due = due || null;
+    const upd = {};
+    if (clean(title)) upd.title = clean(title);
+    if (!t.daily) upd.due = due || null;
+    if (Object.keys(upd).length) must(await tasks().update(upd).eq("id", id));
   },
-  deleteTask(d, { id }) {
-    d.tasks = d.tasks.filter((t) => t.id !== id);
+  async deleteTask({ id }) {
+    must(await tasks().delete().eq("id", id));
   },
-  saveSettings(d, { phone, reminders, times }) {
-    if (phone !== undefined) d.settings.phone = clean(phone);
-    if (reminders !== undefined) d.settings.reminders = !!reminders;
-    if (Array.isArray(times)) d.settings.times = [...new Set(times.filter((t) => /^\d{2}:\d{2}$/.test(t)))].sort();
+  async saveSettings({ phone, reminders, times }) {
+    const upd = {};
+    if (phone !== undefined) upd.phone = clean(phone);
+    if (reminders !== undefined) upd.reminders = !!reminders;
+    if (Array.isArray(times)) upd.times = [...new Set(times.filter((t) => /^\d{2}:\d{2}$/.test(t)))].sort();
+    if (Object.keys(upd).length) await saveSettings(upd);
   },
 };
 
@@ -51,8 +58,11 @@ export async function POST(req) {
   const { type, ...payload } = await req.json();
   const fn = actions[type];
   if (!fn) return Response.json({ error: "Acción inválida" }, { status: 400 });
-  const data = read();
-  fn(data, payload);
-  write(data);
-  return Response.json({ ok: true });
+  try {
+    db();
+    await fn(payload);
+    return Response.json({ ok: true });
+  } catch (e) {
+    return Response.json({ error: e.message }, { status: 500 });
+  }
 }

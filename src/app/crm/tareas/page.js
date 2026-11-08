@@ -70,7 +70,8 @@ export default function TareasPage() {
   const [toast, setToast] = useState(null);
 
   const notify = useCallback((text, bad) => setToast({ text, bad }), []);
-  const load = useCallback(() => api("/api/tareas/state").then((d) => d.projects && setData(d)), []);
+  const [error, setError] = useState("");
+  const load = useCallback(() => api("/api/tareas/state").then((d) => (d.projects ? (setError(""), setData(d)) : setError(d.error || "Error al cargar"))).catch((e) => setError(e.message)), []);
   const loadWa = useCallback(() => api("/api/tareas/wa").then((d) => setWa(d.error ? { status: "error" } : d)).catch(() => setWa({ status: "api_offline" })), []);
 
   useEffect(() => { load(); loadWa(); }, [load, loadWa]);
@@ -90,7 +91,17 @@ export default function TareasPage() {
     await load();
   }, [load]);
 
-  if (!data) return <div className="ft" />;
+  if (!data) {
+    return (
+      <div className="ft">
+        <main className="main">
+          {error ? (
+            <div className="card"><h2>No se pudo cargar el módulo</h2><div className="alert"><Info size={18} />{error}. Verificá que ejecutaste <code>supabase/froit_tareas.sql</code> y que están las variables FROIT_SUPABASE_URL y FROIT_SUPABASE_SERVICE_KEY.</div></div>
+          ) : null}
+        </main>
+      </div>
+    );
+  }
   const { projects, tasks, settings, today } = data;
   const project = projects.find((p) => p.id === view);
   const pending = (p) => tasks.filter((t) => t.projectId === p.id && !isDone(t, today)).length;

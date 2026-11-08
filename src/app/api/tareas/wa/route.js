@@ -1,6 +1,6 @@
 import * as wa from "@/lib/tareas/whatsapp";
 import { sendReminder, buildSummary } from "@/lib/tareas/reminders";
-import { read } from "@/lib/tareas/store";
+import { readAll } from "@/lib/tareas/store";
 import { denyIfNoSession } from "@/lib/tareas/auth";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +21,7 @@ export async function POST(req) {
     if (action === "connect" || action === "refresh-qr") return Response.json(await wa.connect({ refresh: action === "refresh-qr" }));
     if (action === "reset") return Response.json(await wa.reset());
     if (action === "reminder") return Response.json(await sendReminder("manual"));
-    if (action === "preview") return Response.json({ ok: true, text: buildSummary(read()) ?? "✅ No tenés tareas pendientes. ¡Todo al día!" });
+    if (action === "preview") return Response.json({ ok: true, text: buildSummary(await readAll()) ?? "✅ No tenés tareas pendientes. ¡Todo al día!" });
   } catch (e) {
     return Response.json({ ok: false, message: `No se pudo contactar whatsmeow-api: ${e.message}` });
   }
