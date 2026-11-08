@@ -227,8 +227,7 @@
   .modal .chip:hover { background: #e6eaf6; }
   .modal .chip.on { background: #e0e7ff; border-color: #a5b4fc; color: #3730a3; }
   .pop { position: relative; display: inline-flex; }
-  .menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 40; width: 220px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 6px; box-shadow: 0 18px 40px -12px rgba(15, 23, 42, .35); display: grid; gap: 2px; text-align: left; }
-  .modal .menu { left: 0; right: auto; }
+  .menu { position: fixed; z-index: 40; width: 220px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 6px; box-shadow: 0 18px 40px -12px rgba(15, 23, 42, .35); display: grid; gap: 2px; text-align: left; }
   .menu button { display: flex; justify-content: space-between; align-items: center; border: 0; background: none; padding: 8px 10px; border-radius: 8px; font-size: 13.5px; font-weight: 600; color: var(--text); text-align: left; }
   .menu button:hover { background: #eef1fa; }
   .menu small { color: var(--muted); font-weight: 550; }
@@ -309,6 +308,19 @@
   .menu .custom { display: flex; align-items: center; gap: 6px; padding: 6px 8px; font-size: 13px; color: var(--muted); font-weight: 600; border-top: 1px solid var(--line); margin-top: 4px; }
   .menu .custom .inp { width: 60px; padding: 5px 8px; margin: 0; }
   .menu .custom .btn { padding: 5px 10px; }
+
+
+  /* ---------- confirmación ---------- */
+  .confirm-ov { z-index: 80; place-items: center; padding-top: 0; background: rgba(15, 23, 42, .55); }
+  .modal.confirm { width: min(420px, calc(100vw - 32px)); gap: 18px; padding: 22px; }
+  .confirm-ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: #fee2e2; color: #b91c1c; }
+  .confirm h2 { font-size: 17px; letter-spacing: -.01em; margin-bottom: 6px; }
+  .confirm p { color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+  .confirm .modal-foot { border-top: 0; padding-top: 0; margin-top: 0; }
+  .confirm .hint { color: var(--muted); font-size: 12.5px; }
+  .btn.danger-fill { background: #dc2626; border-color: transparent; color: #fff; }
+  .btn.danger-fill:hover { background: #b91c1c; border-color: transparent; }
+  .btn.danger-fill kbd { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.25); }
 
   @media (max-width: 900px) { .grid2, .qrbox { grid-template-columns: 1fr; } .qrbox { justify-items: center; } }
   @media (max-width: 760px) {

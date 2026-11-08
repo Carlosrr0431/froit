@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   AlertTriangle, ArrowLeft, CalendarCheck, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, Clock, Eye, FolderKanban, Info, LayoutDashboard,
   FileText, ImageIcon, ListTodo, LogOut, MessageCircle, Pencil, Plus, QrCode, RefreshCw, Repeat, Send, Sparkles, Trash2, X,
@@ -9,6 +9,57 @@ import "./tareas.css";
 
 /** Permite abrir el panel de detalle de una tarea desde cualquier fila. */
 const PanelCtx = createContext(() => {});
+/** ask({ title, text, ok }) → Promise<boolean>: modal de confirmación moderno. */
+const ConfirmCtx = createContext(() => Promise.resolve(false));
+
+/** Menú flotante anclado a su botón: se reubica para no cortarse en los bordes de la pantalla. */
+function Menu({ anchor, onClose, children }) {
+  const ref = useRef(null);
+  const [pos, setPos] = useState({ top: -9999, left: 0 });
+  useLayoutEffect(() => {
+    const a = anchor.current.getBoundingClientRect();
+    const m = ref.current.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    let left = a.left + m.width <= vw - 8 ? a.left : a.right - m.width;
+    left = Math.max(8, Math.min(left, vw - m.width - 8));
+    let top = a.bottom + 6;
+    if (top + m.height > vh - 8) top = Math.max(8, a.top - m.height - 6);
+    setPos({ top, left });
+  }, [anchor]);
+  useEffect(() => {
+    window.addEventListener("resize", onClose);
+    document.addEventListener("scroll", onClose, true);
+    return () => { window.removeEventListener("resize", onClose); document.removeEventListener("scroll", onClose, true); };
+  }, [onClose]);
+  return <div className="menu" ref={ref} style={pos}>{children}</div>;
+}
+
+function ConfirmModal({ title, text, ok = "Eliminar", onResult }) {
+  useEffect(() => {
+    const key = (e) => {
+      if (e.key !== "Escape" && e.key !== "Enter") return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      onResult(e.key === "Enter");
+    };
+    window.addEventListener("keydown", key, true);
+    return () => window.removeEventListener("keydown", key, true);
+  }, [onResult]);
+  return (
+    <div className="overlay confirm-ov" onMouseDown={(e) => e.target === e.currentTarget && onResult(false)}>
+      <div className="modal confirm" role="alertdialog" aria-label={title}>
+        <div className="confirm-ic"><Trash2 size={20} /></div>
+        <div><h2>{title}</h2>{text && <p>{text}</p>}</div>
+        <div className="modal-foot">
+          <span className="hint"><kbd>Esc</kbd> cancelar</span>
+          <div className="row gap-s">
+            <button className="btn" onClick={() => onResult(false)}>Cancelar</button>
+            <button className="btn danger-fill" autoFocus onClick={() => onResult(true)}>{ok}<kbd>↵</kbd></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const COLORS = ["#5b5bf0", "#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#ec4899", "#14b8a6", "#8b5cf6"];
 const WA = {
@@ -74,6 +125,9 @@ export default function TareasPage() {
   const openNewRef = useRef(() => {});
   const [modal, setModal] = useState(null); // { projectId }
   const [panelId, setPanelId] = useState(null);
+  const [confirmState, setConfirmState] = useState(null);
+  const ask = useCallback((o) => new Promise((res) => setConfirmState({ ...o, res })), []);
+  const answer = useCallback((v) => setConfirmState((s) => { s?.res(v); return null; }), []);
   const [open, setOpen] = useState(true); // sidebar: se achica al ir al centro, se expande al pasar por él
 
   const notify = useCallback((text, bad) => setToast({ text, bad }), []);
@@ -140,6 +194,7 @@ export default function TareasPage() {
 
   return (
     <PanelCtx.Provider value={setPanelId}>
+    <ConfirmCtx.Provider value={ask}>
     <div className={`ft ${panelTask ? "has-panel" : ""}`}>
       <div className={`app ${open ? "" : "min"}`}>
         <aside className="side" onMouseEnter={() => setOpen(true)}>
@@ -171,6 +226,8 @@ export default function TareasPage() {
       {toast && <div className="toast">{toast.bad ? <AlertTriangle size={16} /> : <CheckCircle2 size={16} />}{toast.text}</div>}
       {panelTask && <TaskPanel key={panelTask.id} task={panelTask} project={projects.find((p) => p.id === panelTask.projectId)} today={today} act={act} notify={notify} onClose={() => setPanelId(null)} />}
     </div>
+      {confirmState && <ConfirmModal {...confirmState} onResult={answer} />}
+    </ConfirmCtx.Provider>
     </PanelCtx.Provider>
   );
 }
@@ -199,13 +256,13 @@ function DateChip({ value, today, onChange, placeholder = "Sin fecha" }) {
         <CalendarDays size={14} />{label}
       </button>
       {open && (
-        <div className="menu">
+        <Menu anchor={ref} onClose={() => setOpen(false)}>
           {[["Hoy", 0], ["Mañana", 1], ["En 1 semana", 7]].map(([l, n]) => (
             <button key={l} type="button" onClick={() => pick(addDays(today, n))}>{l}<small>{short(addDays(today, n))}</small></button>
           ))}
           <input type="date" className="inp" value={value || ""} onChange={(e) => e.target.value && pick(e.target.value)} />
           {value && <button type="button" className="rm" onClick={() => pick("")}><X size={13} />Quitar fecha</button>}
-        </div>
+        </Menu>
       )}
     </span>
   );
@@ -229,7 +286,7 @@ function RepeatChip({ every, onChange }) {
         <Repeat size={14} />{every ? everyLabel(every) : "No se repite"}
       </button>
       {open && (
-        <div className="menu">
+        <Menu anchor={ref} onClose={() => setOpen(false)}>
           {[[0, "No se repite"], [1, "Todos los días"], [2, "Cada 2 días"], [3, "Cada 3 días"], [7, "Cada semana"]].map(([n, l]) => (
             <button key={n} type="button" onClick={() => pick(n)}>{l}{every === n ? <Check size={14} /> : null}</button>
           ))}
@@ -239,7 +296,7 @@ function RepeatChip({ every, onChange }) {
             <span>días</span>
             <button type="submit" className="btn" disabled={!(parseInt(custom) > 0)}>OK</button>
           </form>
-        </div>
+        </Menu>
       )}
     </span>
   );
@@ -337,6 +394,7 @@ function TaskGroup({ title, Icon, color, list, defaultOpen = true, children }) {
 }
 
 function TaskRow({ t, today, act, project }) {
+  const ask = useContext(ConfirmCtx);
   const openTask = useContext(PanelCtx);
   const [edit, setEdit] = useState(false);
   const [title, setTitle] = useState(t.title);
@@ -360,7 +418,7 @@ function TaskRow({ t, today, act, project }) {
       {t.daily ? <>{later && <span className="nextrun">Próxima: {short(nextDue(t, today))}</span>}<RepeatChip every={t.every} onChange={(v) => act("updateTask", { id: t.id, every: v })} /></> : <DateChip value={t.due} today={today} onChange={(v) => act("updateTask", { id: t.id, due: v })} />}
       <span className="acts">
         <button className="btn ghost" onClick={() => setEdit(true)} title="Editar"><Pencil size={14} /></button>
-        <button className="btn ghost" onClick={() => act("deleteTask", { id: t.id })} title="Eliminar"><Trash2 size={14} /></button>
+        <button className="btn ghost" onClick={() => ask({ title: "¿Eliminar esta tarea?", text: `“${t.title}” se borrará definitivamente.` }).then((ok) => ok && act("deleteTask", { id: t.id }))} title="Eliminar"><Trash2 size={14} /></button>
       </span>
     </div>
   );
@@ -388,6 +446,7 @@ async function uploadImage(file) {
 
 /** Panel lateral estilo Linear: título, propiedades y descripción con texto + imágenes pegadas. */
 function TaskPanel({ task, project, today, act, notify, onClose }) {
+  const ask = useContext(ConfirmCtx);
   const ed = useRef(null);
   const timer = useRef(null);
   const html = useRef(task.description || "");
@@ -466,7 +525,7 @@ function TaskPanel({ task, project, today, act, notify, onClose }) {
           <span>Tarea</span>
         </span>
         <span className="row gap-s">
-          <button className="btn ghost" title="Eliminar tarea" onClick={() => confirm("¿Eliminar esta tarea?") && (onClose(), act("deleteTask", { id: task.id }))}><Trash2 size={15} /></button>
+          <button className="btn ghost" title="Eliminar tarea" onClick={() => ask({ title: "¿Eliminar esta tarea?", text: `“${task.title}” se borrará junto con su descripción.` }).then((ok) => ok && (onClose(), act("deleteTask", { id: task.id })))}><Trash2 size={15} /></button>
           <button className="btn ghost" title="Cerrar (Esc)" onClick={onClose}><X size={16} /></button>
         </span>
       </div>
@@ -571,6 +630,7 @@ function Today({ projects, tasks, today, act, setView, newProject }) {
 }
 
 function ProjectView({ project: p, tasks, today, act, openNew, onDeleted }) {
+  const ask = useContext(ConfirmCtx);
   const own = tasks.filter((t) => t.projectId === p.id);
   const normal = own.filter((t) => !t.daily);
   const todo = normal.filter((t) => !t.done).sort((a, b) => (a.due || "9").localeCompare(b.due || "9"));
@@ -587,7 +647,7 @@ function ProjectView({ project: p, tasks, today, act, openNew, onDeleted }) {
         <input className="h-edit" defaultValue={p.name} onBlur={(e) => e.target.value.trim() && e.target.value !== p.name && act("updateProject", { id: p.id, name: e.target.value })} />
         <div className="row gap-s">
           <button className="btn primary" onClick={openNew}><Plus size={15} />Nueva tarea<kbd>C</kbd></button>
-          <button className="btn ghost danger" title="Eliminar proyecto" onClick={() => confirm(`¿Eliminar "${p.name}" y todas sus tareas?`) && (act("deleteProject", { id: p.id }), onDeleted())}><Trash2 size={16} /></button>
+          <button className="btn ghost danger" title="Eliminar proyecto" onClick={() => ask({ title: `¿Eliminar "${p.name}"?`, text: "Se borrarán también todas sus tareas. No se puede deshacer." }).then((ok) => ok && (act("deleteProject", { id: p.id }), onDeleted()))}><Trash2 size={16} /></button>
         </div>
       </div>
 
@@ -618,6 +678,7 @@ function ProjectView({ project: p, tasks, today, act, openNew, onDeleted }) {
 }
 
 function WhatsApp({ wa, loadWa, settings, act, notify }) {
+  const ask = useContext(ConfirmCtx);
   const [busy, setBusy] = useState("");
   const [qr, setQr] = useState(null);
   const [preview, setPreview] = useState("");
@@ -657,7 +718,7 @@ function WhatsApp({ wa, loadWa, settings, act, notify }) {
           </div>
           <div className="row gap-s">
             {!connected && !help && <button className="btn primary" disabled={!!busy} onClick={() => run(image ? "refresh-qr" : "connect")}>{busy ? <RefreshCw size={15} className="spin" /> : <QrCode size={16} />}{busy ? "Generando…" : image ? "Nuevo QR" : "Generar QR"}</button>}
-            {(connected || status === "disconnected") && <button className="btn danger" disabled={!!busy} onClick={() => confirm("¿Desvincular WhatsApp?") && (setQr(null), run("reset", "Sesión cerrada"))}><LogOut size={15} />Desvincular</button>}
+            {(connected || status === "disconnected") && <button className="btn danger" disabled={!!busy} onClick={() => ask({ title: "¿Desvincular WhatsApp?", text: "Dejarás de recibir avisos hasta que vuelvas a escanear el QR.", ok: "Desvincular" }).then((ok) => ok && (setQr(null), run("reset", "Sesión cerrada")))}><LogOut size={15} />Desvincular</button>}
           </div>
         </div>
 
