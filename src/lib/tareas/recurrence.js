@@ -9,3 +9,10 @@ export const nextDue = (t, today) => (t.doneOn ? addDays(t.doneOn, t.every || 1)
 export const isDone = (t, day) => (t.daily ? t.doneOn === day || nextDue(t, day) > day : !!t.done);
 
 export const everyLabel = (n) => (n <= 1 ? "Todos los días" : n === 7 ? "Cada semana" : `Cada ${n} días`);
+
+/** Avance de un conjunto de tareas: puntuales + recurrentes que tocan hoy (o ya hechas hoy). */
+export function progress(list, today) {
+  const scope = list.filter((t) => !t.daily || t.doneOn === today || nextDue(t, today) <= today);
+  const done = scope.filter((t) => (t.daily ? t.doneOn === today : t.done)).length;
+  return { done, total: scope.length, pct: scope.length ? Math.round((done / scope.length) * 100) : 0 };
+}

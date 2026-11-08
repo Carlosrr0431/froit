@@ -30,7 +30,7 @@ const WA_HELP = {
 const api = (url, body) =>
   fetch(url, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : { cache: "no-store" }).then((r) => r.json());
 
-import { isDone, nextDue, everyLabel } from "@/lib/tareas/recurrence";
+import { isDone, nextDue, everyLabel, progress } from "@/lib/tareas/recurrence";
 const days = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 86400000);
 const short = (d) => new Date(`${d}T00:00:00Z`).toLocaleDateString("es-AR", { timeZone: "UTC", day: "numeric", month: "short" });
 
@@ -516,10 +516,7 @@ function Today({ projects, tasks, today, act, setView, newProject }) {
   const soon = pending.filter((t) => !t.daily && t.due && days(today, t.due) > 0 && days(today, t.due) <= 7);
   const dueDaily = dailyAll.filter((t) => t.doneOn === today || nextDue(t, today) <= today);
   const doneToday = dueDaily.filter((t) => t.doneOn === today).length;
-  const pct = (p) => {
-    const own = tasks.filter((t) => t.projectId === p.id && !t.daily);
-    return own.length ? Math.round((own.filter((t) => t.done).length / own.length) * 100) : 0;
-  };
+  const pct = (p) => progress(tasks.filter((t) => t.projectId === p.id), today).pct;
   const stats = [
     { n: pending.filter((t) => !t.daily).length, l: "Tareas pendientes", Icon: ListTodo, c: "#4f46e5" },
     { n: overdue.length, l: "Vencidas", Icon: AlertTriangle, c: "#dc2626" },
@@ -579,7 +576,7 @@ function ProjectView({ project: p, tasks, today, act, openNew, onDeleted }) {
   const todo = normal.filter((t) => !t.done).sort((a, b) => (a.due || "9").localeCompare(b.due || "9"));
   const finished = normal.filter((t) => t.done);
   const daily = own.filter((t) => t.daily);
-  const pct = normal.length ? Math.round((finished.length / normal.length) * 100) : 0;
+  const { done: doneN, total: totalN, pct } = progress(own, today);
   const rowProps = { today, act };
 
   return (
@@ -598,7 +595,7 @@ function ProjectView({ project: p, tasks, today, act, openNew, onDeleted }) {
         <label className="prop"><span>Cliente</span><input defaultValue={p.client} onBlur={(e) => act("updateProject", { id: p.id, client: e.target.value })} /></label>
         <div className="prop"><span>Entrega</span><DateChip value={p.deadline} today={today} placeholder="Sin fecha límite" onChange={(v) => act("updateProject", { id: p.id, deadline: v })} /></div>
         <div className="prop"><span>Color</span><div className="swatches">{COLORS.map((c) => <button key={c} className={p.color === c ? "on" : ""} style={{ background: c }} onClick={() => act("updateProject", { id: p.id, color: c })} aria-label={`Color ${c}`} />)}</div></div>
-        <div className="prop grow"><span>Progreso · {finished.length}/{normal.length}</span><div className="bar"><i style={{ width: `${pct}%`, background: p.color }} /></div></div>
+        <div className="prop grow"><span>Progreso · {doneN}/{totalN}</span><div className="bar"><i style={{ width: `${pct}%`, background: p.color }} /></div></div>
       </div>
 
       <div className="list">
