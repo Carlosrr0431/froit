@@ -1,0 +1,91 @@
+import { read, write } from "./store";
+import { today, nowHM, daysBetween, formatLong, formatShort } from "./dates";
+import { sendText } from "./whatsapp";
+
+export const isDone = (t, day) => (t.daily ? t.doneOn === day : !!t.done);
+
+export function buildSummary(data, day = today()) {
+  const blocks = [];
+  let total = 0;
+
+  for (const p of data.projects) {
+    const pending = data.tasks.filter((t) => t.projectId === p.id && !isDone(t, day));
+    const all = data.tasks.filter((t) => t.projectId === p.id && !t.daily);
+    if (!pending.length && !p.deadline) continue;
+
+    const overdue = pending.filter((t) => !t.daily && t.due && t.due < day);
+    const dueToday = pending.filter((t) => !t.daily && t.due === day);
+    const daily = pending.filter((t) => t.daily);
+    const rest = pending.filter((t) => !t.daily && !overdue.includes(t) && !dueToday.includes(t));
+
+    const pct = all.length ? Math.round((all.filter((t) => t.done).length / all.length) * 100) : null;
+    let head = `*${p.name}*`;
+    const meta = [];
+    if (p.deadline) {
+      const d = daysBetween(day, p.deadline);
+      meta.push(d < 0 ? `🔴 vencido hace ${-d} d` : d === 0 ? "🔴 vence HOY" : `⏳ entrega en ${d} d (${formatShort(p.deadline)})`);
+    }
+    if (pct !== null) meta.push(`${pct}%`);
+    if (meta.length) head += `  ${meta.join(" · ")}`;
+
+    const lines = [head];
+    const add = (icon, label, list) => {
+      if (!list.length) return;
+      lines.push(`${icon} _${label}_`);
+      list.slice(0, 8).forEach((t) => lines.push(`  • ${t.title}${!t.daily && t.due ? ` (${formatShort(t.due)})` : ""}`));
+      if (list.length > 8) lines.push(`  … y ${list.length - 8} más`);
+    };
+    add("⚠️", "Vencidas", overdue);
+    add("📅", "Para hoy", dueToday);
+    add("🔁", "Diarias", daily);
+    add("📝", "Pendientes", rest);
+    if (lines.length > 1) {
+      blocks.push(lines.join("\n"));
+      total += pending.length;
+    }
+  }
+
+  if (!blocks.length) return null;
+  return `📋 *Resumen de tareas*\n${formatLong(day)}\n\nTenés *${total}* tarea${total === 1 ? "" : "s"} pendiente${total === 1 ? "" : "s"}.\n\n${blocks.join("\n\n")}`;
+}
+
+function log(data, entry) {
+  data.settings.log = [{ at: new Date().toISOString(), ...entry }, ...(data.settings.log || [])].slice(0, 20);
+}
+
+/** Envía el resumen al número configurado. */
+export async function sendReminder(reason = "manual") {
+  const data = read();
+  const text = buildSummary(data) ?? "✅ No tenés tareas pendientes. ¡Todo al día!";
+  const r = await sendText(data.settings.phone, text);
+  const fresh = read();
+  log(fresh, { reason, ok: r.ok, message: r.ok ? "Enviado" : r.message || `Error ${r.status}` });
+  write(fresh);
+  return r;
+}
+
+/** Revisado cada minuto: dispara los horarios configurados una vez por día. */
+export async function tick() {
+  const data = read();
+  const { reminders, times = [], sent = {} } = data.settings;
+  if (!reminders) return;
+  const day = today();
+  const now = nowHM();
+
+  for (const t of times) {
+    const key = `${day} ${t}`;
+    const [h, m] = t.split(":").map(Number);
+    const [nh, nm] = now.split(":").map(Number);
+    const late = nh * 60 + nm - (h * 60 + m);
+    if (late < 0 || late > 180 || sent[key]) continue;
+    // Tras un error, esperar 15 min antes de reintentar (cuida la línea).
+    if (Date.now() - (sent[`${key} fail`] || 0) < 15 * 60_000) continue;
+
+    const r = await sendReminder(`auto ${t}`);
+    const fresh = read();
+    fresh.settings.sent = Object.fromEntries(
+      Object.entries({ ...fresh.settings.sent, [r.ok ? key : `${key} fail`]: r.ok ? true : Date.now() }).slice(-40)
+    );
+    write(fresh);
+  }
+}
