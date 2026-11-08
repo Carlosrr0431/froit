@@ -19,7 +19,7 @@ const must = ({ data, error }) => {
 };
 
 const toProject = (r) => ({ id: r.id, name: r.name, client: r.client, color: r.color, deadline: r.deadline });
-const toTask = (r) => ({ id: r.id, projectId: r.project_id, title: r.title, due: r.due, daily: r.daily, done: r.done, doneOn: r.done_on });
+const toTask = (r) => ({ id: r.id, projectId: r.project_id, title: r.title, due: r.due, daily: r.daily, done: r.done, doneOn: r.done_on, description: r.description || "" });
 
 export async function readAll() {
   const [p, t, s] = await Promise.all([

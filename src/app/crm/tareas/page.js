@@ -1,11 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   AlertTriangle, ArrowLeft, CalendarCheck, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, Clock, Eye, FolderKanban, Info, LayoutDashboard,
-  ListTodo, LogOut, MessageCircle, Pencil, Plus, QrCode, RefreshCw, Repeat, Send, Sparkles, Trash2, X,
+  FileText, ImageIcon, ListTodo, LogOut, MessageCircle, Pencil, Plus, QrCode, RefreshCw, Repeat, Send, Sparkles, Trash2, X,
 } from "lucide-react";
 import "./tareas.css";
+
+/** Permite abrir el panel de detalle de una tarea desde cualquier fila. */
+const PanelCtx = createContext(() => {});
 
 const COLORS = ["#5b5bf0", "#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#ec4899", "#14b8a6", "#8b5cf6"];
 const WA = {
@@ -70,6 +73,7 @@ export default function TareasPage() {
   const [toast, setToast] = useState(null);
   const openNewRef = useRef(() => {});
   const [modal, setModal] = useState(null); // { projectId }
+  const [panelId, setPanelId] = useState(null);
   const [open, setOpen] = useState(true); // sidebar: se achica al ir al centro, se expande al pasar por él
 
   const notify = useCallback((text, bad) => setToast({ text, bad }), []);
@@ -90,8 +94,10 @@ export default function TareasPage() {
   }, [toast]);
 
   const act = useCallback(async (type, payload = {}) => {
-    await api("/api/tareas/action", { type, ...payload });
+    const r = await api("/api/tareas/action", { type, ...payload });
+    if (r.error) throw new Error(r.error);
     await load();
+    return r.result;
   }, [load]);
 
   // Atajo "C": nueva tarea (si no se está escribiendo en un campo)
@@ -120,6 +126,7 @@ export default function TareasPage() {
   }
   const { projects, tasks, settings, today } = data;
   const project = projects.find((p) => p.id === view);
+  const panelTask = tasks.find((t) => t.id === panelId);
   const pending = (p) => tasks.filter((t) => t.projectId === p.id && !isDone(t, today)).length;
   const [waLabel, waTone] = WA[wa?.status] ?? ["Verificando…", ""];
 
@@ -132,7 +139,8 @@ export default function TareasPage() {
   };
 
   return (
-    <div className="ft">
+    <PanelCtx.Provider value={setPanelId}>
+    <div className={`ft ${panelTask ? "has-panel" : ""}`}>
       <div className={`app ${open ? "" : "min"}`}>
         <aside className="side" onMouseEnter={() => setOpen(true)}>
           <div className="brand"><i><ListTodo size={20} /></i><div className="lb">Tareas<small>Proyectos y avisos</small></div></div>
@@ -161,7 +169,9 @@ export default function TareasPage() {
       </div>
       {modal && <NewTaskModal projects={projects} defaultProject={modal.projectId} today={today} act={act} notify={notify} onClose={() => setModal(null)} />}
       {toast && <div className="toast">{toast.bad ? <AlertTriangle size={16} /> : <CheckCircle2 size={16} />}{toast.text}</div>}
+      {panelTask && <TaskPanel key={panelTask.id} task={panelTask} project={projects.find((p) => p.id === panelTask.projectId)} today={today} act={act} notify={notify} onClose={() => setPanelId(null)} />}
     </div>
+    </PanelCtx.Provider>
   );
 }
 
@@ -203,6 +213,7 @@ function DateChip({ value, today, onChange, placeholder = "Sin fecha" }) {
 
 /** Modal "Nueva tarea" estilo Linear: título grande, proyecto y fecha como chips. */
 function NewTaskModal({ projects, defaultProject, today, act, notify, onClose }) {
+  const openTask = useContext(PanelCtx);
   const [title, setTitle] = useState("");
   const [projectId, setProjectId] = useState(defaultProject || projects[0]?.id);
   const [due, setDue] = useState("");
@@ -220,10 +231,10 @@ function NewTaskModal({ projects, defaultProject, today, act, notify, onClose })
     e.preventDefault();
     if (!title.trim() || busy) return;
     setBusy(true);
-    await act("addTask", { projectId, title, due: daily ? "" : due, daily });
+    const r = await act("addTask", { projectId, title, due: daily ? "" : due, daily });
     setBusy(false);
     notify("Tarea creada");
-    if (again) { setTitle(""); setDue(""); } else onClose();
+    if (again) { setTitle(""); setDue(""); } else { onClose(); if (r?.id) openTask(r.id); }
   };
 
   return (
@@ -291,6 +302,7 @@ function TaskGroup({ title, Icon, color, list, defaultOpen = true, children }) {
 }
 
 function TaskRow({ t, today, act, project }) {
+  const openTask = useContext(PanelCtx);
   const [edit, setEdit] = useState(false);
   const [title, setTitle] = useState(t.title);
   const done = isDone(t, today);
@@ -306,7 +318,7 @@ function TaskRow({ t, today, act, project }) {
       {edit ? (
         <input className="t-edit" autoFocus value={title} onChange={(e) => setTitle(e.target.value)} onBlur={save} onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") { setTitle(t.title); setEdit(false); } }} />
       ) : (
-        <span className="t" onDoubleClick={() => setEdit(true)}>{t.title}</span>
+        <span className="t" onClick={() => openTask(t.id)}>{t.title}{t.description ? <FileText size={13} className="hasdesc" /> : null}</span>
       )}
       {project && <span className="pchip"><span className="dot" style={{ background: project.color, width: 8, height: 8 }} />{project.name}</span>}
       {t.daily ? <span className="chip static"><Repeat size={13} />Diaria</span> : <DateChip value={t.due} today={today} onChange={(v) => act("updateTask", { id: t.id, due: v })} />}
@@ -315,6 +327,136 @@ function TaskRow({ t, today, act, project }) {
         <button className="btn ghost" onClick={() => act("deleteTask", { id: t.id })} title="Eliminar"><Trash2 size={14} /></button>
       </span>
     </div>
+  );
+}
+
+/** Reduce la imagen pegada (máx. 1600 px, webp) antes de subirla. */
+async function shrink(file) {
+  if (file.type === "image/gif") return file;
+  const bmp = await createImageBitmap(file);
+  const k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+  const cv = document.createElement("canvas");
+  cv.width = Math.round(bmp.width * k);
+  cv.height = Math.round(bmp.height * k);
+  cv.getContext("2d").drawImage(bmp, 0, 0, cv.width, cv.height);
+  return new Promise((res) => cv.toBlob((b) => res(b || file), "image/webp", 0.9));
+}
+
+async function uploadImage(file) {
+  const fd = new FormData();
+  fd.append("file", await shrink(file), "imagen.webp");
+  const r = await fetch("/api/tareas/upload", { method: "POST", body: fd }).then((x) => x.json());
+  if (!r.url) throw new Error(r.error || "No se pudo subir la imagen");
+  return r.url;
+}
+
+/** Panel lateral estilo Linear: título, propiedades y descripción con texto + imágenes pegadas. */
+function TaskPanel({ task, project, today, act, notify, onClose }) {
+  const ed = useRef(null);
+  const timer = useRef(null);
+  const html = useRef(task.description || "");
+  const dirty = useRef(false);
+  const uploads = useRef(0);
+  const [title, setTitle] = useState(task.title);
+  const [state, setState] = useState("saved"); // saved | saving | uploading
+  const done = isDone(task, today);
+
+  const save = useCallback(async () => {
+    clearTimeout(timer.current);
+    if (!dirty.current) return;
+    if (uploads.current > 0) { timer.current = setTimeout(save, 600); return; }
+    dirty.current = false;
+    setState("saving");
+    try { await act("updateTask", { id: task.id, description: html.current }); setState("saved"); }
+    catch (e) { dirty.current = true; setState("error"); notify(e.message, true); }
+  }, [act, task.id, notify]);
+
+  const changed = () => {
+    const el = ed.current;
+    html.current = !el.querySelector("img") && !el.textContent.trim() ? "" : el.innerHTML;
+    dirty.current = true;
+    setState("saving");
+    clearTimeout(timer.current);
+    timer.current = setTimeout(save, 700);
+  };
+
+  useEffect(() => { ed.current.innerHTML = task.description || ""; ed.current.focus(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => () => { if (dirty.current) save(); }, [save]);
+  useEffect(() => {
+    const esc = (e) => e.key === "Escape" && !e.defaultPrevented && onClose();
+    window.addEventListener("keydown", esc);
+    return () => window.removeEventListener("keydown", esc);
+  }, [onClose]);
+
+  const addImage = async (file) => {
+    const local = URL.createObjectURL(file);
+    ed.current.focus();
+    document.execCommand("insertHTML", false, `<img src="${local}" class="up" alt=""><br>`);
+    const img = ed.current.querySelector(`img[src="${local}"]`);
+    uploads.current++;
+    try {
+      const url = await uploadImage(file);
+      if (img) { img.src = url; img.classList.remove("up"); }
+    } catch (e) {
+      img?.remove();
+      notify(e.message, true);
+    } finally {
+      uploads.current--;
+      URL.revokeObjectURL(local);
+      changed();
+    }
+  };
+
+  const onPaste = (e) => {
+    const files = [...e.clipboardData.files].filter((f) => f.type.startsWith("image/"));
+    e.preventDefault();
+    if (files.length) files.forEach(addImage);
+    else document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
+  };
+  const onDrop = (e) => {
+    const files = [...e.dataTransfer.files].filter((f) => f.type.startsWith("image/"));
+    if (!files.length) return;
+    e.preventDefault();
+    files.forEach(addImage);
+  };
+
+  const saveTitle = () => title.trim() && title.trim() !== task.title && act("updateTask", { id: task.id, title });
+
+  return (
+    <aside className="panel" aria-label="Detalle de la tarea">
+      <div className="panel-top">
+        <span className="crumbs">
+          {project && <><span className="dot" style={{ background: project.color, width: 8, height: 8 }} /><span>{project.name}</span><ChevronRight size={14} /></>}
+          <span>Tarea</span>
+        </span>
+        <span className="row gap-s">
+          <button className="btn ghost" title="Eliminar tarea" onClick={() => confirm("¿Eliminar esta tarea?") && (onClose(), act("deleteTask", { id: task.id }))}><Trash2 size={15} /></button>
+          <button className="btn ghost" title="Cerrar (Esc)" onClick={onClose}><X size={16} /></button>
+        </span>
+      </div>
+      <div className="panel-body">
+        <div className="panel-title">
+          <input type="checkbox" className="cb" checked={done} onChange={() => act("toggleTask", { id: task.id })} aria-label="Completar tarea" />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} onBlur={saveTitle} onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()} aria-label="Título" />
+        </div>
+        <div className="chips">
+          {task.daily ? <span className="chip static"><Repeat size={13} />Todos los días</span> : <DateChip value={task.due} today={today} onChange={(v) => act("updateTask", { id: task.id, due: v })} placeholder="Fecha límite" />}
+        </div>
+        <div className="panel-label"><span>Descripción</span><small className={`sv ${state}`}>{state === "saved" ? "Guardado" : state === "error" ? "Error al guardar" : "Guardando…"}</small></div>
+        <div
+          ref={ed}
+          className="editor"
+          contentEditable
+          suppressContentEditableWarning
+          data-ph="Explicá de qué trata la tarea y cómo resolverla… Pegá capturas con Ctrl+V"
+          onInput={changed}
+          onPaste={onPaste}
+          onDrop={onDrop}
+          onClick={(e) => e.target.tagName === "IMG" && window.open(e.target.src, "_blank")}
+        />
+        <p className="panel-hint"><ImageIcon size={13} />Pegá o arrastrá imágenes directo en la descripción. Clic en una imagen para verla grande.</p>
+      </div>
+    </aside>
   );
 }
 

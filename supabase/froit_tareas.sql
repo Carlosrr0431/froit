@@ -28,6 +28,7 @@ create table if not exists public.froit_tasks (
   done_on     date,                            -- última fecha en que se tildó una tarea diaria
   created_at  timestamptz not null default now()
 );
+alter table public.froit_tasks add column if not exists description text not null default '';
 create index if not exists froit_tasks_project_idx on public.froit_tasks (project_id);
 
 -- Configuración de avisos por WhatsApp (una sola fila) ------------------

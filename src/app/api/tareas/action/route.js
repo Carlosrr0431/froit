@@ -6,6 +6,15 @@ export const dynamic = "force-dynamic";
 
 const clean = (s) => String(s ?? "").trim();
 
+// Sanitiza el HTML de la descripción (solo la edita el usuario autenticado; esto es defensa extra).
+const cleanHtml = (h) =>
+  String(h ?? "")
+    .slice(0, 200000)
+    .replace(/<\s*(script|style|iframe|object|embed|link|meta)[\s\S]*?(<\/\s*\1\s*>|$)/gi, "")
+    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+    .replace(/(href|src)\s*=\s*(["']?)\s*javascript:/gi, "$1=$2#")
+    .replace(/<img[^>]+src\s*=\s*["']?data:[^>]*>/gi, "");
+
 const actions = {
   async addProject({ name, client, color, deadline }) {
     if (!clean(name)) return;
@@ -22,9 +31,11 @@ const actions = {
   async deleteProject({ id }) {
     must(await projects().delete().eq("id", id)); // las tareas se borran en cascada
   },
-  async addTask({ projectId, title, due, daily }) {
+  async addTask({ projectId, title, due, daily, description }) {
     if (!clean(title)) return;
-    must(await tasks().insert({ project_id: projectId, title: clean(title), due: daily ? null : due || null, daily: !!daily }));
+    const row = { project_id: projectId, title: clean(title), due: daily ? null : due || null, daily: !!daily };
+    if (description) row.description = cleanHtml(description);
+    return must(await tasks().insert(row).select("id").single());
   },
   async toggleTask({ id }) {
     const t = must(await tasks().select("daily, done, done_on").eq("id", id).maybeSingle());
@@ -32,12 +43,13 @@ const actions = {
     const upd = t.daily ? { done_on: t.done_on === today() ? null : today() } : { done: !t.done };
     must(await tasks().update(upd).eq("id", id));
   },
-  async updateTask({ id, title, due }) {
+  async updateTask({ id, title, due, description }) {
     const t = must(await tasks().select("daily").eq("id", id).maybeSingle());
     if (!t) return;
     const upd = {};
     if (clean(title)) upd.title = clean(title);
-    if (!t.daily) upd.due = due || null;
+    if (!t.daily && due !== undefined) upd.due = due || null;
+    if (description !== undefined) upd.description = cleanHtml(description);
     if (Object.keys(upd).length) must(await tasks().update(upd).eq("id", id));
   },
   async deleteTask({ id }) {
@@ -60,8 +72,8 @@ export async function POST(req) {
   if (!fn) return Response.json({ error: "Acción inválida" }, { status: 400 });
   try {
     db();
-    await fn(payload);
-    return Response.json({ ok: true });
+    const result = await fn(payload);
+    return Response.json({ ok: true, result });
   } catch (e) {
     return Response.json({ error: e.message }, { status: 500 });
   }
