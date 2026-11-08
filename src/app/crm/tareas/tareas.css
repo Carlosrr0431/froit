@@ -6,6 +6,8 @@
   background: var(--bg); color: var(--text); min-height: 100vh; color-scheme: light;
   font: 15px/1.55 var(--font-inter), "Segoe UI", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+.ft {
 
   * { box-sizing: border-box; }
   button, input { font: inherit; color: inherit; }
@@ -80,9 +82,9 @@
   .pcard.add::before { display: none; }
   .pcard.add { border: 2px dashed #aab3d0; background: transparent; box-shadow: none; place-items: center; align-content: center; color: var(--muted); min-height: 128px; }
   .pcard.add:hover { border-color: var(--brand); color: var(--brand); box-shadow: none; }
-  .ring { position: relative; width: var(--s, 58px); height: var(--s, 58px); flex: none; }
-  .ring svg { transform: rotate(-90deg); }
-  .ring span { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 750; font-size: 13px; color: var(--text); }
+  .pring { position: relative; width: var(--s, 58px); height: var(--s, 58px); flex: none; }
+  .pring svg { transform: rotate(-90deg); }
+  .pring span { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 750; font-size: 13px; color: var(--text); }
 
   /* ---------- controles ---------- */
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--line); background: var(--card); padding: 10px 16px; border-radius: 12px; font-weight: 650; font-size: 14px; color: var(--text); transition: border-color .15s, background .15s, transform .1s; }
@@ -249,6 +251,29 @@
   .modal-title::placeholder { color: #94a0bd; }
   .chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .modal-foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 14px; margin-top: 4px; }
+
+
+  /* ---------- Hoy / WhatsApp: mismo lenguaje visual ---------- */
+  h1 { font-size: 26px; letter-spacing: -.03em; }
+  .sub { margin: 6px 0 24px; font-size: 14px; }
+  .section-t { font-size: 12px; margin: 26px 0 10px; }
+  .stats { gap: 12px; margin-bottom: 8px; }
+  .stat { border-radius: 14px; padding: 14px 16px; gap: 14px; box-shadow: none; }
+  .stat .ic { width: 40px; height: 40px; border-radius: 11px; }
+  .stat b { font-size: 24px; }
+  .stat span { font-size: 13px; }
+  .projects { gap: 12px; margin-bottom: 8px; }
+  .pcard { border-radius: 14px; padding: 16px; gap: 12px; box-shadow: none; }
+  .pcard::before { width: 4px; height: auto; right: auto; bottom: 0; }
+  .pcard:hover { transform: none; background: #fff; border-color: var(--c); box-shadow: 0 8px 22px -14px var(--c); }
+  .pcard.add { border-width: 1.5px; min-height: 100px; }
+  .card { border-radius: 16px; padding: 20px; box-shadow: none; }
+  .card h2 { font-size: 16px; letter-spacing: -.01em; }
+  .pill, .tag { font-size: 12px; }
+  .inp { border-radius: 10px; padding: 8px 12px; font-size: 13.5px; }
+  .wa-hero .ic { width: 48px; height: 48px; border-radius: 14px; }
+  .btn.primary { background: var(--brand); box-shadow: none; }
+  .btn.primary:hover { background: #4338ca; border-color: transparent; }
 
   @media (max-width: 900px) { .grid2, .qrbox { grid-template-columns: 1fr; } .qrbox { justify-items: center; } }
   @media (max-width: 760px) {

@@ -35,7 +35,7 @@ function Ring({ pct, color, size = 56, stroke = 6 }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   return (
-    <div className="ring" style={{ "--s": `${size}px` }}>
+    <div className="pring" style={{ "--s": `${size}px` }}>
       <svg width={size} height={size}>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#cdd3e6" strokeWidth={stroke} />
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - pct / 100)} style={{ transition: "stroke-dashoffset .5s" }} />
@@ -318,16 +318,12 @@ function TaskRow({ t, today, act, project }) {
   );
 }
 
-function Group({ title, hint, Icon, color, list, projects, today, act }) {
+function Group({ title, Icon, color, list, projects, today, act }) {
   if (!list.length) return null;
   return (
-    <div className="card group">
-      <div className="group-h">
-        <div className="ic" style={{ background: `color-mix(in srgb, ${color} 14%, white)`, color }}><Icon size={18} /></div>
-        <div><h2>{title}</h2><small>{hint}</small></div>
-      </div>
+    <TaskGroup {...{ title, Icon, color, list }}>
       {list.map((t) => <TaskRow key={t.id} {...{ t, today, act }} project={projects.find((p) => p.id === t.projectId)} />)}
-    </div>
+    </TaskGroup>
   );
 }
 
@@ -380,10 +376,12 @@ function Today({ projects, tasks, today, act, setView, newProject }) {
       </div>
 
       <div className="section-t">Qué hacer</div>
+      <div className={nothing ? "" : "list"}>
       <Group title="Vencidas" hint="Pasó la fecha, resolvelas primero" Icon={AlertTriangle} color="#dc2626" list={overdue} {...{ projects, today, act }} />
       <Group title="Para hoy" hint="Vencen hoy" Icon={CalendarCheck} color="#d97706" list={dueToday} {...{ projects, today, act }} />
       <Group title="Todos los días" hint="Rutinas que se reinician cada día" Icon={Repeat} color="#059669" list={daily} {...{ projects, today, act }} />
       <Group title="Próximos 7 días" hint="Para ir adelantando" Icon={Clock} color="#4f46e5" list={soon} {...{ projects, today, act }} />
+      </div>
       {nothing && (
         <div className="card empty">
           <Sparkles size={30} />
