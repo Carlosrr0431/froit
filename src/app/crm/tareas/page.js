@@ -364,19 +364,48 @@ function NewTaskModal({ projects, defaultProject, today, act, notify, onClose })
 function QuickAdd({ projectId, daily, today, act }) {
   const [title, setTitle] = useState("");
   const [due, setDue] = useState("");
+  const [every, setEvery] = useState(daily ? 1 : 0);
+  const [focus, setFocus] = useState(false);
+  const show = focus || title.trim();
   const submit = (e) => {
     e.preventDefault();
     if (!title.trim()) return;
-    act("addTask", { projectId, title, due: daily ? "" : due, daily });
-    setTitle(""); setDue("");
+    act("addTask", { projectId, title, due: every ? "" : due, daily: every > 0, every });
+    setTitle(""); setDue(""); setEvery(daily ? 1 : 0);
   };
   return (
-    <form className="qa" onSubmit={submit}>
+    <form className="qa" onSubmit={submit} onFocus={() => setFocus(true)} onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setFocus(false)}>
       <Plus size={16} />
-      <input placeholder={daily ? "Agregar tarea diaria…" : "Agregar tarea…"} value={title} onChange={(e) => setTitle(e.target.value)} />
-      {title.trim() && !daily && <DateChip value={due} today={today} onChange={setDue} />}
-      {title.trim() && <kbd>↵</kbd>}
+      <input placeholder={daily ? "Agregar tarea recurrente…" : "Agregar tarea…"} value={title} onChange={(e) => setTitle(e.target.value)} />
+      {show ? <>
+        {!every && <DateChip value={due} today={today} onChange={setDue} placeholder="Fecha límite" />}
+        <RepeatChip every={every} onChange={setEvery} />
+        {title.trim() && <kbd>↵</kbd>}
+      </> : null}
     </form>
+  );
+}
+
+/** Descripción del proyecto: colapsada por defecto, con vista previa y botón para expandir. */
+function ProjectDesc({ p, act, notify }) {
+  const [open, setOpen] = useState(false);
+  const saveDesc = useCallback((description) => act("updateProject", { id: p.id, description }), [act, p.id]);
+  const html = p.description || "";
+  const text = html.replace(/<br\s*\/?>|<\/(div|p|li)>/gi, " ").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").trim();
+  const imgs = (html.match(/<img/gi) || []).length;
+  const links = (html.match(/<a\s/gi) || []).length;
+  return (
+    <div className={`pdesc ${open ? "open" : ""}`}>
+      <button type="button" className="pdesc-bar" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+        <FileText size={15} />
+        <b>Descripción</b>
+        <span className="pdesc-prev">{open ? "" : text || "Sin descripción: agregá links, accesos y notas del proyecto"}</span>
+        {!open && links > 0 && <span className="pdesc-n">{links} enlace{links > 1 ? "s" : ""}</span>}
+        {!open && imgs > 0 && <span className="pdesc-n">{imgs} imagen{imgs > 1 ? "es" : ""}</span>}
+        <span className="pdesc-btn">{open ? "Ocultar" : "Expandir"}<ChevronDown size={14} /></span>
+      </button>
+      {open && <RichEditor label="Notas del proyecto" html={html} onSave={saveDesc} notify={notify} autoFocus={!text} placeholder="Links, accesos, contexto del cliente, notas… Pegá enlaces o capturas con Ctrl+V" hint="Los enlaces se vuelven clicables. Pegá o arrastrá imágenes si las necesitás." />}
+    </div>
   );
 }
 
@@ -661,7 +690,6 @@ function Today({ projects, tasks, today, act, setView, newProject }) {
 
 function ProjectView({ project: p, tasks, today, act, notify, openNew, onDeleted }) {
   const ask = useContext(ConfirmCtx);
-  const saveDesc = useCallback((description) => act("updateProject", { id: p.id, description }), [act, p.id]);
   const own = tasks.filter((t) => t.projectId === p.id);
   const normal = own.filter((t) => !t.daily);
   const todo = normal.filter((t) => !t.done).sort((a, b) => (a.due || "9").localeCompare(b.due || "9"));
@@ -672,9 +700,8 @@ function ProjectView({ project: p, tasks, today, act, notify, openNew, onDeleted
 
   return (
     <>
-      <div className="crumbs"><span>Proyectos</span><ChevronRight size={14} /><span className="dot" style={{ background: p.color, width: 9, height: 9 }} />{p.name}</div>
-
-      <div className="row between" style={{ margin: "14px 0 18px" }}>
+      <div className="phead">
+        <span className="dot" style={{ background: p.color, width: 12, height: 12 }} />
         <input className="h-edit" defaultValue={p.name} onBlur={(e) => e.target.value.trim() && e.target.value !== p.name && act("updateProject", { id: p.id, name: e.target.value })} />
         <div className="row gap-s">
           <button className="btn primary" onClick={openNew}><Plus size={15} />Nueva tarea<kbd>C</kbd></button>
@@ -689,9 +716,7 @@ function ProjectView({ project: p, tasks, today, act, notify, openNew, onDeleted
         <div className="prop grow"><span>Progreso · {doneN}/{totalN}</span><div className="bar"><i style={{ width: `${pct}%`, background: p.color }} /></div></div>
       </div>
 
-      <div className="card pdesc">
-        <RichEditor label="Descripción del proyecto" html={p.description} onSave={saveDesc} notify={notify} placeholder="Links, accesos, contexto del cliente, notas… Pegá enlaces o capturas con Ctrl+V" hint="Los enlaces se vuelven clicables. Pegá o arrastrá imágenes si las necesitás." />
-      </div>
+      <ProjectDesc p={p} act={act} notify={notify} />
 
       <div className="list">
         <TaskGroup title="Por hacer" Icon={ListTodo} color="#4f46e5" list={todo}>
