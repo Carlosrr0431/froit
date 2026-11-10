@@ -322,6 +322,18 @@
   .btn.danger-fill:hover { background: #b91c1c; border-color: transparent; }
   .btn.danger-fill kbd { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.25); }
 
+
+  /* ---------- editor rico: imágenes y enlaces contenidos ---------- */
+  .panel-body { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .panel-body > * { flex: none; min-width: 0; }
+  .rich { display: grid; gap: 10px; min-width: 0; }
+  .editor { display: flow-root; max-width: 100%; overflow-x: hidden; overflow-wrap: anywhere; word-break: break-word; }
+  .editor img { display: block; width: auto; height: auto; max-width: 100%; max-height: 420px; object-fit: contain; background: #eef1fa; box-shadow: 0 6px 18px -10px rgba(15, 23, 42, .35); }
+  .editor a { color: var(--brand); font-weight: 600; text-decoration: underline; text-decoration-color: rgba(79, 70, 229, .35); text-underline-offset: 3px; cursor: pointer; }
+  .editor a:hover { text-decoration-color: var(--brand); }
+  .pdesc { padding: 16px 18px; margin-bottom: 22px; }
+  .pdesc .editor { min-height: 96px; background: #fbfcff; }
+
   @media (max-width: 900px) { .grid2, .qrbox { grid-template-columns: 1fr; } .qrbox { justify-items: center; } }
   @media (max-width: 760px) {
     .app, .app.min { grid-template-columns: 1fr; }

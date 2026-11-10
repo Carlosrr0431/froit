@@ -218,7 +218,7 @@ export default function TareasPage() {
 
         <main className="main" key={view} onMouseEnter={() => setOpen(false)}>
           {view === "hoy" && <Today {...{ projects, tasks, today, act, setView, newProject }} />}
-          {project && <ProjectView key={project.id} {...{ project, tasks, today, act, openNew, onDeleted: () => setView("hoy") }} />}
+          {project && <ProjectView key={project.id} {...{ project, tasks, today, act, notify, openNew, onDeleted: () => setView("hoy") }} />}
           {view === "wa" && <WhatsApp {...{ wa, loadWa, settings, act, notify }} />}
         </main>
       </div>
@@ -444,17 +444,36 @@ async function uploadImage(file) {
   return r.url;
 }
 
-/** Panel lateral estilo Linear: título, propiedades y descripción con texto + imágenes pegadas. */
-function TaskPanel({ task, project, today, act, notify, onClose }) {
-  const ask = useContext(ConfirmCtx);
+const escapeHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const URL_RE = /\bhttps?:\/\/[^\s<>"']+/g;
+const anchor = (u) => `<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`;
+const linkify = (text) => escapeHtml(text).replace(URL_RE, anchor).replace(/\n/g, "<br>");
+
+/** Convierte en enlaces las URLs escritas a mano (al salir del campo). */
+function linkifyNode(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) {
+    const n = walker.currentNode;
+    if (!n.parentElement.closest("a") && n.nodeValue.match(URL_RE)) nodes.push(n);
+  }
+  nodes.forEach((n) => {
+    const urls = n.nodeValue.match(URL_RE);
+    const span = document.createElement("span");
+    span.innerHTML = n.nodeValue.split(URL_RE).map((part, i) => escapeHtml(part) + (urls[i] ? anchor(urls[i]) : "")).join("");
+    n.replaceWith(...span.childNodes);
+  });
+  return nodes.length > 0;
+}
+
+/** Editor rico: texto, enlaces e imágenes pegadas/arrastradas. Guarda solo (debounce) y al desmontar. */
+function RichEditor({ label = "Descripción", html: initial, onSave, notify, placeholder, hint, autoFocus, className = "" }) {
   const ed = useRef(null);
   const timer = useRef(null);
-  const html = useRef(task.description || "");
+  const html = useRef(initial || "");
   const dirty = useRef(false);
   const uploads = useRef(0);
-  const [title, setTitle] = useState(task.title);
-  const [state, setState] = useState("saved"); // saved | saving | uploading
-  const done = task.daily ? task.doneOn === today : isDone(task, today);
+  const [state, setState] = useState("saved"); // saved | saving | error
 
   const save = useCallback(async () => {
     clearTimeout(timer.current);
@@ -462,9 +481,9 @@ function TaskPanel({ task, project, today, act, notify, onClose }) {
     if (uploads.current > 0) { timer.current = setTimeout(save, 600); return; }
     dirty.current = false;
     setState("saving");
-    try { await act("updateTask", { id: task.id, description: html.current }); setState("saved"); }
+    try { await onSave(html.current); setState("saved"); }
     catch (e) { dirty.current = true; setState("error"); notify(e.message, true); }
-  }, [act, task.id, notify]);
+  }, [onSave, notify]);
 
   const changed = () => {
     const el = ed.current;
@@ -475,13 +494,8 @@ function TaskPanel({ task, project, today, act, notify, onClose }) {
     timer.current = setTimeout(save, 700);
   };
 
-  useEffect(() => { ed.current.innerHTML = task.description || ""; ed.current.focus(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { ed.current.innerHTML = initial || ""; if (autoFocus) ed.current.focus(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => () => { if (dirty.current) save(); }, [save]);
-  useEffect(() => {
-    const esc = (e) => e.key === "Escape" && !e.defaultPrevented && onClose();
-    window.addEventListener("keydown", esc);
-    return () => window.removeEventListener("keydown", esc);
-  }, [onClose]);
 
   const addImage = async (file) => {
     const local = URL.createObjectURL(file);
@@ -506,7 +520,7 @@ function TaskPanel({ task, project, today, act, notify, onClose }) {
     const files = [...e.clipboardData.files].filter((f) => f.type.startsWith("image/"));
     e.preventDefault();
     if (files.length) files.forEach(addImage);
-    else document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
+    else document.execCommand("insertHTML", false, linkify(e.clipboardData.getData("text/plain")));
   };
   const onDrop = (e) => {
     const files = [...e.dataTransfer.files].filter((f) => f.type.startsWith("image/"));
@@ -514,6 +528,34 @@ function TaskPanel({ task, project, today, act, notify, onClose }) {
     e.preventDefault();
     files.forEach(addImage);
   };
+  const onClick = (e) => {
+    const a = e.target.closest?.("a");
+    if (a) { e.preventDefault(); window.open(a.href, "_blank", "noopener,noreferrer"); }
+    else if (e.target.tagName === "IMG") window.open(e.target.src, "_blank", "noopener,noreferrer");
+  };
+  const onBlur = () => { if (linkifyNode(ed.current)) changed(); };
+
+  return (
+    <div className={`rich ${className}`}>
+      <div className="panel-label"><span>{label}</span><small className={`sv ${state}`}>{state === "saved" ? "Guardado" : state === "error" ? "Error al guardar" : "Guardando…"}</small></div>
+      <div ref={ed} className="editor" contentEditable suppressContentEditableWarning data-ph={placeholder} onInput={changed} onPaste={onPaste} onDrop={onDrop} onClick={onClick} onBlur={onBlur} />
+      <p className="panel-hint"><ImageIcon size={13} />{hint}</p>
+    </div>
+  );
+}
+
+/** Panel lateral estilo Linear: título, propiedades y descripción con texto + imágenes pegadas. */
+function TaskPanel({ task, project, today, act, notify, onClose }) {
+  const ask = useContext(ConfirmCtx);
+  const [title, setTitle] = useState(task.title);
+  const done = task.daily ? task.doneOn === today : isDone(task, today);
+  const saveDesc = useCallback((description) => act("updateTask", { id: task.id, description }), [act, task.id]);
+
+  useEffect(() => {
+    const esc = (e) => e.key === "Escape" && !e.defaultPrevented && onClose();
+    window.addEventListener("keydown", esc);
+    return () => window.removeEventListener("keydown", esc);
+  }, [onClose]);
 
   const saveTitle = () => title.trim() && title.trim() !== task.title && act("updateTask", { id: task.id, title });
 
@@ -539,19 +581,7 @@ function TaskPanel({ task, project, today, act, notify, onClose }) {
           <RepeatChip every={task.daily ? task.every : 0} onChange={(v) => act("updateTask", { id: task.id, every: v })} />
           {task.daily && <span className="nextrun">{done ? "Hecha hoy · " : ""}Próxima: {nextDue(task, today) <= today ? "hoy" : short(nextDue(task, today))}{done ? ` → ${short(nextDue({ ...task, doneOn: today }, today))}` : ""}</span>}
         </div>
-        <div className="panel-label"><span>Descripción</span><small className={`sv ${state}`}>{state === "saved" ? "Guardado" : state === "error" ? "Error al guardar" : "Guardando…"}</small></div>
-        <div
-          ref={ed}
-          className="editor"
-          contentEditable
-          suppressContentEditableWarning
-          data-ph="Explicá de qué trata la tarea y cómo resolverla… Pegá capturas con Ctrl+V"
-          onInput={changed}
-          onPaste={onPaste}
-          onDrop={onDrop}
-          onClick={(e) => e.target.tagName === "IMG" && window.open(e.target.src, "_blank")}
-        />
-        <p className="panel-hint"><ImageIcon size={13} />Pegá o arrastrá imágenes directo en la descripción. Clic en una imagen para verla grande.</p>
+        <RichEditor html={task.description} onSave={saveDesc} notify={notify} autoFocus placeholder="Explicá de qué trata la tarea y cómo resolverla… Pegá capturas con Ctrl+V" hint="Pegá o arrastrá imágenes directo en la descripción. Clic en una imagen o enlace para abrirlo." />
       </div>
     </aside>
   );
@@ -629,8 +659,9 @@ function Today({ projects, tasks, today, act, setView, newProject }) {
   );
 }
 
-function ProjectView({ project: p, tasks, today, act, openNew, onDeleted }) {
+function ProjectView({ project: p, tasks, today, act, notify, openNew, onDeleted }) {
   const ask = useContext(ConfirmCtx);
+  const saveDesc = useCallback((description) => act("updateProject", { id: p.id, description }), [act, p.id]);
   const own = tasks.filter((t) => t.projectId === p.id);
   const normal = own.filter((t) => !t.daily);
   const todo = normal.filter((t) => !t.done).sort((a, b) => (a.due || "9").localeCompare(b.due || "9"));
@@ -656,6 +687,10 @@ function ProjectView({ project: p, tasks, today, act, openNew, onDeleted }) {
         <div className="prop"><span>Entrega</span><DateChip value={p.deadline} today={today} placeholder="Sin fecha límite" onChange={(v) => act("updateProject", { id: p.id, deadline: v })} /></div>
         <div className="prop"><span>Color</span><div className="swatches">{COLORS.map((c) => <button key={c} className={p.color === c ? "on" : ""} style={{ background: c }} onClick={() => act("updateProject", { id: p.id, color: c })} aria-label={`Color ${c}`} />)}</div></div>
         <div className="prop grow"><span>Progreso · {doneN}/{totalN}</span><div className="bar"><i style={{ width: `${pct}%`, background: p.color }} /></div></div>
+      </div>
+
+      <div className="card pdesc">
+        <RichEditor label="Descripción del proyecto" html={p.description} onSave={saveDesc} notify={notify} placeholder="Links, accesos, contexto del cliente, notas… Pegá enlaces o capturas con Ctrl+V" hint="Los enlaces se vuelven clicables. Pegá o arrastrá imágenes si las necesitás." />
       </div>
 
       <div className="list">

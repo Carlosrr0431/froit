@@ -18,7 +18,7 @@ const must = ({ data, error }) => {
   return data;
 };
 
-const toProject = (r) => ({ id: r.id, name: r.name, client: r.client, color: r.color, deadline: r.deadline });
+const toProject = (r) => ({ id: r.id, name: r.name, client: r.client, color: r.color, deadline: r.deadline, description: r.description || "" });
 const toTask = (r) => ({ id: r.id, projectId: r.project_id, title: r.title, due: r.due, daily: r.daily, done: r.done, doneOn: r.done_on, description: r.description || "", every: r.every_days || 1, startOn: r.start_on });
 
 export async function readAll() {

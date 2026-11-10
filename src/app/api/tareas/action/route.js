@@ -26,6 +26,7 @@ const actions = {
     if ("client" in patch) upd.client = clean(patch.client);
     if (patch.color) upd.color = patch.color;
     if ("deadline" in patch) upd.deadline = patch.deadline || null;
+    if ("description" in patch) upd.description = cleanHtml(patch.description);
     if (Object.keys(upd).length) must(await projects().update(upd).eq("id", id));
   },
   async deleteProject({ id }) {
